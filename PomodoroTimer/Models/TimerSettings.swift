@@ -20,6 +20,8 @@ class TimerSettings: ObservableObject, Codable {
     @Published var hapticEnabled: Bool
     @Published var notificationsEnabled: Bool
     @Published var selectedTheme: AppTheme
+    @Published var focusModeEnabled: Bool
+    @Published var syncWithFocusMode: Bool
     
     enum AppTheme: String, Codable, CaseIterable {
         case system = "System"
@@ -46,6 +48,8 @@ class TimerSettings: ObservableObject, Codable {
         case hapticEnabled
         case notificationsEnabled
         case selectedTheme
+        case focusModeEnabled
+        case syncWithFocusMode
     }
     
     init(
@@ -58,7 +62,9 @@ class TimerSettings: ObservableObject, Codable {
         soundEnabled: Bool = true,
         hapticEnabled: Bool = true,
         notificationsEnabled: Bool = true,
-        selectedTheme: AppTheme = .system
+        selectedTheme: AppTheme = .system,
+        focusModeEnabled: Bool = false,
+        syncWithFocusMode: Bool = false
     ) {
         self.focusDuration = focusDuration
         self.shortBreakDuration = shortBreakDuration
@@ -70,6 +76,8 @@ class TimerSettings: ObservableObject, Codable {
         self.hapticEnabled = hapticEnabled
         self.notificationsEnabled = notificationsEnabled
         self.selectedTheme = selectedTheme
+        self.focusModeEnabled = focusModeEnabled
+        self.syncWithFocusMode = syncWithFocusMode
     }
     
     required init(from decoder: Decoder) throws {
@@ -84,6 +92,8 @@ class TimerSettings: ObservableObject, Codable {
         hapticEnabled = try container.decode(Bool.self, forKey: .hapticEnabled)
         notificationsEnabled = try container.decode(Bool.self, forKey: .notificationsEnabled)
         selectedTheme = try container.decode(AppTheme.self, forKey: .selectedTheme)
+        focusModeEnabled = try container.decodeIfPresent(Bool.self, forKey: .focusModeEnabled) ?? false
+        syncWithFocusMode = try container.decodeIfPresent(Bool.self, forKey: .syncWithFocusMode) ?? false
     }
     
     func encode(to encoder: Encoder) throws {
@@ -98,5 +108,7 @@ class TimerSettings: ObservableObject, Codable {
         try container.encode(hapticEnabled, forKey: .hapticEnabled)
         try container.encode(notificationsEnabled, forKey: .notificationsEnabled)
         try container.encode(selectedTheme, forKey: .selectedTheme)
+        try container.encode(focusModeEnabled, forKey: .focusModeEnabled)
+        try container.encode(syncWithFocusMode, forKey: .syncWithFocusMode)
     }
 }

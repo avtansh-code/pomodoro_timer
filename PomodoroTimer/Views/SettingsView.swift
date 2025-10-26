@@ -62,6 +62,35 @@ struct SettingsView: View {
                     .accessibilityLabel("Auto-start focus sessions")
                 }
                 
+                // Focus Mode Integration
+                if #available(iOS 16.1, *) {
+                    Section(header: Text("Focus Mode")) {
+                        Toggle(isOn: $timerManager.settings.focusModeEnabled) {
+                            HStack {
+                                Image(systemName: "moon.circle.fill")
+                                    .foregroundColor(.indigo)
+                                Text("Enable Focus Mode")
+                            }
+                        }
+                        .accessibilityLabel("Enable Focus Mode during Pomodoro")
+                        
+                        if timerManager.settings.focusModeEnabled {
+                            Toggle(isOn: $timerManager.settings.syncWithFocusMode) {
+                                HStack {
+                                    Image(systemName: "arrow.triangle.2.circlepath")
+                                        .foregroundColor(.purple)
+                                    Text("Sync with iOS Focus")
+                                }
+                            }
+                            .accessibilityLabel("Sync timer with iOS Focus Mode")
+                            
+                            Text("Note: Focus Mode will be suggested during focus sessions. You can enable it manually from Control Center.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+                
                 // Notifications & Feedback
                 Section(header: Text("Notifications & Feedback")) {
                     Toggle(isOn: $timerManager.settings.notificationsEnabled) {

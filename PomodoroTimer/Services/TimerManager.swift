@@ -26,12 +26,14 @@ class TimerManager: ObservableObject {
     private var timer: Timer?
     private var backgroundTime: Date?
     private var audioPlayer: AVAudioPlayer?
+    private var focusModeManager: Any? // Will be FocusModeManager for iOS 16.1+
     
     init(settings: TimerSettings = TimerSettings()) {
         self.settings = settings
         self.timeRemaining = settings.focusDuration
         setupAudioSession()
         setupIntentObservers()
+        setupFocusModeIfAvailable()
     }
     
     // MARK: - Timer Controls
@@ -40,6 +42,11 @@ class TimerManager: ObservableObject {
         guard timerState != .running else { return }
         
         timerState = .running
+        
+        // Enable Focus Mode if settings allow and it's a focus session
+        if settings.focusModeEnabled && currentSessionType == .focus {
+            enableFocusModeIfAvailable()
+        }
         
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.tick()
@@ -98,6 +105,11 @@ class TimerManager: ObservableObject {
         timer?.invalidate()
         timer = nil
         timerState = .idle
+        
+        // Disable Focus Mode when session completes
+        if settings.focusModeEnabled && currentSessionType == .focus {
+            disableFocusModeIfAvailable()
+        }
         
         // Save completed session
         let session = TimerSession(type: currentSessionType, duration: getDuration(for: currentSessionType))
@@ -410,6 +422,53 @@ class TimerManager: ObservableObject {
         }
         
         return streak
+    }
+    
+    // MARK: - Focus Mode Integration
+    
+    private func setupFocusModeIfAvailable() {
+        if #available(iOS 16.1, *) {
+            focusModeManager = FocusModeManager.shared
+        }
+    }
+    
+    private func enableFocusModeIfAvailable() {
+        if #available(iOS 16.1, *) {
+            if let manager = focusModeManager as? FocusModeManager {
+                manager.enableFocusMode()
+                
+                // Show hint to user about Focus Mode
+                if settings.syncWithFocusMode {
+                    sendFocusModeHint()
+                }
+            }
+        }
+    }
+    
+    private func disableFocusModeIfAvailable() {
+        if #available(iOS 16.1, *) {
+            if let manager = focusModeManager as? FocusModeManager {
+                manager.disableFocusMode()
+            }
+        }
+    }
+    
+    private func sendFocusModeHint() {
+        guard settings.notificationsEnabled else { return }
+        
+        let content = UNMutableNotificationContent()
+        content.title = "Focus Mode Tip 💡"
+        content.body = "Enable Focus Mode from Control Center to minimize distractions during your Pomodoro session."
+        content.sound = nil
+        content.interruptionLevel = .passive
+        
+        let request = UNNotificationRequest(
+            identifier: "FocusModeHint",
+            content: content,
+            trigger: nil
+        )
+        
+        UNUserNotificationCenter.current().add(request)
     }
     
     deinit {
