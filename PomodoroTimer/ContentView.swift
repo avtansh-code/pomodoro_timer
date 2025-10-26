@@ -23,14 +23,14 @@ struct ContentView: View {
             // Statistics Tab
             StatisticsTabView(timerManager: timerManager)
                 .tabItem {
-                    Label("Stats", systemImage: "chart.bar.fill")
+                    Label("Stats", systemImage: "chart.line.uptrend.xyaxis")
                 }
                 .tag(1)
             
             // Settings Tab
             SettingsTabView(timerManager: timerManager, themeManager: themeManager)
                 .tabItem {
-                    Label("Settings", systemImage: "gearshape.fill")
+                    Label("Settings", systemImage: "slider.horizontal.3")
                 }
                 .tag(2)
         }
