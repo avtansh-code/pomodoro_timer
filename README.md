@@ -215,12 +215,55 @@ Potential features for future versions:
 - 🏆 Achievement system and badges
 - 🎯 Live Activities support (iOS 16.1+)
 
-## 🔒 Privacy
+## 🔒 Privacy & Data Protection
 
-- **Local-only data** - All data stays on your device
-- **No analytics** - No tracking or data collection
-- **No account required** - Use immediately without sign-up
-- **Full control** - Delete all data anytime from settings
+Your privacy is our top priority. Pomodoro Timer is designed with a privacy-first approach.
+
+### What We Collect
+
+**Local Device Storage Only:**
+- ✅ Timer settings and preferences
+- ✅ Session history and statistics
+- ✅ Focus Mode preferences
+
+**Optional iCloud Sync:**
+- ☁️ If enabled, data syncs to **your private iCloud account**
+- 🔐 Encrypted using Apple's security infrastructure
+- 🎛️ You control sync - enable/disable anytime
+- 🗑️ You can delete iCloud data from Settings
+
+### What We DON'T Collect
+
+- ❌ **No Analytics** - We don't track your usage
+- ❌ **No Third-Party Services** - No external data sharing
+- ❌ **No Advertising** - No ads, no ad tracking
+- ❌ **No Account Creation** - No email, username, or personal info required
+- ❌ **No Network Requests** - Except optional iCloud sync via Apple's secure infrastructure
+- ❌ **No Location Data** - We never access your location
+- ❌ **No Personal Information** - We don't collect or store any personal data
+
+### Your Rights & Control
+
+- 👁️ **Access**: View all your data within the app
+- ✏️ **Modify**: Edit settings and preferences anytime
+- 🗑️ **Delete**: Clear session history or reset all data from Settings
+- 🔒 **Secure**: Protected by iOS sandboxing and device security
+- 📤 **Export**: View session data in Statistics screen
+
+### Compliance
+
+- **GDPR Compliant** - Respects EU privacy rights
+- **CCPA Compliant** - Honors California privacy rights
+- **Apple Guidelines** - Follows App Store privacy requirements
+- **Children's Privacy** - Not directed at children under 13
+
+### Privacy Policy
+
+For complete details about our privacy practices, see:
+- 📄 **[Full Privacy Policy](PrivacyPolicy.md)** - Comprehensive documentation
+- 📱 **In-App**: Settings → About → Privacy Policy
+
+**Privacy Summary**: All data stored locally on your device. Optional iCloud sync to your private account. No tracking, no analytics, no third parties. You control everything.
 
 ## 📄 License
 

@@ -209,6 +209,15 @@ struct SettingsView: View {
                 
                 // App Info
                 Section(header: Text("About")) {
+                    NavigationLink(destination: PrivacyPolicyView()) {
+                        HStack {
+                            Image(systemName: "hand.raised.fill")
+                                .foregroundColor(.blue)
+                            Text("Privacy Policy")
+                        }
+                    }
+                    .accessibilityLabel("View Privacy Policy")
+                    
                     HStack {
                         Text("Version")
                         Spacer()
