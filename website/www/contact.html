@@ -8,7 +8,7 @@
     
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="favicon.png">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -38,55 +38,24 @@
                 <p class="contact-subtitle">We'd love to hear from you! Share your ideas, report issues, or just say hello.</p>
             </div>
 
-            <div class="contact-content">
-                <div class="contact-info">
-                    <h2>Contact Information</h2>
-                    
-                    <div class="contact-methods">
-                        <div class="contact-method">
-                            <div class="contact-icon">📧</div>
-                            <div class="contact-details">
-                                <h3>General Support</h3>
-                                <p>For app support and general questions</p>
-                                <a href="mailto:support@mrpomodoro.com">support@mrpomodoro.com</a>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-method">
-                            <div class="contact-icon">💡</div>
-                            <div class="contact-details">
-                                <h3>Feature Requests</h3>
-                                <p>Share your ideas for new features</p>
-                                <a href="mailto:support@mrpomodoro.com">support@mrpomodoro.com</a>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-method">
-                            <div class="contact-icon">🐛</div>
-                            <div class="contact-details">
-                                <h3>Bug Reports</h3>
-                                <p>Report technical issues or bugs</p>
-                                <a href="mailto:support@mrpomodoro.com">support@mrpomodoro.com</a>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-method">
-                            <div class="contact-icon">🔒</div>
-                            <div class="contact-details">
-                                <h3>Privacy Concerns</h3>
-                                <p>Questions about data and privacy</p>
-                                <a href="mailto:support@mrpomodoro.com">support@mrpomodoro.com</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="response-time">
-                        <h3>📞 Response Time</h3>
-                        <p>We typically respond to all inquiries within <strong>24-48 hours</strong>. For urgent issues, please include "URGENT" in your subject line.</p>
+            <div class="contact-info-compact">
+                <div class="contact-method">
+                    <div class="contact-icon">📧</div>
+                    <div class="contact-details">
+                        <h3>Email Us</h3>
+                        <p>For all inquiries including support, feature requests, bug reports, and privacy questions</p>
+                        <a href="mailto:support@mrpomodoro.com">support@mrpomodoro.com</a>
                     </div>
                 </div>
+                
+                <div class="response-time">
+                    <h3>📞 Response Time</h3>
+                    <p>We typically respond within <strong>24-48 hours</strong>. For urgent issues, include "URGENT" in your subject line.</p>
+                </div>
+            </div>
 
-                <div class="contact-form-section">
+            <div class="contact-content">
+                <div class="contact-form-section" style="display: none;">
                     <h2>Send Us a Message</h2>
                     <p>Use the form below to get in touch. We read every message!</p>
                     
@@ -178,67 +147,37 @@
                 
                 <div class="faq-grid">
                     <div class="faq-item">
-                        <h3>How do I report a bug?</h3>
-                        <p>Use the contact form above with "Bug Report" selected, or email <a href="mailto:support@mrpomodoro.com">support@mrpomodoro.com</a>. Please include your iOS version, device model, and steps to reproduce the issue.</p>
+                        <h3>Does Mr. Pomodoro sync across my devices?</h3>
+                        <p>Yes! Mr. Pomodoro uses iCloud to automatically sync your timer settings, statistics, and session history across all your iOS devices. Just sign in with the same Apple ID on each device.</p>
                     </div>
                     
                     <div class="faq-item">
-                        <h3>Will you implement my feature request?</h3>
-                        <p>We consider all feature requests carefully! While we can't implement every suggestion, popular requests that align with our vision are prioritized for future updates.</p>
+                        <h3>Can I use Siri to control the timer?</h3>
+                        <p>Absolutely! Mr. Pomodoro includes Siri Shortcuts support. You can start, pause, resume, or reset your timer using voice commands. Set up shortcuts in the Settings app to customize your commands.</p>
                     </div>
                     
                     <div class="faq-item">
-                        <h3>How can I get app support?</h3>
-                        <p>For general app support, use the contact form or email <a href="mailto:support@mrpomodoro.com">support@mrpomodoro.com</a>. We're here to help with any questions about using the app.</p>
+                        <h3>Is my data private and secure?</h3>
+                        <p>Yes. All your data stays on your device and in your private iCloud account. We don't collect, track, or sell any personal information. Check our <a href="privacy.html">Privacy Policy</a> for full details.</p>
                     </div>
                     
                     <div class="faq-item">
-                        <h3>Do you respond to all messages?</h3>
-                        <p>Yes! We read and respond to every message we receive, typically within 24-48 hours. We value your feedback and questions.</p>
+                        <h3>How do I customize timer durations?</h3>
+                        <p>Go to Settings in the app to customize your focus time, short break, and long break durations. You can also adjust session counts and enable auto-start features to match your workflow.</p>
                     </div>
                     
                     <div class="faq-item">
-                        <h3>Can I suggest UI/design changes?</h3>
-                        <p>Absolutely! We love hearing ideas about how to improve the app's interface and user experience. Please be specific about what you'd like to see changed.</p>
+                        <h3>Does the app work with Focus Mode?</h3>
+                        <p>Yes! Mr. Pomodoro integrates with iOS Focus Modes to help minimize distractions during your focus sessions. Enable this in the app settings to automatically activate your preferred Focus Mode.</p>
                     </div>
                     
                     <div class="faq-item">
-                        <h3>Is there a roadmap for future features?</h3>
-                        <p>While we don't publish a public roadmap, we're always working on improvements based on user feedback. Follow us for updates on new releases!</p>
+                        <h3>How do I report a bug or request a feature?</h3>
+                        <p>Use the contact form above or email <a href="mailto:support@mrpomodoro.com">support@mrpomodoro.com</a>. For bugs, include your iOS version and device model. We respond within 24-48 hours and carefully consider all feature requests.</p>
                     </div>
                 </div>
             </div>
 
-            <div class="community-section">
-                <h2>👥 Join Our Community</h2>
-                <p>Connect with other Mr. Pomodoro users and stay updated on the latest features:</p>
-                
-                <div class="community-links">
-                    <a href="#" class="community-link">
-                        <div class="community-icon">🐦</div>
-                        <div>
-                            <h3>Twitter</h3>
-                            <p>Follow @MrPomodoroApp for updates</p>
-                        </div>
-                    </a>
-                    
-                    <a href="#" class="community-link">
-                        <div class="community-icon">💬</div>
-                        <div>
-                            <h3>Discord</h3>
-                            <p>Join our community chat</p>
-                        </div>
-                    </a>
-                    
-                    <a href="#" class="community-link">
-                        <div class="community-icon">📧</div>
-                        <div>
-                            <h3>Newsletter</h3>
-                            <p>Get monthly updates via email</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
         </div>
     </main>
 
@@ -326,7 +265,7 @@
                 });
             }, observerOptions);
 
-            document.querySelectorAll('.guideline-card, .faq-item, .contact-method, .community-link').forEach(el => {
+            document.querySelectorAll('.guideline-card, .faq-item, .contact-method').forEach(el => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(20px)';
                 el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
