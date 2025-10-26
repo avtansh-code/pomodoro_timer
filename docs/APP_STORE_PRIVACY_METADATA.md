@@ -1,6 +1,6 @@
 # 📱 App Store Privacy Metadata Guide
 
-**App Name**: Pomodoro Timer  
+**App Name**: Mr. Pomodoro  
 **Version**: 1.0.0  
 **Privacy Policy URL**: [Your hosted URL here]  
 **Last Updated**: October 26, 2025
@@ -88,7 +88,7 @@ You must provide a publicly accessible URL to your Privacy Policy. Options:
 **Text for "Privacy practices may include handling of data as described below":**
 
 ```
-Pomodoro Timer is designed with privacy as a core principle. All your timer settings and session history are stored locally on your device. No data is collected, tracked, or shared with third parties.
+Mr. Pomodoro is designed with privacy as a core principle. All your timer settings and session history are stored locally on your device. No data is collected, tracked, or shared with third parties.
 
 Optional iCloud Sync:
 If you choose to enable iCloud sync, your data is synced to your private iCloud account using Apple's CloudKit framework. We do not have access to your iCloud data, and it remains encrypted and secure within your personal Apple ecosystem.
@@ -311,7 +311,7 @@ Most productivity apps collect:
 - ❌ Device information
 - ❌ IP addresses
 
-Pomodoro Timer:
+Mr. Pomodoro:
 - ✅ None of the above
 - ✅ True privacy-first design
 - ✅ No cloud servers (except optional iCloud)

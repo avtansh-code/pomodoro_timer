@@ -1,4 +1,4 @@
-# 🍅 Pomodoro Timer - iOS App
+# 🍅 Mr. Pomodoro - iOS App
 
 A clean, customizable, and user-friendly Pomodoro timer built with SwiftUI for iOS. This app helps boost productivity using the proven Pomodoro Technique with flexible configuration options and elegant design.
 
@@ -217,7 +217,7 @@ Potential features for future versions:
 
 ## 🔒 Privacy & Data Protection
 
-Your privacy is our top priority. Pomodoro Timer is designed with a privacy-first approach.
+Your privacy is our top priority. Mr. Pomodoro is designed with a privacy-first approach.
 
 ### What We Collect
 

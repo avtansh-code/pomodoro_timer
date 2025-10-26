@@ -283,7 +283,7 @@
 				DEVELOPMENT_TEAM = S6ULATL6PT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PomodoroWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = PomodoroWidget;
+				INFOPLIST_KEY_CFBundleDisplayName = "Mr. Pomodoro";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 18;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -320,7 +320,7 @@
 				DEVELOPMENT_TEAM = S6ULATL6PT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PomodoroWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = PomodoroWidget;
+				INFOPLIST_KEY_CFBundleDisplayName = "Mr. Pomodoro";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 18;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -479,7 +479,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PomodoroTimer/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = PomoDoro;
+				INFOPLIST_KEY_CFBundleDisplayName = "Mr. Pomodoro";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -528,7 +528,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PomodoroTimer/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = PomoDoro;
+				INFOPLIST_KEY_CFBundleDisplayName = "Mr. Pomodoro";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;

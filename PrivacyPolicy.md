@@ -1,15 +1,15 @@
-# Privacy Policy for Pomodoro Timer
+# Privacy Policy for Mr. Pomodoro
 
 **Effective Date:** October 26, 2025  
 **Last Updated:** October 26, 2025
 
 ## Introduction
 
-Welcome to Pomodoro Timer ("we," "our," or "the app"). We are committed to protecting your privacy and being transparent about how we handle your information. This Privacy Policy explains our practices regarding data collection, use, and storage.
+Welcome to Mr. Pomodoro ("we," "our," or "the app"). We are committed to protecting your privacy and being transparent about how we handle your information. This Privacy Policy explains our practices regarding data collection, use, and storage.
 
 ## Our Commitment to Privacy
 
-Pomodoro Timer is designed with privacy as a core principle. We believe your productivity data should remain yours, stored securely on your device with optional iCloud sync that you control.
+Mr. Pomodoro is designed with privacy as a core principle. We believe your productivity data should remain yours, stored securely on your device with optional iCloud sync that you control.
 
 ## What Data We Collect
 

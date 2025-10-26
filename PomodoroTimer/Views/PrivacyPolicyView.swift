@@ -21,6 +21,10 @@ struct PrivacyPolicyView: View {
                             .font(.largeTitle)
                             .fontWeight(.bold)
                         
+                        Text("Mr. Pomodoro")
+                            .font(.title3)
+                            .foregroundColor(.blue)
+                        
                         Text("Effective Date: October 26, 2025")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
@@ -36,7 +40,7 @@ struct PrivacyPolicyView: View {
                     // Introduction
                     PolicySection(
                         title: "Our Commitment to Privacy",
-                        content: "Pomodoro Timer is designed with privacy as a core principle. We believe your productivity data should remain yours, stored securely on your device with optional iCloud sync that you control."
+                        content: "Mr. Pomodoro is designed with privacy as a core principle. We believe your productivity data should remain yours, stored securely on your device with optional iCloud sync that you control."
                     )
                     
                     // What We Collect
