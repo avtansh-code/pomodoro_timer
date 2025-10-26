@@ -287,15 +287,38 @@ You can also start a Pomodoro with a custom duration:
 - **Deep Work**: Start Pomodoro → Enable Do Not Disturb → Open IDE
 - **Quick Break**: Show stats → Start break timer
 
-## 📚 Additional Documentation
+## 📚 Documentation
 
-For detailed information about specific features:
+Complete documentation is available in the **[docs](docs/)** folder. The documentation has been reorganized into focused, comprehensive guides:
 
-- **[UI Redesign Guide](docs/UI_REDESIGN_GUIDE.md)** - Complete design system documentation and theming guide
-- **[Focus Mode Integration Guide](docs/FOCUS_MODE_GUIDE.md)** - Complete guide to using Focus Mode with the app
-- **[iCloud Sync Setup Guide](docs/ICLOUD_SETUP_GUIDE.md)** - How to enable and configure iCloud sync
-- **[Features Overview](docs/FEATURES_OVERVIEW.md)** - Comprehensive feature documentation
-- **[App Store Privacy Metadata](docs/APP_STORE_PRIVACY_METADATA.md)** - Privacy practices and data handling
+### For Users
+- **[User Guide](docs/USER_GUIDE.md)** (22KB) - Complete end-user documentation
+  - Getting started, features, statistics, customization
+  - iCloud Sync, Focus Mode, Siri Shortcuts setup
+  - Privacy, troubleshooting, FAQ, tips & best practices
+
+### For Developers
+- **[Developer Guide](docs/DEVELOPER_GUIDE.md)** (28KB) - Technical reference
+  - Architecture (MVVM), development setup, project structure
+  - Complete testing strategy (unit, performance, UI tests)
+  - iCloud & Focus Mode integration implementation
+  - Background execution, performance, debugging, CI/CD
+
+### For App Store
+- **[App Store Submission Guide](docs/APP_STORE_SUBMISSION.md)** (26KB) - Submission package
+  - Pre-submission checklist, marketing copy, keywords
+  - Privacy configuration & compliance report (99/100 score)
+  - Screenshots guide, review notes, post-launch strategy
+
+### For Designers
+- **[Design System Guide](docs/DESIGN_SYSTEM.md)** (18KB) - Design reference
+  - Design philosophy, theming system (5 themes)
+  - Typography, colors, layout specifications
+  - Component library, animation guidelines, accessibility
+
+### Quick Links
+- **[Documentation Overview](docs/README.md)** - Navigation guide for all docs
+- **[Privacy Policy](PrivacyPolicy.md)** - Complete privacy policy
 
 ## 🚀 Future Enhancements
 
