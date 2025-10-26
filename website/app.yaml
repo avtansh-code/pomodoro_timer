@@ -1,0 +1,22 @@
+runtime: python312
+
+handlers:
+# Serve the root path with index.html
+- url: /
+  static_files: www/index.html
+  upload: www/index.html
+
+# Serve CSS files from the css directory
+- url: /styles.css
+  static_files: css/styles.css
+  upload: css/styles.css
+
+# Serve all CSS files
+- url: /css/(.*)
+  static_files: css/\1
+  upload: css/(.*)
+
+# Serve all other static files from www directory
+- url: /(.*)
+  static_files: www/\1
+  upload: www/(.*)

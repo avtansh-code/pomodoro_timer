@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Mr. Pomodoro</title>
+    <meta name="description" content="Get in touch with the Mr. Pomodoro team. Request features, report bugs, or ask questions about our productivity timer app.">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <span class="logo">🍅</span>
+                    <span class="brand-name">Mr. Pomodoro</span>
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html#features">Features</a>
+                <a href="index.html#about">About</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="contact.html" class="active">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="contact-page">
+        <div class="container">
+            <div class="contact-header">
+                <h1>Get in Touch</h1>
+                <p class="contact-subtitle">We'd love to hear from you! Share your ideas, report issues, or just say hello.</p>
+            </div>
+
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h2>Contact Information</h2>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <div class="contact-icon">📧</div>
+                            <div class="contact-details">
+                                <h3>General Support</h3>
+                                <p>For app support and general questions</p>
+                                <a href="mailto:support@mr-pomodoro.com">support@mr-pomodoro.com</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">💡</div>
+                            <div class="contact-details">
+                                <h3>Feature Requests</h3>
+                                <p>Share your ideas for new features</p>
+                                <a href="mailto:features@mr-pomodoro.com">features@mr-pomodoro.com</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">🐛</div>
+                            <div class="contact-details">
+                                <h3>Bug Reports</h3>
+                                <p>Report technical issues or bugs</p>
+                                <a href="mailto:bugs@mr-pomodoro.com">bugs@mr-pomodoro.com</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">🔒</div>
+                            <div class="contact-details">
+                                <h3>Privacy Concerns</h3>
+                                <p>Questions about data and privacy</p>
+                                <a href="mailto:privacy@mr-pomodoro.com">privacy@mr-pomodoro.com</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="response-time">
+                        <h3>📞 Response Time</h3>
+                        <p>We typically respond to all inquiries within <strong>24-48 hours</strong>. For urgent issues, please include "URGENT" in your subject line.</p>
+                    </div>
+                </div>
+
+                <div class="contact-form-section">
+                    <h2>Send Us a Message</h2>
+                    <p>Use the form below to get in touch. We read every message!</p>
+                    
+                    <form class="contact-form" action="#" method="POST">
+                        <div class="form-group">
+                            <label for="name">Your Name *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Select a topic...</option>
+                                <option value="feature-request">💡 Feature Request</option>
+                                <option value="bug-report">🐛 Bug Report</option>
+                                <option value="general-support">📧 General Support</option>
+                                <option value="privacy-question">🔒 Privacy Question</option>
+                                <option value="feedback">⭐ Feedback</option>
+                                <option value="other">❓ Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ios-version">iOS Version (if relevant)</label>
+                            <input type="text" id="ios-version" name="ios-version" placeholder="e.g., iOS 17.1">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="device">Device Model (if relevant)</label>
+                            <input type="text" id="device" name="device" placeholder="e.g., iPhone 15 Pro, iPad Air">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" rows="6" required placeholder="Tell us about your feature idea, bug report, or question..."></textarea>
+                        </div>
+                        
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="newsletter" id="newsletter">
+                                <span class="checkmark"></span>
+                                Keep me updated about Mr. Pomodoro news and updates
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="feature-request-section">
+                <h2>🚀 Feature Request Guidelines</h2>
+                <p>Planning to request a new feature? Here's how to make your request most effective:</p>
+                
+                <div class="guidelines-grid">
+                    <div class="guideline-card">
+                        <div class="guideline-icon">🎯</div>
+                        <h3>Be Specific</h3>
+                        <p>Describe exactly what you want the feature to do and how it would work.</p>
+                    </div>
+                    
+                    <div class="guideline-card">
+                        <div class="guideline-icon">❓</div>
+                        <h3>Explain the Why</h3>
+                        <p>Tell us what problem this feature would solve or how it would improve your workflow.</p>
+                    </div>
+                    
+                    <div class="guideline-card">
+                        <div class="guideline-icon">📱</div>
+                        <h3>Consider iOS Design</h3>
+                        <p>Think about how the feature would fit into the existing app design and iOS patterns.</p>
+                    </div>
+                    
+                    <div class="guideline-card">
+                        <div class="guideline-icon">👥</div>
+                        <h3>Think of Others</h3>
+                        <p>Consider how this feature might benefit other users, not just your specific use case.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h2>❓ Frequently Asked Questions</h2>
+                
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <h3>How do I report a bug?</h3>
+                        <p>Use the contact form above with "Bug Report" selected, or email <a href="mailto:bugs@mr-pomodoro.com">bugs@mr-pomodoro.com</a>. Please include your iOS version, device model, and steps to reproduce the issue.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Will you implement my feature request?</h3>
+                        <p>We consider all feature requests carefully! While we can't implement every suggestion, popular requests that align with our vision are prioritized for future updates.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>How can I get app support?</h3>
+                        <p>For general app support, use the contact form or email <a href="mailto:support@mr-pomodoro.com">support@mr-pomodoro.com</a>. We're here to help with any questions about using the app.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Do you respond to all messages?</h3>
+                        <p>Yes! We read and respond to every message we receive, typically within 24-48 hours. We value your feedback and questions.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Can I suggest UI/design changes?</h3>
+                        <p>Absolutely! We love hearing ideas about how to improve the app's interface and user experience. Please be specific about what you'd like to see changed.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Is there a roadmap for future features?</h3>
+                        <p>While we don't publish a public roadmap, we're always working on improvements based on user feedback. Follow us for updates on new releases!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="community-section">
+                <h2>👥 Join Our Community</h2>
+                <p>Connect with other Mr. Pomodoro users and stay updated on the latest features:</p>
+                
+                <div class="community-links">
+                    <a href="#" class="community-link">
+                        <div class="community-icon">🐦</div>
+                        <div>
+                            <h3>Twitter</h3>
+                            <p>Follow @MrPomodoroApp for updates</p>
+                        </div>
+                    </a>
+                    
+                    <a href="#" class="community-link">
+                        <div class="community-icon">💬</div>
+                        <div>
+                            <h3>Discord</h3>
+                            <p>Join our community chat</p>
+                        </div>
+                    </a>
+                    
+                    <a href="#" class="community-link">
+                        <div class="community-icon">📧</div>
+                        <div>
+                            <h3>Newsletter</h3>
+                            <p>Get monthly updates via email</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="index.html">
+                        <span class="logo">🍅</span>
+                        <span class="brand-name">Mr. Pomodoro</span>
+                    </a>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="contact.html" class="active">Contact</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Mr. Pomodoro. Made with ❤️ by Avtansh Gupta.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple form enhancement
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.contact-form');
+            const subjectSelect = document.getElementById('subject');
+            const messageTextarea = document.getElementById('message');
+            
+            // Auto-fill message placeholder based on subject
+            subjectSelect.addEventListener('change', function() {
+                const subject = this.value;
+                let placeholder = 'Tell us about your feature idea, bug report, or question...';
+                
+                switch(subject) {
+                    case 'feature-request':
+                        placeholder = 'Describe the feature you\'d like to see, what problem it would solve, and how you envision it working...';
+                        break;
+                    case 'bug-report':
+                        placeholder = 'Please describe the bug, steps to reproduce it, and what you expected to happen instead...';
+                        break;
+                    case 'general-support':
+                        placeholder = 'How can we help you with the app? Please describe your question or issue...';
+                        break;
+                    case 'privacy-question':
+                        placeholder = 'What would you like to know about how we handle your data and privacy?';
+                        break;
+                    case 'feedback':
+                        placeholder = 'We\'d love to hear your thoughts about the app! What do you like? What could be improved?';
+                        break;
+                }
+                
+                messageTextarea.placeholder = placeholder;
+            });
+            
+            // Form submission (you'll need to implement the backend)
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // For now, show a thank you message
+                const formData = new FormData(form);
+                const name = formData.get('name');
+                
+                alert(`Thank you, ${name}! Your message has been received. We'll get back to you within 24-48 hours.`);
+                
+                // Reset form
+                form.reset();
+            });
+            
+            // Animation for cards
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.guideline-card, .faq-item, .contact-method, .community-link').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
