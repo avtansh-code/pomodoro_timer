@@ -41,10 +41,12 @@ final class TimerManagerTests: XCTestCase {
     // MARK: - Initialization Tests
     
     func testTimerManagerInitialization() {
-        XCTAssertEqual(timerManager.timerState, .idle)
-        XCTAssertEqual(timerManager.currentSessionType, .focus)
-        XCTAssertEqual(timerManager.completedFocusSessions, 0)
-        XCTAssertEqual(timerManager.timeRemaining, timerManager.settings.focusDuration)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, .idle)
+            XCTAssertEqual(timerManager.currentSessionType, .focus)
+            XCTAssertEqual(timerManager.completedFocusSessions, 0)
+            XCTAssertEqual(timerManager.timeRemaining, timerManager.settings.focusDuration)
+        }
     }
     
     func testTimerManagerInitializationWithCustomSettings() {
@@ -60,43 +62,59 @@ final class TimerManagerTests: XCTestCase {
     func testStartTimer() {
         timerManager.startTimer()
         
-        XCTAssertEqual(timerManager.timerState, .running)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, .running)
+        }
     }
     
     func testStartTimerWhenAlreadyRunning() {
         timerManager.startTimer()
-        let initialState = timerManager.timerState
+        let initialState = MainActor.assumeIsolated { timerManager.timerState }
         
         timerManager.startTimer()
         
-        XCTAssertEqual(timerManager.timerState, initialState)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, initialState)
+        }
     }
     
     func testPauseTimer() {
         timerManager.startTimer()
-        XCTAssertEqual(timerManager.timerState, .running)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, .running)
+        }
         
         timerManager.pauseTimer()
         
-        XCTAssertEqual(timerManager.timerState, .paused)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, .paused)
+        }
     }
     
     func testPauseTimerWhenIdle() {
-        XCTAssertEqual(timerManager.timerState, .idle)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, .idle)
+        }
         
         timerManager.pauseTimer()
         
-        XCTAssertEqual(timerManager.timerState, .idle)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, .idle)
+        }
     }
     
     func testResumeTimer() {
         timerManager.startTimer()
         timerManager.pauseTimer()
-        XCTAssertEqual(timerManager.timerState, .paused)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, .paused)
+        }
         
         timerManager.startTimer()
         
-        XCTAssertEqual(timerManager.timerState, .running)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, .running)
+        }
     }
     
     func testResetTimer() {
@@ -119,12 +137,16 @@ final class TimerManagerTests: XCTestCase {
     }
     
     func testSkipSession() {
-        XCTAssertEqual(timerManager.currentSessionType, .focus)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.currentSessionType, .focus)
+        }
         
         timerManager.skipSession()
         
-        XCTAssertEqual(timerManager.timerState, .idle)
-        XCTAssertEqual(timerManager.currentSessionType, .shortBreak)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, .idle)
+            XCTAssertEqual(timerManager.currentSessionType, .shortBreak)
+        }
     }
     
     // MARK: - Timer Tick Tests
@@ -152,7 +174,9 @@ final class TimerManagerTests: XCTestCase {
         }
         waitForExpectations(timeout: 4.0)
         
-        XCTAssertEqual(timerManager.timerState, .idle)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, .idle)
+        }
     }
     
     // MARK: - Session Switching Tests
@@ -280,7 +304,9 @@ final class TimerManagerTests: XCTestCase {
         timerManager.appWillEnterForeground()
         
         // Timer should have completed
-        XCTAssertEqual(timerManager.timerState, .idle)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, .idle)
+        }
     }
     
     // MARK: - Auto-Start Tests
@@ -312,7 +338,9 @@ final class TimerManagerTests: XCTestCase {
         waitForExpectations(timeout: 4.0)
         
         // Should be idle after completion
-        XCTAssertEqual(timerManager.timerState, .idle)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, .idle)
+        }
     }
     
     // MARK: - Notification Tests
@@ -379,13 +407,19 @@ final class TimerManagerTests: XCTestCase {
     func testMultipleStartStopCycles() {
         for _ in 0..<5 {
             timerManager.startTimer()
-            XCTAssertEqual(timerManager.timerState, .running)
+            MainActor.assumeIsolated {
+                XCTAssertEqual(timerManager.timerState, .running)
+            }
             
             timerManager.pauseTimer()
-            XCTAssertEqual(timerManager.timerState, .paused)
+            MainActor.assumeIsolated {
+                XCTAssertEqual(timerManager.timerState, .paused)
+            }
             
             timerManager.resetTimer()
-            XCTAssertEqual(timerManager.timerState, .idle)
+            MainActor.assumeIsolated {
+                XCTAssertEqual(timerManager.timerState, .idle)
+            }
         }
     }
     
@@ -395,6 +429,8 @@ final class TimerManagerTests: XCTestCase {
         timerManager.startTimer()
         timerManager.resetTimer()
         
-        XCTAssertEqual(timerManager.timerState, .idle)
+        MainActor.assumeIsolated {
+            XCTAssertEqual(timerManager.timerState, .idle)
+        }
     }
 }

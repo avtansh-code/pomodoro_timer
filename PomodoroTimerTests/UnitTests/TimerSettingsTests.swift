@@ -130,7 +130,9 @@ final class TimerSettingsTests: XCTestCase {
         let data = try encoder.encode(originalSettings)
         
         let decoder = JSONDecoder()
-        let decodedSettings = try decoder.decode(TimerSettings.self, from: data)
+        let decodedSettings = try MainActor.assumeIsolated {
+            try decoder.decode(TimerSettings.self, from: data)
+        }
         
         XCTAssertEqual(decodedSettings.focusDuration, originalSettings.focusDuration)
         XCTAssertEqual(decodedSettings.shortBreakDuration, originalSettings.shortBreakDuration)
@@ -161,7 +163,9 @@ final class TimerSettingsTests: XCTestCase {
         let data = try encoder.encode(originalSettings)
         
         let decoder = JSONDecoder()
-        let decodedSettings = try decoder.decode(TimerSettings.self, from: data)
+        let decodedSettings = try MainActor.assumeIsolated {
+            try decoder.decode(TimerSettings.self, from: data)
+        }
         
         XCTAssertEqual(decodedSettings.focusDuration, originalSettings.focusDuration)
         XCTAssertEqual(decodedSettings.shortBreakDuration, originalSettings.shortBreakDuration)
@@ -197,7 +201,9 @@ final class TimerSettingsTests: XCTestCase {
         
         let data = json.data(using: .utf8)!
         let decoder = JSONDecoder()
-        let settings = try decoder.decode(TimerSettings.self, from: data)
+        let settings = try MainActor.assumeIsolated {
+            try decoder.decode(TimerSettings.self, from: data)
+        }
         
         XCTAssertEqual(settings.focusDuration, 1500)
         XCTAssertFalse(settings.focusModeEnabled, "Should default to false")

@@ -31,7 +31,11 @@ extension XCTestCase {
     
     /// Wait for timer state to change
     func waitForTimerState(_ timerManager: TimerManager, expectedState: TimerState, timeout: TimeInterval = 5.0) {
-        wait(for: { timerManager.timerState == expectedState }, timeout: timeout, description: "Timer state to be \(expectedState)")
+        wait(for: { 
+            MainActor.assumeIsolated { 
+                timerManager.timerState == expectedState 
+            }
+        }, timeout: timeout, description: "Timer state to be \(expectedState)")
     }
     
     /// Wait for a published value to change
