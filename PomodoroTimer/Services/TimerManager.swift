@@ -10,7 +10,7 @@ import Combine
 import UserNotifications
 import AVFoundation
 
-enum TimerState {
+enum TimerState: Sendable, Equatable {
     case idle
     case running
     case paused

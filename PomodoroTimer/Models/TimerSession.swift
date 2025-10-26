@@ -7,13 +7,13 @@
 
 import Foundation
 
-enum SessionType: String, Codable {
+enum SessionType: String, Codable, Sendable {
     case focus = "Focus"
     case shortBreak = "Short Break"
     case longBreak = "Long Break"
 }
 
-struct TimerSession: Identifiable, Codable {
+struct TimerSession: Identifiable, Codable, Sendable {
     let id: UUID
     let type: SessionType
     let duration: TimeInterval

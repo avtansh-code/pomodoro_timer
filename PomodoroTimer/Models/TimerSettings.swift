@@ -24,7 +24,7 @@ class TimerSettings: ObservableObject, Codable {
     @Published var syncWithFocusMode: Bool
     @Published var iCloudSyncEnabled: Bool
     
-    enum AppTheme: String, Codable, CaseIterable {
+    enum AppTheme: String, Codable, CaseIterable, Sendable {
         case system = "System"
         case light = "Light"
         case dark = "Dark"
@@ -101,7 +101,7 @@ class TimerSettings: ObservableObject, Codable {
         iCloudSyncEnabled = try container.decodeIfPresent(Bool.self, forKey: .iCloudSyncEnabled) ?? false
     }
     
-    func encode(to encoder: Encoder) throws {
+    nonisolated func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(focusDuration, forKey: .focusDuration)
         try container.encode(shortBreakDuration, forKey: .shortBreakDuration)
