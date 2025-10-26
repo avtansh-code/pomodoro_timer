@@ -374,16 +374,16 @@
 			};
 			name = Debug;
 		};
-520588EF2EAE66750001EE1F /* Release */ = {
-isa = XCBuildConfiguration;
-buildSettings = {
-BUNDLE_LOADER = "$(TEST_HOST)";
-CODE_SIGN_STYLE = Automatic;
-CURRENT_PROJECT_VERSION = 3;
-DEVELOPMENT_TEAM = S6ULATL6PT;
-GENERATE_INFOPLIST_FILE = YES;
-IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-MARKETING_VERSION = 1.0.2;
+		520588EF2EAE66750001EE1F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = S6ULATL6PT;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = avtanshgupta.PomodoroTimer.PomodoroTimerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -421,16 +421,16 @@ MARKETING_VERSION = 1.0.2;
 			};
 			name = Debug;
 		};
-520588FC2EAE668F0001EE1F /* Release */ = {
-isa = XCBuildConfiguration;
-buildSettings = {
-BUNDLE_LOADER = "$(TEST_HOST)";
-CODE_SIGN_STYLE = Automatic;
-CURRENT_PROJECT_VERSION = 3;
-DEVELOPMENT_TEAM = S6ULATL6PT;
-GENERATE_INFOPLIST_FILE = YES;
-IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-MARKETING_VERSION = 1.0.2;
+		520588FC2EAE668F0001EE1F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = S6ULATL6PT;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = avtanshgupta.PomodoroTimer.PomodoroTimerPerformanceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -467,15 +467,15 @@ MARKETING_VERSION = 1.0.2;
 			};
 			name = Debug;
 		};
-5205890B2EAE669B0001EE1F /* Release */ = {
-isa = XCBuildConfiguration;
-buildSettings = {
-CODE_SIGN_STYLE = Automatic;
-CURRENT_PROJECT_VERSION = 3;
-DEVELOPMENT_TEAM = S6ULATL6PT;
-GENERATE_INFOPLIST_FILE = YES;
-IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-MARKETING_VERSION = 1.0.2;
+		5205890B2EAE669B0001EE1F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = S6ULATL6PT;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = avtanshgupta.PomodoroTimer.PomodoroTimerUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -657,41 +657,41 @@ MARKETING_VERSION = 1.0.2;
 			};
 			name = Debug;
 		};
-529A0BB62E915A66007CD213 /* Release */ = {
-isa = XCBuildConfiguration;
-buildSettings = {
-ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-CODE_SIGN_ENTITLEMENTS = PomodoroTimer/PomodoroTimer.entitlements;
-CODE_SIGN_STYLE = Automatic;
-CURRENT_PROJECT_VERSION = 3;
-DEVELOPMENT_TEAM = S6ULATL6PT;
-ENABLE_APP_SANDBOX = YES;
-ENABLE_HARDENED_RUNTIME = YES;
-ENABLE_PREVIEWS = YES;
-ENABLE_USER_SELECTED_FILES = readonly;
-GENERATE_INFOPLIST_FILE = YES;
-INFOPLIST_FILE = PomodoroTimer/Info.plist;
-INFOPLIST_KEY_CFBundleDisplayName = "Mr. Pomodoro";
-INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
-"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
-"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
-"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
-"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
-"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
-INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
-"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-"INFOPLIST_KEY_UISupportedInterfaceOrientations[sdk=iphoneos*]" = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-"INFOPLIST_KEY_UISupportedInterfaceOrientations[sdk=iphonesimulator*]" = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-MACOSX_DEPLOYMENT_TARGET = 26.0;
-MARKETING_VERSION = 1.0.2;
+		529A0BB62E915A66007CD213 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = PomodoroTimer/PomodoroTimer.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = S6ULATL6PT;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PomodoroTimer/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Mr. Pomodoro";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				"INFOPLIST_KEY_UISupportedInterfaceOrientations[sdk=iphoneos*]" = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				"INFOPLIST_KEY_UISupportedInterfaceOrientations[sdk=iphonesimulator*]" = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = avtanshgupta.PomodoroTimer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
