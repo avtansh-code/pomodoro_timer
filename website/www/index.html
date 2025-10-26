@@ -147,52 +147,74 @@
         <!-- About Pomodoro Section -->
         <section id="about" class="about-technique">
             <div class="container">
-                <div class="technique-content">
-                    <div class="technique-text">
-                        <h2>What is the Pomodoro Technique?</h2>
-                        <p>The Pomodoro Technique is a time management method developed by Francesco Cirillo in the late 1980s. It uses a timer to break work into focused intervals, traditionally 25 minutes, separated by short breaks.</p>
-                        
-                        <div class="technique-steps">
-                            <div class="step">
-                                <div class="step-number">1</div>
-                                <div class="step-content">
-                                    <h4>Choose a Task</h4>
-                                    <p>Pick something you want to work on</p>
-                                </div>
+                <div class="technique-text">
+                    <h2>What is the Pomodoro Technique?</h2>
+                    <p>The Pomodoro Technique is a time management method developed by Francesco Cirillo in the late 1980s. It uses a timer to break work into focused intervals, traditionally 25 minutes, separated by short breaks.</p>
+                    
+                    <div class="technique-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Choose a Task</h4>
+                                <p>Pick something you want to work on</p>
                             </div>
-                            <div class="step">
-                                <div class="step-number">2</div>
-                                <div class="step-content">
-                                    <h4>Set Timer for 25 Minutes</h4>
-                                    <p>Focus completely on your task</p>
-                                </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Set Timer for 25 Minutes</h4>
+                                <p>Focus completely on your task</p>
                             </div>
-                            <div class="step">
-                                <div class="step-number">3</div>
-                                <div class="step-content">
-                                    <h4>Take a 5-Minute Break</h4>
-                                    <p>Step away and recharge</p>
-                                </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Take a 5-Minute Break</h4>
+                                <p>Step away and recharge</p>
                             </div>
-                            <div class="step">
-                                <div class="step-number">4</div>
-                                <div class="step-content">
-                                    <h4>Repeat and Take Longer Breaks</h4>
-                                    <p>After 4 cycles, take a 15-30 minute break</p>
-                                </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Repeat and Take Longer Breaks</h4>
+                                <p>After 4 cycles, take a 15-30 minute break</p>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="technique-benefits">
-                        <h3>Benefits</h3>
-                        <ul>
-                            <li>🎯 <strong>Better Focus</strong> - Eliminates distractions during work periods</li>
-                            <li>⚡ <strong>Increased Productivity</strong> - Makes large tasks feel more manageable</li>
-                            <li>🧠 <strong>Reduced Mental Fatigue</strong> - Regular breaks keep your mind fresh</li>
-                            <li>📈 <strong>Improved Estimation</strong> - Learn how long tasks actually take</li>
-                            <li>🏆 <strong>Sense of Accomplishment</strong> - Complete cycles give you momentum</li>
-                        </ul>
+                </div>
+                
+                <div class="technique-benefits">
+                    <h3>Benefits</h3>
+                    <div class="benefits-grid">
+                        <div class="benefit-card">
+                            <div class="benefit-icon">🎯</div>
+                            <h4>Better Focus</h4>
+                            <p>Eliminates distractions during work periods</p>
+                        </div>
+                        
+                        <div class="benefit-card">
+                            <div class="benefit-icon">⚡</div>
+                            <h4>Increased Productivity</h4>
+                            <p>Makes large tasks feel more manageable</p>
+                        </div>
+                        
+                        <div class="benefit-card">
+                            <div class="benefit-icon">🧠</div>
+                            <h4>Reduced Mental Fatigue</h4>
+                            <p>Regular breaks keep your mind fresh</p>
+                        </div>
+                        
+                        <div class="benefit-card">
+                            <div class="benefit-icon">📈</div>
+                            <h4>Improved Estimation</h4>
+                            <p>Learn how long tasks actually take</p>
+                        </div>
+                        
+                        <div class="benefit-card">
+                            <div class="benefit-icon">🏆</div>
+                            <h4>Sense of Accomplishment</h4>
+                            <p>Complete cycles give you momentum</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -268,7 +290,7 @@
             });
         }, observerOptions);
 
-        document.querySelectorAll('.feature-card, .step').forEach(el => {
+        document.querySelectorAll('.feature-card, .step, .benefit-card').forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(20px)';
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
