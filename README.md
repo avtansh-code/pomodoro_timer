@@ -61,9 +61,8 @@ PomodoroTimer/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- **Xcode 15.0+**
-- **iOS 17.0+**
-- **macOS Sonoma** (for development)
+- **Xcode 16.0+** (Xcode 26.0.1 recommended)
+- **iOS 18.0+** (Optimized for iOS 18 and iPhone 17)
 
 ### Installation
 
@@ -110,7 +109,37 @@ PomodoroTimer/
 2. View your streak, daily stats, and weekly progress
 3. See motivational quotes to stay inspired
 
-## 🔧 Technical Details
+## 📱 iOS 18 & iPhone 17 Support
+
+This app is **fully optimized for iOS 18** and the **iPhone 17** lineup:
+
+### iOS 18 Features
+- ✅ **CloudKit API Updates** - Updated to use iOS 18's new Result-based fetch APIs
+- ✅ **Swift 6 Ready** - Uses modern concurrency patterns with strict sendability
+- ✅ **Latest SDK** - Built with iPhone SDK 26.0 for optimal performance
+- ✅ **Modern SwiftUI** - Leverages iOS 18 SwiftUI enhancements
+- ✅ **App Intents** - Full Siri shortcuts integration with iOS 18 improvements
+
+### iPhone 17 Compatibility
+- 📱 **iPhone 17** - Full support for standard model
+- 📱 **iPhone 17 Pro** - Optimized for Pro features
+- 📱 **iPhone 17 Pro Max** - Large screen layouts
+- 📱 **iPhone Air** - Lightweight experience optimized
+
+### Device Requirements
+- **Minimum**: iOS 18.0
+- **Deployment Target**: iOS 18.0
+- **Recommended**: iOS 18.6 or later
+- **Simulators**: Xcode includes iPhone 17 simulators (iOS 26.0)
+
+### Build Configuration
+The project is configured with:
+- `IPHONEOS_DEPLOYMENT_TARGET = 18.0`
+- `SDKROOT = iPhoneOS26.0`
+- `TARGETED_DEVICE_FAMILY = 1,2` (iPhone and iPad)
+- Swift 5.0+ with modern concurrency features enabled
+
+## � Technical Details
 
 ### Data Persistence
 - **UserDefaults** - Stores user settings and session history
@@ -140,7 +169,7 @@ PomodoroTimer/
 - **Apple HIG Compliance** - Follows iOS Human Interface Guidelines
 - **Accessibility First** - Designed to be usable by everyone
 
-## 🗣️ Siri Shortcuts
+## �🗣️ Siri Shortcuts
 
 Control your Pomodoro timer hands-free using Siri or the Shortcuts app!
 

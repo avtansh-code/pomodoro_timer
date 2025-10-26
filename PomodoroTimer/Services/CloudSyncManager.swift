@@ -109,39 +109,48 @@ class CloudSyncManager: ObservableObject {
         let query = CKQuery(recordType: "Settings", predicate: NSPredicate(value: true))
         query.sortDescriptors = [NSSortDescriptor(key: "lastModified", ascending: false)]
         
-        privateDatabase.perform(query, inZoneWith: nil) { records, error in
-            if let error = error {
+        privateDatabase.fetch(withQuery: query, inZoneWith: nil, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
+            switch result {
+            case .success(let (matchResults, _)):
+                guard let firstMatch = matchResults.first else {
+                    DispatchQueue.main.async {
+                        completion(nil)
+                    }
+                    return
+                }
+                
+                switch firstMatch.1 {
+                case .success(let record):
+            
+                    let settings = TimerSettings(
+                        focusDuration: record["focusDuration"] as? TimeInterval ?? 25 * 60,
+                        shortBreakDuration: record["shortBreakDuration"] as? TimeInterval ?? 5 * 60,
+                        longBreakDuration: record["longBreakDuration"] as? TimeInterval ?? 15 * 60,
+                        sessionsUntilLongBreak: record["sessionsUntilLongBreak"] as? Int ?? 4,
+                        autoStartBreaks: record["autoStartBreaks"] as? Bool ?? false,
+                        autoStartFocus: record["autoStartFocus"] as? Bool ?? false,
+                        soundEnabled: record["soundEnabled"] as? Bool ?? true,
+                        hapticEnabled: record["hapticEnabled"] as? Bool ?? true,
+                        notificationsEnabled: record["notificationsEnabled"] as? Bool ?? true,
+                        selectedTheme: TimerSettings.AppTheme(rawValue: record["selectedTheme"] as? String ?? "System") ?? .system,
+                        focusModeEnabled: record["focusModeEnabled"] as? Bool ?? false,
+                        syncWithFocusMode: record["syncWithFocusMode"] as? Bool ?? false
+                    )
+                    
+                    DispatchQueue.main.async {
+                        completion(settings)
+                    }
+                case .failure(let error):
+                    print("Fetch settings record error: \(error)")
+                    DispatchQueue.main.async {
+                        completion(nil)
+                    }
+                }
+            case .failure(let error):
                 print("Fetch settings error: \(error)")
                 DispatchQueue.main.async {
                     completion(nil)
                 }
-                return
-            }
-            
-            guard let record = records?.first else {
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
-                return
-            }
-            
-            let settings = TimerSettings(
-                focusDuration: record["focusDuration"] as? TimeInterval ?? 25 * 60,
-                shortBreakDuration: record["shortBreakDuration"] as? TimeInterval ?? 5 * 60,
-                longBreakDuration: record["longBreakDuration"] as? TimeInterval ?? 15 * 60,
-                sessionsUntilLongBreak: record["sessionsUntilLongBreak"] as? Int ?? 4,
-                autoStartBreaks: record["autoStartBreaks"] as? Bool ?? false,
-                autoStartFocus: record["autoStartFocus"] as? Bool ?? false,
-                soundEnabled: record["soundEnabled"] as? Bool ?? true,
-                hapticEnabled: record["hapticEnabled"] as? Bool ?? true,
-                notificationsEnabled: record["notificationsEnabled"] as? Bool ?? true,
-                selectedTheme: TimerSettings.AppTheme(rawValue: record["selectedTheme"] as? String ?? "System") ?? .system,
-                focusModeEnabled: record["focusModeEnabled"] as? Bool ?? false,
-                syncWithFocusMode: record["syncWithFocusMode"] as? Bool ?? false
-            )
-            
-            DispatchQueue.main.async {
-                completion(settings)
             }
         }
     }
@@ -178,35 +187,36 @@ class CloudSyncManager: ObservableObject {
         let query = CKQuery(recordType: "Session", predicate: NSPredicate(value: true))
         query.sortDescriptors = [NSSortDescriptor(key: "completedAt", ascending: false)]
         
-        privateDatabase.perform(query, inZoneWith: nil) { records, error in
-            if let error = error {
+        privateDatabase.fetch(withQuery: query, inZoneWith: nil, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
+            switch result {
+            case .success(let (matchResults, _)):
+                let sessions = matchResults.compactMap { matchResult -> TimerSession? in
+                    guard case .success(let record) = matchResult.1,
+                          let sessionIdString = record["sessionId"] as? String,
+                          let sessionId = UUID(uuidString: sessionIdString),
+                          let typeString = record["type"] as? String,
+                          let type = SessionType(rawValue: typeString),
+                          let duration = record["duration"] as? TimeInterval,
+                          let completedAt = record["completedAt"] as? Date else {
+                        return nil
+                    }
+                    
+                    return TimerSession(
+                        id: sessionId,
+                        type: type,
+                        duration: duration,
+                        completedAt: completedAt
+                    )
+                }
+                
+                DispatchQueue.main.async {
+                    completion(sessions)
+                }
+            case .failure(let error):
                 print("Fetch sessions error: \(error)")
                 DispatchQueue.main.async {
                     completion([])
                 }
-                return
-            }
-            
-            let sessions = (records ?? []).compactMap { record -> TimerSession? in
-                guard let sessionIdString = record["sessionId"] as? String,
-                      let sessionId = UUID(uuidString: sessionIdString),
-                      let typeString = record["type"] as? String,
-                      let type = SessionType(rawValue: typeString),
-                      let duration = record["duration"] as? TimeInterval,
-                      let completedAt = record["completedAt"] as? Date else {
-                    return nil
-                }
-                
-                return TimerSession(
-                    id: sessionId,
-                    type: type,
-                    duration: duration,
-                    completedAt: completedAt
-                )
-            }
-            
-            DispatchQueue.main.async {
-                completion(sessions)
             }
         }
     }
@@ -264,13 +274,18 @@ class CloudSyncManager: ObservableObject {
         
         // Delete all settings
         let settingsQuery = CKQuery(recordType: "Settings", predicate: NSPredicate(value: true))
-        privateDatabase.perform(settingsQuery, inZoneWith: nil) { [weak self] records, error in
-            guard let self = self, let records = records else {
+        privateDatabase.fetch(withQuery: settingsQuery, inZoneWith: nil, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { [weak self] result in
+            guard let self = self else {
                 DispatchQueue.main.async { completion(false) }
                 return
             }
             
-            let recordIDs = records.map { $0.recordID }
+            guard case .success(let (matchResults, _)) = result else {
+                DispatchQueue.main.async { completion(false) }
+                return
+            }
+            
+            let recordIDs = matchResults.map { $0.0 }
             let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIDs)
             
             operation.modifyRecordsResultBlock = { result in
@@ -284,13 +299,18 @@ class CloudSyncManager: ObservableObject {
     
     private func deleteAllSessions(completion: @escaping (Bool) -> Void) {
         let sessionsQuery = CKQuery(recordType: "Session", predicate: NSPredicate(value: true))
-        privateDatabase.perform(sessionsQuery, inZoneWith: nil) { [weak self] records, error in
-            guard let self = self, let records = records else {
+        privateDatabase.fetch(withQuery: sessionsQuery, inZoneWith: nil, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { [weak self] result in
+            guard let self = self else {
                 DispatchQueue.main.async { completion(false) }
                 return
             }
             
-            let recordIDs = records.map { $0.recordID }
+            guard case .success(let (matchResults, _)) = result else {
+                DispatchQueue.main.async { completion(false) }
+                return
+            }
+            
+            let recordIDs = matchResults.map { $0.0 }
             let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIDs)
             
             operation.modifyRecordsResultBlock = { result in
