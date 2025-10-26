@@ -173,15 +173,47 @@ You can also start a Pomodoro with a custom duration:
 - **Deep Work**: Start Pomodoro → Enable Do Not Disturb → Open IDE
 - **Quick Break**: Show stats → Start break timer
 
+## 📱 Home Screen Widgets
+
+Track your focus sessions at a glance with beautiful widgets!
+
+### Available Widget Sizes
+
+- **Small Widget**: Current timer countdown with session type indicator
+- **Medium Widget**: Timer + today's completed sessions + focus time
+- **Large Widget**: Timer + daily stats + streak counter
+
+### Lock Screen Widgets (iOS 16+)
+
+- **Circular**: Compact timer display
+- **Rectangular**: Timer with session type
+- **Inline**: Text-only status
+
+### Widget Features
+
+✅ Live timer updates (every 10 seconds when running)
+✅ Daily session count and focus time
+✅ Current streak tracking
+✅ Color-coded session types
+✅ Battery efficient with smart refresh intervals
+
+### Setup Instructions
+
+Widgets require additional Xcode configuration. See **[WIDGET_SETUP_GUIDE.md](WIDGET_SETUP_GUIDE.md)** for detailed setup instructions including:
+- App Groups configuration
+- Widget Extension target creation
+- Complete widget code
+- Troubleshooting tips
+
 ## 📝 Future Enhancements
 
 Potential features for future versions:
 - ⌚ Apple Watch companion app
 - ☁️ iCloud sync across devices
 - 🎯 Focus Mode API integration
-- 📊 More detailed analytics and charts
+- 📊 More detailed analytics with Charts framework
 - 🏆 Achievement system and badges
-- 📱 WidgetKit support for home screen
+- 🎯 Live Activities support (iOS 16.1+)
 
 ## 🔒 Privacy
 
