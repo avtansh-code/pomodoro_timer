@@ -2,12 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPrivacyPolicyURL</key>
-	<string>https://www.mrpomodoro.in/privacy.html</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>remote-notification</string>
-	</array>
+<key>NSPrivacyPolicyURL</key>
+<string>https://www.mrpomodoro.in/privacy.html</string>
+<key>UIBackgroundModes</key>
+<array>
+<string>fetch</string>
+<string>remote-notification</string>
+</array>
+<key>UISupportedInterfaceOrientations</key>
+<array>
+<string>UIInterfaceOrientationPortrait</string>
+<string>UIInterfaceOrientationPortraitUpsideDown</string>
+<string>UIInterfaceOrientationLandscapeLeft</string>
+<string>UIInterfaceOrientationLandscapeRight</string>
+</array>
 </dict>
 </plist>
