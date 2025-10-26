@@ -169,6 +169,18 @@ The project is configured with:
 - **Apple HIG Compliance** - Follows iOS Human Interface Guidelines
 - **Accessibility First** - Designed to be usable by everyone
 
+### 🖼️ Splash Screen
+
+The app features a beautiful, professionally designed splash screen:
+
+- **Warm Gradient Background** - Red to orange gradient matching the Pomodoro theme
+- **Centered Tomato Icon** - Clean, minimalist timer icon with subtle clock elements
+- **"FocusFlow" Branding** - Elegant typography with tagline
+- **Dark Mode Support** - Automatically adapts to system appearance
+- **Universal Sizing** - Optimized for all iPhone and iPad devices
+
+**Setup Guide**: See [docs/SPLASH_SCREEN_SETUP.md](docs/SPLASH_SCREEN_SETUP.md) for customization instructions.
+
 ## �🗣️ Siri Shortcuts
 
 Control your Pomodoro timer hands-free using Siri or the Shortcuts app!

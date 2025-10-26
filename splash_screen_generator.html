@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFlow Splash Screen Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .canvas-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        button {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        button:hover {
+            background: #0051D5;
+        }
+        
+        .mode-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .mode-button {
+            flex: 1;
+            background: #e5e5ea;
+            color: #000;
+        }
+        
+        .mode-button.active {
+            background: #007AFF;
+            color: white;
+        }
+        
+        h1 {
+            margin: 0 0 20px 0;
+            color: #1d1d1f;
+            font-size: 28px;
+        }
+        
+        .info {
+            background: #f5f5f7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .preview-size {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <h1>🍅 FocusFlow Splash Screen Generator</h1>
+        <div class="mode-toggle">
+            <button class="mode-button active" onclick="switchMode('light')">Light Mode</button>
+            <button class="mode-button" onclick="switchMode('dark')">Dark Mode</button>
+        </div>
+        <div class="info">
+            <strong>Instructions:</strong><br>
+            1. Choose Light or Dark mode<br>
+            2. Click "Download Splash Screen" to save the image<br>
+            3. Repeat for both modes<br>
+            4. Add the images to your Xcode Assets catalog
+        </div>
+    </div>
+    
+    <div class="canvas-container">
+        <div class="preview-size">Preview (actual size: 2732×2732 px)</div>
+        <canvas id="splashCanvas" width="2732" height="2732"></canvas>
+        <button onclick="downloadImage()">Download Splash Screen</button>
+    </div>
+
+    <script>
+        let currentMode = 'light';
+        const canvas = document.getElementById('splashCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawSplashScreen(mode) {
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw gradient background
+            const gradient = ctx.createLinearGradient(0, 0, 0, height);
+            if (mode === 'light') {
+                gradient.addColorStop(0, '#FF6347');  // Tomato red
+                gradient.addColorStop(1, '#FF8855');  // Warm orange
+            } else {
+                gradient.addColorStop(0, '#8B0000');  // Dark red
+                gradient.addColorStop(1, '#2D1B1B');  // Deep charcoal
+            }
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+            
+            // Add subtle radial glow from center
+            const radialGradient = ctx.createRadialGradient(
+                width/2, height/2, 0,
+                width/2, height/2, width/2
+            );
+            radialGradient.addColorStop(0, 'rgba(255, 255, 255, 0.15)');
+            radialGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.05)');
+            radialGradient.addColorStop(1, 'rgba(0, 0, 0, 0.1)');
+            ctx.fillStyle = radialGradient;
+            ctx.fillRect(0, 0, width, height);
+            
+            // Draw tomato icon (simplified)
+            const centerX = width / 2;
+            const centerY = height / 2 - 200;
+            const radius = 400;
+            
+            // Tomato body
+            ctx.fillStyle = mode === 'light' ? '#FFFFFF' : '#F5F5F5';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Add subtle shadow to tomato
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY + 20, radius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Redraw tomato body on top
+            ctx.fillStyle = mode === 'light' ? '#FFFFFF' : '#F5F5F5';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw tomato stem/leaves
+            ctx.fillStyle = mode === 'light' ? '#FFFFFF' : '#F5F5F5';
+            ctx.beginPath();
+            ctx.moveTo(centerX - 80, centerY - radius + 50);
+            ctx.bezierCurveTo(
+                centerX - 100, centerY - radius - 50,
+                centerX - 50, centerY - radius - 100,
+                centerX, centerY - radius
+            );
+            ctx.bezierCurveTo(
+                centerX + 50, centerY - radius - 100,
+                centerX + 100, centerY - radius - 50,
+                centerX + 80, centerY - radius + 50
+            );
+            ctx.closePath();
+            ctx.fill();
+            
+            // Draw timer segments on tomato
+            ctx.strokeStyle = mode === 'light' ? 'rgba(255, 99, 71, 0.3)' : 'rgba(139, 0, 0, 0.4)';
+            ctx.lineWidth = 30;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius - 80, -Math.PI/2, -Math.PI/2 + (Math.PI * 1.5), false);
+            ctx.stroke();
+            
+            // Draw clock hand
+            ctx.strokeStyle = mode === 'light' ? 'rgba(255, 99, 71, 0.5)' : 'rgba(139, 0, 0, 0.6)';
+            ctx.lineWidth = 25;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX, centerY - radius + 120);
+            ctx.stroke();
+            
+            // Draw center dot
+            ctx.fillStyle = mode === 'light' ? 'rgba(255, 99, 71, 0.5)' : 'rgba(139, 0, 0, 0.6)';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 40, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw app name "FocusFlow"
+            ctx.fillStyle = mode === 'light' ? '#FFFFFF' : '#F5F5F5';
+            ctx.font = '600 180px -apple-system, SF Pro Rounded, system-ui, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Add subtle text shadow
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetY = 10;
+            
+            ctx.fillText('FocusFlow', centerX, centerY + 600);
+            
+            // Reset shadow
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetY = 0;
+            
+            // Draw tagline
+            ctx.font = '400 80px -apple-system, SF Pro, system-ui, sans-serif';
+            ctx.fillStyle = mode === 'light' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(245, 245, 245, 0.8)';
+            ctx.fillText('Stay Focused, Stay Productive', centerX, centerY + 750);
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // Update button states
+            document.querySelectorAll('.mode-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Redraw splash screen
+            drawSplashScreen(mode);
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            const filename = currentMode === 'light' ? 'splash_screen_light.png' : 'splash_screen_dark.png';
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Initial draw
+        drawSplashScreen('light');
+    </script>
+</body>
+</html>

@@ -71,10 +71,9 @@ class CloudSyncManager: ObservableObject {
     private func performAutomaticSync() {
         guard isCloudAvailable, !isSyncing else { return }
         
-        // Sync settings if they exist
-        if let settings = PersistenceManager.shared.loadSettings() as? TimerSettings {
-            syncSettings(settings)
-        }
+        // Sync settings
+        let settings = PersistenceManager.shared.loadSettings()
+        syncSettings(settings)
         
         // Sync all sessions
         let sessions = PersistenceManager.shared.getAllSessions()

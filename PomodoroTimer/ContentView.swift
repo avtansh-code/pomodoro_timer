@@ -55,6 +55,7 @@ struct ContentView: View {
         .preferredColorScheme(timerManager.settings.selectedTheme.colorScheme)
         .sheet(isPresented: $showSettings) {
             SettingsView(timerManager: timerManager)
+                .preferredColorScheme(timerManager.settings.selectedTheme.colorScheme)
         }
         .sheet(isPresented: $showStatistics) {
             StatisticsView(timerManager: timerManager)

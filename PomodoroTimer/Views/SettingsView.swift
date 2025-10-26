@@ -255,8 +255,6 @@ struct SettingsView: View {
                 }
             }
         }
-        .preferredColorScheme(timerManager.settings.selectedTheme.colorScheme)
-        .id(timerManager.settings.selectedTheme)
     }
     
     private func saveSettings() {
