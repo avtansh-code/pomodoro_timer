@@ -9,6 +9,8 @@ import Foundation
 import Combine
 import UserNotifications
 import AVFoundation
+import UIKit
+import AudioToolbox
 
 enum TimerState: Sendable, Equatable {
     case idle
@@ -399,6 +401,3 @@ class TimerManager: ObservableObject {
         NotificationCenter.default.removeObserver(self)
     }
 }
-
-import UIKit
-import AudioToolbox

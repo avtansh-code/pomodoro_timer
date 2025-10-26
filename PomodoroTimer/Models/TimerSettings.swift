@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
+@MainActor
 class TimerSettings: ObservableObject, Codable {
     @Published var focusDuration: TimeInterval
     @Published var shortBreakDuration: TimeInterval
@@ -101,22 +102,20 @@ class TimerSettings: ObservableObject, Codable {
         iCloudSyncEnabled = try container.decodeIfPresent(Bool.self, forKey: .iCloudSyncEnabled) ?? false
     }
     
-    nonisolated func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try MainActor.assumeIsolated {
-            try container.encode(focusDuration, forKey: .focusDuration)
-            try container.encode(shortBreakDuration, forKey: .shortBreakDuration)
-            try container.encode(longBreakDuration, forKey: .longBreakDuration)
-            try container.encode(sessionsUntilLongBreak, forKey: .sessionsUntilLongBreak)
-            try container.encode(autoStartBreaks, forKey: .autoStartBreaks)
-            try container.encode(autoStartFocus, forKey: .autoStartFocus)
-            try container.encode(soundEnabled, forKey: .soundEnabled)
-            try container.encode(hapticEnabled, forKey: .hapticEnabled)
-            try container.encode(notificationsEnabled, forKey: .notificationsEnabled)
-            try container.encode(selectedTheme, forKey: .selectedTheme)
-            try container.encode(focusModeEnabled, forKey: .focusModeEnabled)
-            try container.encode(syncWithFocusMode, forKey: .syncWithFocusMode)
-            try container.encode(iCloudSyncEnabled, forKey: .iCloudSyncEnabled)
-        }
+        try container.encode(focusDuration, forKey: .focusDuration)
+        try container.encode(shortBreakDuration, forKey: .shortBreakDuration)
+        try container.encode(longBreakDuration, forKey: .longBreakDuration)
+        try container.encode(sessionsUntilLongBreak, forKey: .sessionsUntilLongBreak)
+        try container.encode(autoStartBreaks, forKey: .autoStartBreaks)
+        try container.encode(autoStartFocus, forKey: .autoStartFocus)
+        try container.encode(soundEnabled, forKey: .soundEnabled)
+        try container.encode(hapticEnabled, forKey: .hapticEnabled)
+        try container.encode(notificationsEnabled, forKey: .notificationsEnabled)
+        try container.encode(selectedTheme, forKey: .selectedTheme)
+        try container.encode(focusModeEnabled, forKey: .focusModeEnabled)
+        try container.encode(syncWithFocusMode, forKey: .syncWithFocusMode)
+        try container.encode(iCloudSyncEnabled, forKey: .iCloudSyncEnabled)
     }
 }

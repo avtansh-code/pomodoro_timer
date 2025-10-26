@@ -65,6 +65,7 @@ struct MainTimerView: View {
                         .cornerRadius(28)
                     }
                     .accessibilityLabel("Start timer")
+                    .accessibilityIdentifier("startTimerButton")
                     
                 } else if timerManager.timerState == .running {
                     // Pause Button
@@ -82,6 +83,7 @@ struct MainTimerView: View {
                         .cornerRadius(28)
                     }
                     .accessibilityLabel("Pause timer")
+                    .accessibilityIdentifier("pauseTimerButton")
                     
                 } else {
                     // Resume Button
@@ -99,6 +101,7 @@ struct MainTimerView: View {
                         .cornerRadius(28)
                     }
                     .accessibilityLabel("Resume timer")
+                    .accessibilityIdentifier("resumeTimerButton")
                 }
                 
                 // Reset Button
@@ -116,6 +119,7 @@ struct MainTimerView: View {
                     .cornerRadius(28)
                 }
                 .accessibilityLabel("Reset timer")
+                .accessibilityIdentifier("resetTimerButton")
             }
             
             // Skip Button
@@ -130,6 +134,7 @@ struct MainTimerView: View {
                 .foregroundColor(.secondary)
             }
             .accessibilityLabel("Skip to \(nextSessionName)")
+            .accessibilityIdentifier("skipSessionButton")
             
             Spacer()
         }

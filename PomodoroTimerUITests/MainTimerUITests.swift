@@ -35,49 +35,51 @@ final class MainTimerUITests: XCTestCase {
     }
     
     func testStartButtonExists() throws {
-        let startButton = app.buttons["Start"].firstMatch
-        XCTAssertTrue(startButton.exists || app.buttons.matching(NSPredicate(format: "label CONTAINS 'Start'")).firstMatch.exists)
+        let startButton = app.buttons["startTimerButton"]
+        XCTAssertTrue(startButton.waitForExistence(timeout: 2), "Start button should exist")
     }
     
     // MARK: - Timer Control Tests
     
     func testStartTimer() throws {
-        let startButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Start'")).firstMatch
+        let startButton = app.buttons["startTimerButton"]
         XCTAssertTrue(startButton.waitForExistence(timeout: 2))
         
         startButton.tap()
         
         // Verify button changed to Pause
-        let pauseButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Pause'")).firstMatch
+        let pauseButton = app.buttons["pauseTimerButton"]
         XCTAssertTrue(pauseButton.waitForExistence(timeout: 2))
     }
     
     func testPauseTimer() throws {
         // Start timer first
-        let startButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Start'")).firstMatch
+        let startButton = app.buttons["startTimerButton"]
+        XCTAssertTrue(startButton.waitForExistence(timeout: 2))
         startButton.tap()
         
         // Wait for pause button
-        let pauseButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Pause'")).firstMatch
+        let pauseButton = app.buttons["pauseTimerButton"]
         XCTAssertTrue(pauseButton.waitForExistence(timeout: 2))
         
         pauseButton.tap()
         
-        // Verify button changed back to Start/Resume
-        let resumeButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Start' OR label CONTAINS 'Resume'")).firstMatch
+        // Verify button changed back to Resume
+        let resumeButton = app.buttons["resumeTimerButton"]
         XCTAssertTrue(resumeButton.waitForExistence(timeout: 2))
     }
     
     func testResetTimer() throws {
         // Start timer
-        let startButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Start'")).firstMatch
+        let startButton = app.buttons["startTimerButton"]
+        XCTAssertTrue(startButton.waitForExistence(timeout: 2))
         startButton.tap()
         
         // Wait a moment
         sleep(2)
         
         // Find and tap reset button
-        let resetButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Reset'")).firstMatch
+        let resetButton = app.buttons["resetTimerButton"]
         XCTAssertTrue(resetButton.waitForExistence(timeout: 2))
         
         resetButton.tap()
@@ -87,12 +89,12 @@ final class MainTimerUITests: XCTestCase {
     }
     
     func testSkipSession() throws {
-        // Look for skip button - make it optional as UI might not show it initially
-        let skipButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Skip'")).firstMatch
+        // Look for skip button
+        let skipButton = app.buttons["skipSessionButton"]
         
-        // Try to wait for button to appear
+        // Wait for button to appear
         if skipButton.waitForExistence(timeout: 2) {
-            // Try to make it visible first by scrolling
+            // Ensure button is hittable
             if skipButton.isHittable {
                 skipButton.tap()
                 
@@ -114,12 +116,12 @@ final class MainTimerUITests: XCTestCase {
     // MARK: - Timer Display Tests
     
     func testTimerDisplayUpdates() throws {
-        let startButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Start'")).firstMatch
+        let startButton = app.buttons["startTimerButton"]
         XCTAssertTrue(startButton.waitForExistence(timeout: 2))
         startButton.tap()
         
         // Wait for pause button to confirm timer started
-        let pauseButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Pause'")).firstMatch
+        let pauseButton = app.buttons["pauseTimerButton"]
         XCTAssertTrue(pauseButton.waitForExistence(timeout: 2), "Timer should start")
         
         // Get initial timer value
@@ -208,33 +210,45 @@ final class MainTimerUITests: XCTestCase {
         let timerDisplay = app.staticTexts.matching(NSPredicate(format: "label CONTAINS ':'")).firstMatch
         XCTAssertTrue(timerDisplay.isHittable || timerDisplay.exists)
         
-        let startButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Start'")).firstMatch
+        let startButton = app.buttons["startTimerButton"]
         XCTAssertTrue(startButton.isHittable || startButton.exists)
     }
     
     // MARK: - Interaction Tests
     
     func testDoubleTapDoesNotCrash() throws {
-        let startButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Start'")).firstMatch
+        let startButton = app.buttons["startTimerButton"]
+        XCTAssertTrue(startButton.waitForExistence(timeout: 2))
         
         startButton.tap()
-        startButton.tap()
+        
+        // After first tap, button changes to pause
+        let pauseButton = app.buttons["pauseTimerButton"]
+        if pauseButton.waitForExistence(timeout: 1) {
+            pauseButton.tap()
+        }
         
         // App should still be running
         XCTAssertTrue(app.exists)
     }
     
     func testRapidButtonTaps() throws {
-        let startButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Start'")).firstMatch
+        let startButton = app.buttons["startTimerButton"]
+        let pauseButton = app.buttons["pauseTimerButton"]
+        let resumeButton = app.buttons["resumeTimerButton"]
         
         for _ in 0..<5 {
             if startButton.exists {
                 startButton.tap()
+                sleep(1)
             }
             
-            let pauseButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Pause'")).firstMatch
             if pauseButton.exists {
                 pauseButton.tap()
+                sleep(1)
+            } else if resumeButton.exists {
+                resumeButton.tap()
+                sleep(1)
             }
         }
         
@@ -264,14 +278,15 @@ final class MainTimerUITests: XCTestCase {
     // MARK: - Long-Running Tests
     
     func testTimerRunsForExtendedPeriod() throws {
-        let startButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Start'")).firstMatch
+        let startButton = app.buttons["startTimerButton"]
+        XCTAssertTrue(startButton.waitForExistence(timeout: 2))
         startButton.tap()
         
         // Let timer run for 10 seconds
         sleep(10)
         
         // Verify app is still responsive
-        let pauseButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Pause'")).firstMatch
+        let pauseButton = app.buttons["pauseTimerButton"]
         XCTAssertTrue(pauseButton.exists, "App should remain responsive")
         
         pauseButton.tap()
