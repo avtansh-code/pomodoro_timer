@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Charts
 
 struct StatisticsView: View {
     @ObservedObject var timerManager: TimerManager
@@ -13,14 +14,47 @@ struct StatisticsView: View {
     
     @State private var todaySessions: [TimerSession] = []
     @State private var weeklySessions: [TimerSession] = []
+    @State private var monthlySessions: [TimerSession] = []
+    @State private var allSessions: [TimerSession] = []
     @State private var currentStreak: Int = 0
+    @State private var selectedTimeRange: TimeRange = .week
+    
+    enum TimeRange: String, CaseIterable {
+        case week = "Week"
+        case month = "Month"
+        case all = "All Time"
+    }
     
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 24) {
+                    // Time Range Picker
+                    Picker("Time Range", selection: $selectedTimeRange) {
+                        ForEach(TimeRange.allCases, id: \.self) { range in
+                            Text(range.rawValue).tag(range)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal)
+                    
                     // Current Streak Card
                     StreakCard(streak: currentStreak)
+                    
+                    // Weekly Sessions Chart
+                    if #available(iOS 16.0, *) {
+                        WeeklySessionsChart(sessions: currentSessions)
+                    }
+                    
+                    // Focus Time Trend Chart
+                    if #available(iOS 16.0, *) {
+                        FocusTimeTrendChart(sessions: currentSessions)
+                    }
+                    
+                    // Session Type Distribution
+                    if #available(iOS 16.0, *) {
+                        SessionTypeDistributionChart(sessions: currentSessions)
+                    }
                     
                     // Today's Stats
                     StatsSection(
@@ -29,10 +63,10 @@ struct StatisticsView: View {
                         icon: "calendar"
                     )
                     
-                    // Weekly Stats
+                    // Summary Stats based on selected range
                     StatsSection(
-                        title: "This Week",
-                        sessions: weeklySessions,
+                        title: selectedTimeRange.rawValue,
+                        sessions: currentSessions,
                         icon: "calendar.badge.clock"
                     )
                     
@@ -53,15 +87,255 @@ struct StatisticsView: View {
             .onAppear {
                 loadStatistics()
             }
+            .onChange(of: selectedTimeRange) { oldValue, newValue in
+                // Stats will update automatically through computed property
+            }
+        }
+    }
+    
+    private var currentSessions: [TimerSession] {
+        switch selectedTimeRange {
+        case .week:
+            return weeklySessions
+        case .month:
+            return monthlySessions
+        case .all:
+            return allSessions
         }
     }
     
     private func loadStatistics() {
         todaySessions = PersistenceManager.shared.getTodaySessions()
         weeklySessions = PersistenceManager.shared.getWeeklySessions()
+        monthlySessions = PersistenceManager.shared.getMonthlySessions()
+        allSessions = PersistenceManager.shared.getAllSessions()
         currentStreak = PersistenceManager.shared.getCurrentStreak()
     }
 }
+
+// MARK: - Weekly Sessions Chart
+
+@available(iOS 16.0, *)
+struct WeeklySessionsChart: View {
+    let sessions: [TimerSession]
+    
+    private var dailyData: [(day: String, count: Int)] {
+        let calendar = Calendar.current
+        let today = Date()
+        var data: [(String, Int)] = []
+        
+        // Get last 7 days
+        for i in 0..<7 {
+            guard let date = calendar.date(byAdding: .day, value: -i, to: today) else { continue }
+            let dayName = calendar.shortWeekdaySymbols[calendar.component(.weekday, from: date) - 1]
+            let sessionsOnDay = sessions.filter { calendar.isDate($0.completedAt, inSameDayAs: date) }.count
+            data.append((dayName, sessionsOnDay))
+        }
+        
+        return data.reversed()
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "chart.bar.fill")
+                    .foregroundColor(.blue)
+                Text("Sessions per Day")
+                    .font(.title2)
+                    .fontWeight(.bold)
+            }
+            
+            Chart(dailyData, id: \.day) { item in
+                BarMark(
+                    x: .value("Day", item.day),
+                    y: .value("Sessions", item.count)
+                )
+                .foregroundStyle(Color.blue.gradient)
+                .cornerRadius(8)
+            }
+            .frame(height: 200)
+            .chartYAxis {
+                AxisMarks(position: .leading)
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemGray6))
+        )
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Bar chart showing sessions per day for the past week")
+    }
+}
+
+// MARK: - Focus Time Trend Chart
+
+@available(iOS 16.0, *)
+struct FocusTimeTrendChart: View {
+    let sessions: [TimerSession]
+    
+    private var trendData: [(date: Date, minutes: Double)] {
+        let calendar = Calendar.current
+        let today = Date()
+        var data: [(Date, Double)] = []
+        
+        // Get last 7 days
+        for i in 0..<7 {
+            guard let date = calendar.date(byAdding: .day, value: -i, to: today) else { continue }
+            let focusTime = sessions
+                .filter { $0.type == .focus && calendar.isDate($0.completedAt, inSameDayAs: date) }
+                .reduce(0.0) { $0 + $1.duration }
+            data.append((date, focusTime / 60.0)) // Convert to minutes
+        }
+        
+        return data.reversed()
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "chart.line.uptrend.xyaxis")
+                    .foregroundColor(.red)
+                Text("Focus Time Trend")
+                    .font(.title2)
+                    .fontWeight(.bold)
+            }
+            
+            if trendData.allSatisfy({ $0.minutes == 0 }) {
+                Text("No focus sessions yet")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 80)
+            } else {
+                Chart(trendData, id: \.date) { item in
+                    LineMark(
+                        x: .value("Date", item.date, unit: .day),
+                        y: .value("Minutes", item.minutes)
+                    )
+                    .foregroundStyle(Color.red.gradient)
+                    .interpolationMethod(.catmullRom)
+                    
+                    AreaMark(
+                        x: .value("Date", item.date, unit: .day),
+                        y: .value("Minutes", item.minutes)
+                    )
+                    .foregroundStyle(Color.red.opacity(0.2).gradient)
+                    .interpolationMethod(.catmullRom)
+                }
+                .frame(height: 200)
+                .chartYAxis {
+                    AxisMarks(position: .leading) { value in
+                        AxisValueLabel {
+                            if let minutes = value.as(Double.self) {
+                                Text("\(Int(minutes))m")
+                            }
+                        }
+                    }
+                }
+                .chartXAxis {
+                    AxisMarks(values: .stride(by: .day)) { value in
+                        if let date = value.as(Date.self) {
+                            AxisValueLabel {
+                                Text(date, format: .dateTime.weekday(.abbreviated))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemGray6))
+        )
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Line chart showing focus time trend over the past week")
+    }
+}
+
+// MARK: - Session Type Distribution Chart
+
+@available(iOS 16.0, *)
+struct SessionTypeDistributionChart: View {
+    let sessions: [TimerSession]
+    
+    private var distributionData: [(type: String, count: Int, color: Color)] {
+        let focusCount = sessions.filter { $0.type == .focus }.count
+        let shortBreakCount = sessions.filter { $0.type == .shortBreak }.count
+        let longBreakCount = sessions.filter { $0.type == .longBreak }.count
+        
+        return [
+            ("Focus", focusCount, .red),
+            ("Short Break", shortBreakCount, .green),
+            ("Long Break", longBreakCount, .blue)
+        ].filter { $0.count > 0 }
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "chart.pie.fill")
+                    .foregroundColor(.purple)
+                Text("Session Distribution")
+                    .font(.title2)
+                    .fontWeight(.bold)
+            }
+            
+            if distributionData.isEmpty {
+                Text("No sessions yet")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 80)
+            } else {
+                HStack(spacing: 20) {
+                    // Pie Chart
+                    Chart(distributionData, id: \.type) { item in
+                        SectorMark(
+                            angle: .value("Count", item.count),
+                            innerRadius: .ratio(0.5),
+                            angularInset: 2
+                        )
+                        .foregroundStyle(item.color.gradient)
+                        .cornerRadius(4)
+                    }
+                    .frame(width: 120, height: 120)
+                    
+                    // Legend
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(distributionData, id: \.type) { item in
+                            HStack(spacing: 8) {
+                                Circle()
+                                    .fill(item.color)
+                                    .frame(width: 12, height: 12)
+                                
+                                Text(item.type)
+                                    .font(.caption)
+                                    .foregroundColor(.primary)
+                                
+                                Spacer()
+                                
+                                Text("\(item.count)")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
+                            }
+                        }
+                    }
+                }
+                .padding(.vertical, 8)
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemGray6))
+        )
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Pie chart showing distribution of session types")
+    }
+}
+
+// MARK: - Supporting Views
 
 struct StreakCard: View {
     let streak: Int

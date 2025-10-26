@@ -52,6 +52,20 @@ class PersistenceManager {
         }
     }
     
+    func getMonthlySessions() -> [TimerSession] {
+        let allSessions = loadAllSessions()
+        let calendar = Calendar.current
+        let monthAgo = calendar.date(byAdding: .month, value: -1, to: Date()) ?? Date()
+        
+        return allSessions.filter { session in
+            session.completedAt >= monthAgo
+        }
+    }
+    
+    func getAllSessions() -> [TimerSession] {
+        return loadAllSessions()
+    }
+    
     func getCurrentStreak() -> Int {
         let allSessions = loadAllSessions()
         let calendar = Calendar.current
