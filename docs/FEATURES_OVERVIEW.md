@@ -1,8 +1,9 @@
 # 🍅 Mr. Pomodoro - Features Overview
 
-**Version**: 1.0.0  
-**Last Updated**: October 26, 2025  
-**iOS Version**: 18.0+
+**Version**: 1.0.2 (Build 3)  
+**Last Updated**: January 26, 2026  
+**iOS Version**: 18.0+  
+**Xcode**: 26.0.1 / iOS SDK 26.0
 
 This document provides a comprehensive overview of all features available in the Mr. Pomodoro iOS app.
 
@@ -243,10 +244,10 @@ Track your productivity with comprehensive statistics and insights.
 
 ### iOS 18 Optimization
 - ✅ **Latest CloudKit APIs** - iOS 18 Result-based fetch APIs
-- ✅ **Swift 6 Ready** - Modern concurrency patterns
-- ✅ **Latest SDK** - Built with iPhone SDK 26.0
+- ✅ **Swift 5.0+** - Modern concurrency with MainActor isolation
+- ✅ **Latest SDK** - Built with iOS SDK 26.0 (Xcode 26.0.1)
 - ✅ **SwiftUI Enhancements** - Uses iOS 18 features
-- ✅ **App Intents** - Full Siri integration
+- ✅ **App Intents** - Full Siri shortcuts integration
 
 ### Architecture
 - 🏗️ **MVVM Pattern** - Clean, maintainable code structure
@@ -298,9 +299,10 @@ Track your productivity with comprehensive statistics and insights.
 
 ### iOS Versions
 - **Minimum**: iOS 18.0
-- **Recommended**: iOS 18.6 or later
 - **Deployment Target**: iOS 18.0
-- **SDK**: iPhone SDK 26.0
+- **SDK**: iOS 26.0
+- **Xcode**: 26.0.1 or later
+- **Swift**: 5.0+
 
 ### iPhone Models
 - ✅ iPhone 17 (all variants)
@@ -422,8 +424,8 @@ A: No tracking whatsoever. No analytics, no third parties.
 
 ---
 
-**Last Updated**: October 26, 2025  
-**App Version**: 1.0.0  
-**Documentation Version**: 1.0
+**Last Updated**: January 26, 2026  
+**App Version**: 1.0.2 (Build 3)  
+**Documentation Version**: 1.0.2
 
 Made with ❤️ and ☕ by Avtansh Gupta

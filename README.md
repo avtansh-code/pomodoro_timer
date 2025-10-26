@@ -77,8 +77,9 @@ PomodoroTimer/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- **Xcode 16.0+** (Xcode 26.0.1 recommended)
-- **iOS 18.0+** (Optimized for iOS 18 and iPhone 17)
+- **Xcode 26.0.1** (or later)
+- **iOS 18.0+** (Minimum deployment target)
+- **Swift 5.0+** with modern concurrency
 
 ### Installation
 
@@ -151,9 +152,9 @@ Additional statistics features displaying your session breakdown, focus vs. brea
 This app is **fully optimized for iOS 18** and the **iPhone 17** lineup:
 
 ### iOS 18 Features
-- ✅ **CloudKit API Updates** - Updated to use iOS 18's new Result-based fetch APIs
-- ✅ **Swift 6 Ready** - Uses modern concurrency patterns with strict sendability
-- ✅ **Latest SDK** - Built with iPhone SDK 26.0 for optimal performance
+- ✅ **CloudKit API Updates** - Uses iOS 18's new Result-based fetch APIs
+- ✅ **Swift 6 Ready** - Modern concurrency patterns with strict sendability
+- ✅ **Latest SDK** - Built with iOS SDK 26.0 (Xcode 26.0.1)
 - ✅ **Modern SwiftUI** - Leverages iOS 18 SwiftUI enhancements
 - ✅ **App Intents** - Full Siri shortcuts integration with iOS 18 improvements
 
@@ -164,17 +165,23 @@ This app is **fully optimized for iOS 18** and the **iPhone 17** lineup:
 - 📱 **iPhone Air** - Lightweight experience optimized
 
 ### Device Requirements
-- **Minimum**: iOS 18.0
+- **Minimum iOS**: 18.0
 - **Deployment Target**: iOS 18.0
-- **Recommended**: iOS 18.6 or later
-- **Simulators**: Xcode includes iPhone 17 simulators (iOS 26.0)
+- **SDK Version**: iOS 26.0
+- **Xcode**: 26.0.1 or later
+- **Supported Platforms**: iPhone and iPad
 
 ### Build Configuration
-The project is configured with:
-- `IPHONEOS_DEPLOYMENT_TARGET = 18.0`
-- `SDKROOT = iPhoneOS26.0`
-- `TARGETED_DEVICE_FAMILY = 1,2` (iPhone and iPad)
-- Swift 5.0+ with modern concurrency features enabled
+```
+IPHONEOS_DEPLOYMENT_TARGET = 18.0
+SDKROOT = auto (iOS 26.0)
+TARGETED_DEVICE_FAMILY = 1,2 (iPhone and iPad)
+MARKETING_VERSION = 1.0.2
+CURRENT_PROJECT_VERSION = 3
+SWIFT_VERSION = 5.0
+SWIFT_APPROACHABLE_CONCURRENCY = YES
+SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor
+```
 
 ## � Technical Details
 
@@ -206,17 +213,15 @@ The project is configured with:
 - **Apple HIG Compliance** - Follows iOS Human Interface Guidelines
 - **Accessibility First** - Designed to be usable by everyone
 
-### 🖼️ Splash Screen
+### 🖼️ Launch Screen
 
-The app features a beautiful, professionally designed splash screen:
+The app features a beautiful launch screen with:
 
 - **Warm Gradient Background** - Red to orange gradient matching the Pomodoro theme
-- **Centered Tomato Icon** - Clean, minimalist timer icon with subtle clock elements
-- **"FocusFlow" Branding** - Elegant typography with tagline
+- **Centered Tomato Icon** - Clean, minimalist timer icon
 - **Dark Mode Support** - Automatically adapts to system appearance
 - **Universal Sizing** - Optimized for all iPhone and iPad devices
-
-**Setup Guide**: See [docs/SPLASH_SCREEN_SETUP.md](docs/SPLASH_SCREEN_SETUP.md) for customization instructions.
+- **Storyboard-Based** - Configured via `LaunchScreen.storyboard`
 
 ## �🗣️ Siri Shortcuts
 
@@ -343,7 +348,9 @@ Suggestions and improvements are welcome! Feel free to:
 
 ---
 
-**Version**: 1.0.0  
-**Last Updated**: October 2025
+**Version**: 1.0.2 (Build 3)  
+**Last Updated**: January 2026  
+**Minimum iOS**: 18.0  
+**Built with**: Xcode 26.0.1 / iOS SDK 26.0
 
 Made with ❤️ and ☕ using SwiftUI
