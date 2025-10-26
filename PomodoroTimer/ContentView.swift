@@ -27,7 +27,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
                 
                 MainTimerView(timerManager: timerManager)
-                    .navigationTitle("Pomodoro")
+                    .navigationTitle("Mr. Pomodoro")
                     .navigationBarTitleDisplayMode(.large)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarLeading) {
@@ -85,7 +85,7 @@ struct ContentView: View {
             forName: NSNotification.Name("ShowStatisticsFromIntent"),
             object: nil,
             queue: .main
-        ) { [self] _ in
+        ) { _ in
             showStatistics = true
         }
     }

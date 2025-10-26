@@ -15,7 +15,6 @@ struct PomodoroTimerApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(timerManager)
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
             switch newPhase {

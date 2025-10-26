@@ -19,6 +19,22 @@ A clean, customizable, and user-friendly Pomodoro timer built with SwiftUI for i
 - **Theme Selection** - Choose between System, Light, or Dark mode
 - **Notification Controls** - Enable/disable sounds, haptics, and push notifications
 
+### ☁️ iCloud Sync (Optional)
+- **Cross-Device Sync** - Seamlessly sync settings and session history across all your Apple devices
+- **Private & Secure** - Data stored in your private iCloud account, encrypted by Apple
+- **Automatic Sync** - Settings sync automatically; sessions sync daily or on-demand
+- **Manual Control** - Sync now button and ability to enable/disable sync anytime
+- **Conflict Resolution** - Smart merging of data from multiple devices
+- **Data Management** - View sync status, last sync time, and delete cloud data from Settings
+
+### 🌙 Focus Mode Integration
+- **iOS Focus Mode** - Suggests enabling Focus Mode when starting focus sessions
+- **Minimize Distractions** - Automatically helps block notifications during work sessions
+- **Seamless Integration** - Works with your existing Focus Mode configurations
+- **User Control** - Enable/disable integration with toggle in Settings
+- **Bidirectional Sync** - Optional sync with iOS Focus status (iOS 16.1+)
+- **Privacy-First** - Suggestions only, app never automatically controls Focus Mode
+
 ### 📊 Statistics & Tracking
 - **Daily Statistics** - Track completed sessions and focus time for today
 - **Weekly Overview** - View your productivity over the past 7 days
@@ -214,15 +230,23 @@ You can also start a Pomodoro with a custom duration:
 - **Deep Work**: Start Pomodoro → Enable Do Not Disturb → Open IDE
 - **Quick Break**: Show stats → Start break timer
 
-##  Future Enhancements
+## 📚 Additional Documentation
+
+For detailed information about specific features:
+
+- **[Focus Mode Integration Guide](docs/FOCUS_MODE_GUIDE.md)** - Complete guide to using Focus Mode with the app
+- **[iCloud Sync Setup Guide](docs/ICLOUD_SETUP_GUIDE.md)** - How to enable and configure iCloud sync
+- **[App Store Privacy Metadata](docs/APP_STORE_PRIVACY_METADATA.md)** - Privacy practices and data handling
+
+## 🚀 Future Enhancements
 
 Potential features for future versions:
 - ⌚ Apple Watch companion app
-- ☁️ iCloud sync across devices
-- 🎯 Focus Mode API integration
 - 📊 More detailed analytics with Charts framework
 - 🏆 Achievement system and badges
 - 🎯 Live Activities support (iOS 16.1+)
+- 🔔 Rich notifications with action buttons
+- 📈 Weekly/monthly productivity reports
 
 ## 🔒 Privacy & Data Protection
 
