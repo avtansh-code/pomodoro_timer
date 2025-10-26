@@ -1,6 +1,6 @@
 # 📱 App Store Marketing Copy - Mr. Pomodoro
 
-**Version**: 1.0.1  
+**Version**: 1.0.2  
 **Last Updated**: October 26, 2025  
 **Status**: Ready for App Store Submission
 
@@ -8,25 +8,25 @@
 
 ## 📝 Promotional Text
 
-**Word Limit**: 100 words maximum  
+**Character Limit**: 170 characters maximum  
 **Purpose**: Appears at the top of App Store listing, can be updated without new version
 
-### Option 1 (Productivity-focused) - 72 words ✅
+### Option 1 (Focus & Privacy) - 169 chars ✅
 ```
-Boost your focus and master your time with the proven Pomodoro Technique. Mr. Pomodoro offers customizable work and break sessions, seamless iCloud sync across all your devices, detailed statistics tracking, Siri shortcuts for hands-free control, and iOS Focus Mode integration to minimize distractions. Your privacy matters—no analytics, no tracking, no ads. All data stays on your device unless you choose to sync via your private iCloud account. Start building better focus habits today.
-```
-
-### Option 2 (Feature-focused) - 79 words ✅
-```
-A beautiful, powerful Pomodoro timer designed for iOS 18. Fully customizable session durations, automatic transitions, and skip options give you complete control. Track your productivity with detailed statistics and streak monitoring. Seamlessly sync settings and history across devices with optional iCloud integration. Control everything with Siri shortcuts and voice commands. Minimize distractions with Focus Mode suggestions. Built with privacy first—no tracking, no analytics, no third parties. Your data belongs to you. Download now and transform how you work.
+Master your time with the Pomodoro Technique. Customizable timers, iCloud sync, statistics, Siri shortcuts, Focus Mode. Private—no tracking, no ads. Your data stays yours.
 ```
 
-### Option 3 (Benefit-focused) - 76 words ✅
+### Option 2 (Feature-Rich) - 167 chars ✅
 ```
-Transform your productivity with Mr. Pomodoro, the elegant time management app that helps you accomplish more with less stress. Perfect for students, remote workers, developers, and anyone building better focus habits. Enjoy customizable timers, cross-device iCloud sync, comprehensive statistics, Siri integration, and Focus Mode support—all wrapped in a beautiful, accessible interface. Completely private with no tracking or ads. All your data stays secure on your device or in your personal iCloud account. Start focusing better today.
+Beautiful Pomodoro timer for iOS 18. Customizable sessions, iCloud sync, detailed stats, Siri control, Focus Mode integration. Privacy-first: no tracking, no ads.
 ```
 
-**Recommended**: Option 1 (best balance of features, benefits, and privacy emphasis)
+### Option 3 (Productivity-Focused) - 164 chars ✅
+```
+Boost productivity with proven Pomodoro Technique. Custom timers, cross-device sync, stats tracking, Siri shortcuts. Completely private—no analytics, no third parties.
+```
+
+**Recommended**: Option 1 (best balance of features and privacy emphasis)
 
 ---
 
@@ -218,7 +218,7 @@ If planning to localize for other markets, consider:
 
 ## ✅ Pre-Submission Checklist
 
-- [ ] App version updated to 1.0.1 in project
+- [x] App version updated to 1.0.2 in project
 - [ ] All features tested on iOS 18 devices
 - [ ] Screenshots prepared (5-10 screenshots recommended)
 - [ ] App icon finalized (all required sizes)
@@ -282,13 +282,14 @@ Please contact support@mrpomodoro.app (pending) with any questions.
 
 ## 📝 Version History Planning
 
-### Version 1.0.1 (Current)
+### Version 1.0.2 (Current)
 - Initial App Store release
 - Core Pomodoro timer functionality
 - iCloud sync support
 - Focus Mode integration
 - Siri shortcuts
 - Statistics tracking
+- Fixed app icon display issue
 
 ### Version 1.1.0 (Planned)
 - Apple Watch app
