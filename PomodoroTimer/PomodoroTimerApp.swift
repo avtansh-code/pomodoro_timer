@@ -28,8 +28,11 @@ struct PomodoroTimerApp: App {
                     timerManager.appWillEnterForeground()
                     // Sync with iCloud in background
                     Task.detached(priority: .background) {
-                        PersistenceManager.shared.syncWithCloud {
-                            print("iCloud sync completed")
+                        await withCheckedContinuation { continuation in
+                            PersistenceManager.shared.syncWithCloud {
+                                print("iCloud sync completed")
+                                continuation.resume()
+                            }
                         }
                     }
                 }
