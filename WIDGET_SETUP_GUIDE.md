@@ -1,8 +1,97 @@
+# 📱 Widget Setup Guide for Pomodoro Timer
+
+This guide will help you add WidgetKit support to the Pomodoro Timer app.
+
+## 🎯 Overview
+
+Widgets will display:
+- **Small Widget**: Current timer countdown with session type
+- **Medium Widget**: Timer + today's completed sessions
+- **Large Widget**: Timer + sessions + streak counter
+- **Lock Screen Widgets**: Minimal timer display (iOS 16+)
+
+## 📋 Prerequisites
+
+- Xcode 15.0+
+- iOS 16.0+ deployment target
+- Understanding of Widget Extension targets
+
+---
+
+## 🔧 Step 1: Add App Groups Capability
+
+### For Main App Target
+
+1. Open `PomodoroTimer.xcodeproj` in Xcode
+2. Select the **PomodoroTimer** target
+3. Go to **Signing & Capabilities** tab
+4. Click **+ Capability**
+5. Add **App Groups**
+6. Click **+** to add a new group
+7. Enter: `group.com.avtanshgupta.pomodoro`
+8. Enable the checkbox for this group
+
+### Important Notes
+- The App Group ID must match the one in `SharedTimerData.swift`
+- If you want to use a different ID, update it in `SharedTimerDataManager`
+- App Groups allow data sharing between the app and widget
+
+---
+
+## 🎨 Step 2: Create Widget Extension Target
+
+1. In Xcode, go to **File** → **New** → **Target**
+2. Select **Widget Extension**
+3. Configure:
+   - **Product Name**: `PomodoroWidget`
+   - **Include Configuration Intent**: ❌ (unchecked for now)
+   - **Finish**
+4. When prompted "Activate PomodoroWidget scheme?", click **Activate**
+
+---
+
+## ⚙️ Step 3: Configure Widget Target
+
+### Add App Groups to Widget Target
+
+1. Select the **PomodoroWidget** target
+2. Go to **Signing & Capabilities**
+3. Click **+ Capability**
+4. Add **App Groups**
+5. Enable `group.com.avtanshgupta.pomodoro` (same as main app)
+
+### Set Deployment Target
+
+1. In **General** tab
+2. Set **Minimum Deployments** to **iOS 16.0** (or higher)
+
+---
+
+## 📦 Step 4: Add Shared Files to Widget Target
+
+You need to add these files to **both** the app and widget targets:
+
+1. In Xcode's Project Navigator, select these files:
+   - `PomodoroTimer/Models/TimerSession.swift`
+   - `PomodoroTimer/Services/SharedTimerData.swift`
+
+2. For each file:
+   - Open **File Inspector** (⌥⌘1)
+   - Under **Target Membership**
+   - ✅ Check **PomodoroWidget**
+
+---
+
+## 🎨 Step 5: Create Widget Views
+
+Replace the contents of `PomodoroWidget/PomodoroWidget.swift` with the following code:
+
+```swift
 //
 //  PomodoroWidget.swift
 //  PomodoroWidget
 //
-//  Created by Avtansh Gupta on 26/10/25.
+//  Created by Your Name
 //
 
 import WidgetKit
@@ -186,14 +275,7 @@ struct PomodoroWidget: Widget {
     
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: PomodoroTimelineProvider()) { entry in
-            if #available(iOS 17.0, *) {
-                PomodoroWidgetEntryView(entry: entry)
-                    .containerBackground(.fill.tertiary, for: .widget)
-            } else {
-                PomodoroWidgetEntryView(entry: entry)
-                    .padding()
-                    .background(Color(UIColor.systemBackground))
-            }
+            PomodoroWidgetEntryView(entry: entry)
         }
         .configurationDisplayName("Pomodoro Timer")
         .description("Track your focus sessions at a glance")
@@ -326,118 +408,140 @@ struct InlineLockScreenView: View {
     }
 }
 
+// MARK: - Widget Bundle
+
+@main
+struct PomodoroWidgetBundle: WidgetBundle {
+    var body: some Widget {
+        PomodoroWidget()
+        if #available(iOS 16.0, *) {
+            PomodoroLockScreenWidget()
+        }
+    }
+}
+
 // MARK: - Previews
 
-@available(iOS 17.0, *)
-#Preview("Small Widget - Running", as: .systemSmall) {
-    PomodoroWidget()
-} timeline: {
-    PomodoroEntry(date: .now, timerData: SharedTimerData(
-        currentSessionType: "Focus",
-        timeRemaining: 1500,
-        isRunning: true,
-        completedSessionsToday: 3,
-        totalFocusTimeToday: 3600,
-        currentStreak: 5,
-        lastUpdated: .now
-    ))
-    PomodoroEntry(date: .now, timerData: SharedTimerData(
-        currentSessionType: "Focus",
-        timeRemaining: 900,
-        isRunning: true,
-        completedSessionsToday: 3,
-        totalFocusTimeToday: 3600,
-        currentStreak: 5,
-        lastUpdated: .now
-    ))
+struct PomodoroWidget_Previews: PreviewProvider {
+    static var previews: some View {
+        let sampleEntry = PomodoroEntry(
+            date: Date(),
+            timerData: SharedTimerData(
+                currentSessionType: "Focus",
+                timeRemaining: 1500,
+                isRunning: true,
+                completedSessionsToday: 3,
+                totalFocusTimeToday: 3600,
+                currentStreak: 5,
+                lastUpdated: Date()
+            )
+        )
+        
+        Group {
+            PomodoroWidgetEntryView(entry: sampleEntry)
+                .previewContext(WidgetPreviewContext(family: .systemSmall))
+            
+            PomodoroWidgetEntryView(entry: sampleEntry)
+                .previewContext(WidgetPreviewContext(family: .systemMedium))
+            
+            PomodoroWidgetEntryView(entry: sampleEntry)
+                .previewContext(WidgetPreviewContext(family: .systemLarge))
+        }
+    }
 }
+```
 
-@available(iOS 17.0, *)
-#Preview("Small Widget - Paused", as: .systemSmall) {
-    PomodoroWidget()
-} timeline: {
-    PomodoroEntry(date: .now, timerData: SharedTimerData(
-        currentSessionType: "Short Break",
-        timeRemaining: 300,
-        isRunning: false,
-        completedSessionsToday: 3,
-        totalFocusTimeToday: 3600,
-        currentStreak: 5,
-        lastUpdated: .now
-    ))
-}
+---
 
-@available(iOS 17.0, *)
-#Preview("Medium Widget", as: .systemMedium) {
-    PomodoroWidget()
-} timeline: {
-    PomodoroEntry(date: .now, timerData: SharedTimerData(
-        currentSessionType: "Focus",
-        timeRemaining: 1500,
-        isRunning: true,
-        completedSessionsToday: 5,
-        totalFocusTimeToday: 7200,
-        currentStreak: 5,
-        lastUpdated: .now
-    ))
-}
+## ✅ Step 6: Build and Test
 
-@available(iOS 17.0, *)
-#Preview("Large Widget", as: .systemLarge) {
-    PomodoroWidget()
-} timeline: {
-    PomodoroEntry(date: .now, timerData: SharedTimerData(
-        currentSessionType: "Focus",
-        timeRemaining: 1200,
-        isRunning: true,
-        completedSessionsToday: 8,
-        totalFocusTimeToday: 10800,
-        currentStreak: 12,
-        lastUpdated: .now
-    ))
-}
+1. Select the **PomodoroWidget** scheme in Xcode
+2. Choose a simulator or device
+3. Press **⌘ + R** to run
+4. The widget will appear on the home screen
+5. Long-press the widget to see all sizes
 
-@available(iOS 17.0, *)
-#Preview("Lock Screen - Circular", as: .accessoryCircular) {
-    PomodoroLockScreenWidget()
-} timeline: {
-    PomodoroEntry(date: .now, timerData: SharedTimerData(
-        currentSessionType: "Focus",
-        timeRemaining: 1500,
-        isRunning: true,
-        completedSessionsToday: 3,
-        totalFocusTimeToday: 3600,
-        currentStreak: 5,
-        lastUpdated: .now
-    ))
-}
+### Testing Tips
 
-@available(iOS 17.0, *)
-#Preview("Lock Screen - Rectangular", as: .accessoryRectangular) {
-    PomodoroLockScreenWidget()
-} timeline: {
-    PomodoroEntry(date: .now, timerData: SharedTimerData(
-        currentSessionType: "Short Break",
-        timeRemaining: 180,
-        isRunning: true,
-        completedSessionsToday: 4,
-        totalFocusTimeToday: 4800,
-        currentStreak: 5,
-        lastUpdated: .now
-    ))
-}
+- Run the main app first to generate some data
+- Complete a few focus sessions
+- Then run the widget to see live data
+- Try different widget sizes
 
-@available(iOS 17.0, *)
-#Preview("Lock Screen - Inline", as: .accessoryInline) {
-    PomodoroLockScreenWidget()
-} timeline: {
-    PomodoroEntry(date: .now, timerData: SharedTimerData(
-        currentSessionType: "Long Break",
-        timeRemaining: 900,
-        isRunning: false,
-        completedSessionsToday: 8,
-        totalFocusTimeToday: 9600,
-        currentStreak: 7,
-        lastUpdated: .now
-    ))
-}
+---
+
+## 🔄 Step 7: Add Widget to Home Screen (on Device/Simulator)
+
+1. Long-press on empty home screen area
+2. Tap **+** button in top-left
+3. Search for "Pomodoro Timer"
+4. Choose widget size (Small, Medium, or Large)
+5. Tap **Add Widget**
+6. Position and tap **Done**
+
+### Lock Screen Widgets (iOS 16+)
+
+1. Long-press lock screen
+2. Tap **Customize**
+3. Tap widget area
+4. Search for "Pomodoro"
+5. Add circular, rectangular, or inline widget
+
+---
+
+## 🐛 Troubleshooting
+
+### Widget Shows "No Data"
+- Ensure App Groups are configured for **both** targets
+- Verify App Group ID matches in code
+- Run the main app and start a timer
+- Check Console for App Group configuration warnings
+
+### Widget Not Updating
+- Widgets update based on timeline policy (every 10 seconds when running)
+- Background restrictions may delay updates
+- Restart the widget: Remove and re-add it
+
+### Build Errors
+- Ensure `TimerSession.swift` and `SharedTimerData.swift` are added to widget target
+- Check that deployment target is iOS 16.0+
+- Clean build folder: **⇧⌘K**
+
+---
+
+## 📱 Widget Features Summary
+
+✅ **Home Screen Widgets**
+- Small: Timer countdown
+- Medium: Timer + sessions today
+- Large: Timer + sessions + streak
+
+✅ **Lock Screen Widgets** (iOS 16+)
+- Circular: Compact timer
+- Rectangular: Timer with session type
+- Inline: Text-only status
+
+✅ **Live Updates**
+- Updates every 10 seconds when timer is running
+- Updates every 5 minutes when idle
+- Real-time data from main app
+
+✅ **Battery Efficient**
+- Smart update intervals
+- Minimal data transfer
+- Optimized rendering
+
+---
+
+## 🎉 Next Steps
+
+After widgets are working:
+1. Test on multiple devices
+2. Try different widget sizes
+3. Monitor battery usage
+4. Consider adding widget configuration options
+5. Test with Live Activities (iOS 16.1+)
+
+---
+
+**Need Help?** Check the main README.md or create an issue in the repository.
