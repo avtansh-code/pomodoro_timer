@@ -38,7 +38,9 @@ class CloudSyncManager: ObservableObject {
     }
     
     private init() {
-        container = CKContainer.default()
+        // Use explicit container identifier to match entitlements
+        let containerIdentifier = "iCloud.avtanshgupta.PomodoroTimer"
+        container = CKContainer(identifier: containerIdentifier)
         privateDatabase = container.privateCloudDatabase
         
         checkCloudAvailability()
