@@ -167,7 +167,7 @@ struct PrivacyPolicyView: View {
                         HStack(spacing: 12) {
                             Image(systemName: "envelope.fill")
                                 .foregroundColor(.blue)
-                            Text("privacy@pomodoro-timer-app.com")
+                            Text("support@pomodorotimer.in")
                                 .font(.body)
                                 .foregroundColor(.blue)
                         }

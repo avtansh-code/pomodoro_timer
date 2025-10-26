@@ -15,11 +15,14 @@ class CloudSyncManager: ObservableObject {
     @Published var isSyncing: Bool = false
     @Published var syncStatus: SyncStatus = .idle
     @Published var lastSyncDate: Date?
+    @Published var nextSyncDate: Date?
     @Published var isCloudAvailable: Bool = false
     
     private let container: CKContainer
     private let privateDatabase: CKDatabase
     private var cancellables = Set<AnyCancellable>()
+    private var syncTimer: Timer?
+    private let syncInterval: TimeInterval = 24 * 60 * 60 // 24 hours (once a day)
     
     enum SyncStatus: Equatable {
         case idle
@@ -44,6 +47,43 @@ class CloudSyncManager: ObservableObject {
         privateDatabase = container.privateCloudDatabase
         
         checkCloudAvailability()
+    }
+    
+    // MARK: - Automatic Sync
+    
+    func startAutomaticSync() {
+        stopAutomaticSync()
+        
+        // Schedule next sync
+        nextSyncDate = Date().addingTimeInterval(syncInterval)
+        
+        syncTimer = Timer.scheduledTimer(withTimeInterval: syncInterval, repeats: true) { [weak self] _ in
+            self?.performAutomaticSync()
+        }
+    }
+    
+    func stopAutomaticSync() {
+        syncTimer?.invalidate()
+        syncTimer = nil
+        nextSyncDate = nil
+    }
+    
+    private func performAutomaticSync() {
+        guard isCloudAvailable, !isSyncing else { return }
+        
+        // Sync settings if they exist
+        if let settings = PersistenceManager.shared.loadSettings() as? TimerSettings {
+            syncSettings(settings)
+        }
+        
+        // Sync all sessions
+        let sessions = PersistenceManager.shared.getAllSessions()
+        if !sessions.isEmpty {
+            syncAllSessions(sessions)
+        }
+        
+        // Schedule next sync
+        nextSyncDate = Date().addingTimeInterval(syncInterval)
     }
     
     // MARK: - Cloud Availability

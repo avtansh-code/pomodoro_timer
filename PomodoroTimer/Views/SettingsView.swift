@@ -9,7 +9,9 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var timerManager: TimerManager
+    @ObservedObject private var cloudSyncManager = CloudSyncManager.shared
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var systemColorScheme
     
     var body: some View {
         NavigationView {
@@ -131,41 +133,57 @@ struct SettingsView: View {
                         }
                     }
                     .accessibilityLabel("Enable iCloud sync")
+                    .onChange(of: timerManager.settings.iCloudSyncEnabled) { oldValue, newValue in
+                        if newValue {
+                            cloudSyncManager.startAutomaticSync()
+                        } else {
+                            cloudSyncManager.stopAutomaticSync()
+                        }
+                    }
                     
                     if timerManager.settings.iCloudSyncEnabled {
                         HStack {
-                            Image(systemName: "arrow.triangle.2.circlepath")
-                                .foregroundColor(.green)
-                            Text("Sync Status")
+                            Image(systemName: "clock.fill")
+                                .foregroundColor(.orange)
+                            Text("Last Sync")
                             Spacer()
-                            Text(CloudSyncManager.shared.syncStatus.message)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        if let lastSync = CloudSyncManager.shared.lastSyncDate {
-                            HStack {
-                                Image(systemName: "clock.fill")
-                                    .foregroundColor(.orange)
-                                Text("Last Sync")
-                                Spacer()
-                                Text(lastSync, style: .relative)
+                            if let lastSync = cloudSyncManager.lastSyncDate {
+                                Text(formatTimeSinceSync(lastSync))
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            } else {
+                                Text("Never")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
                         }
                         
-                        Button {
-                            syncNow()
-                        } label: {
-                            HStack {
-                                Image(systemName: "arrow.clockwise")
-                                Text("Sync Now")
+                        HStack {
+                            Image(systemName: "clock.arrow.circlepath")
+                                .foregroundColor(.blue)
+                            Text("Next Sync")
+                            Spacer()
+                            if cloudSyncManager.isSyncing {
+                                HStack(spacing: 4) {
+                                    ProgressView()
+                                        .progressViewStyle(.circular)
+                                        .scaleEffect(0.7)
+                                    Text("Syncing...")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            } else if let nextSync = cloudSyncManager.nextSyncDate {
+                                Text(formatTimeUntilSync(nextSync))
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            } else {
+                                Text("Not scheduled")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
                             }
                         }
-                        .disabled(CloudSyncManager.shared.isSyncing)
                         
-                        Text("Your settings and session history will be synced across all your devices signed in with the same iCloud account.")
+                        Text("Your settings and session history automatically sync once daily across all your devices signed in with the same iCloud account.")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -237,6 +255,8 @@ struct SettingsView: View {
                 }
             }
         }
+        .preferredColorScheme(timerManager.settings.selectedTheme.colorScheme)
+        .id(timerManager.settings.selectedTheme)
     }
     
     private func saveSettings() {
@@ -262,6 +282,52 @@ struct SettingsView: View {
             } else {
                 print("Failed to delete iCloud data")
             }
+        }
+    }
+    
+    private func formatTimeSinceSync(_ date: Date) -> String {
+        let now = Date()
+        let timeInterval = now.timeIntervalSince(date)
+        
+        // Convert to whole number minutes
+        let totalMinutes = Int(timeInterval / 60)
+        
+        if totalMinutes < 1 {
+            return "Just now"
+        } else if totalMinutes < 60 {
+            // Less than 60 minutes, show in minutes
+            return "\(totalMinutes) min ago"
+        } else if totalMinutes < 1440 { // Less than 24 hours (60 * 24 = 1440)
+            // Show in hours
+            let hours = totalMinutes / 60
+            return "\(hours) hour\(hours == 1 ? "" : "s") ago"
+        } else {
+            // Show in days
+            let days = totalMinutes / 1440
+            return "\(days) day\(days == 1 ? "" : "s") ago"
+        }
+    }
+    
+    private func formatTimeUntilSync(_ date: Date) -> String {
+        let now = Date()
+        let timeInterval = date.timeIntervalSince(now)
+        
+        // Convert to whole number minutes
+        let totalMinutes = Int(timeInterval / 60)
+        
+        if totalMinutes < 1 {
+            return "In < 1 min"
+        } else if totalMinutes < 60 {
+            // Less than 60 minutes, show in minutes
+            return "In \(totalMinutes) min"
+        } else if totalMinutes < 1440 { // Less than 24 hours (60 * 24 = 1440)
+            // Show in hours
+            let hours = totalMinutes / 60
+            return "In \(hours) hour\(hours == 1 ? "" : "s")"
+        } else {
+            // Show in days
+            let days = totalMinutes / 1440
+            return "In \(days) day\(days == 1 ? "" : "s")"
         }
     }
 }

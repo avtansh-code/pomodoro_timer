@@ -129,6 +129,9 @@ class PersistenceManager {
             return
         }
         
+        // Start automatic sync if enabled
+        CloudSyncManager.shared.startAutomaticSync()
+        
         // Merge settings
         CloudSyncManager.shared.mergeWithCloud(localSettings: settings) { [weak self] mergedSettings in
             self?.saveSettings(mergedSettings)

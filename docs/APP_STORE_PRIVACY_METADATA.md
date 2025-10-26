@@ -284,7 +284,7 @@ Ensure these links are accessible:
 
 ## 📞 Privacy Contact
 
-**Privacy Email**: privacy@pomodoro-timer-app.com  
+**Privacy Email**: support@pomodorotimer.in  
 **Response Time**: 48 hours  
 **Languages**: English
 

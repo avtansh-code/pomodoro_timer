@@ -176,7 +176,7 @@ If you use iCloud sync, your data may be stored in Apple's data centers, which m
 
 If you have questions or concerns about this Privacy Policy or our data practices, please contact us:
 
-**Email**: privacy@pomodoro-timer-app.com  
+**Email**: support@pomodorotimer.in  
 **Response Time**: We aim to respond within 48 hours
 
 ## Open Source and Transparency
