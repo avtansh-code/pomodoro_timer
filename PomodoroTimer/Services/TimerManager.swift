@@ -54,9 +54,6 @@ class TimerManager: ObservableObject {
         
         // Keep timer running when app goes to background
         RunLoop.current.add(timer!, forMode: .common)
-        
-        // Update shared data for widget
-        updateSharedData()
     }
     
     func pauseTimer() {
@@ -65,9 +62,6 @@ class TimerManager: ObservableObject {
         timerState = .paused
         timer?.invalidate()
         timer = nil
-        
-        // Update shared data for widget
-        updateSharedData()
     }
     
     func resetTimer() {
@@ -76,9 +70,6 @@ class TimerManager: ObservableObject {
         timerState = .idle
         timeRemaining = getDuration(for: currentSessionType)
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        
-        // Update shared data for widget
-        updateSharedData()
     }
     
     func skipSession() {
@@ -91,11 +82,6 @@ class TimerManager: ObservableObject {
     private func tick() {
         if timeRemaining > 0 {
             timeRemaining -= 1
-            
-            // Update shared data for widget every 10 seconds
-            if Int(timeRemaining) % 10 == 0 {
-                updateSharedData()
-            }
         } else {
             completeSession()
         }
@@ -361,55 +347,6 @@ class TimerManager: ObservableObject {
         }
     }
     
-    // MARK: - Widget Data Sharing
-    
-    private func updateSharedData() {
-        let sessions = loadSessions()
-        let todaySessions = sessions.filter { Calendar.current.isDateInToday($0.completedAt) }
-        let focusSessions = todaySessions.filter { $0.type == .focus }
-        
-        let completedToday = focusSessions.count
-        let totalFocusTime = focusSessions.reduce(0.0) { $0 + $1.duration }
-        let streak = calculateCurrentStreak()
-        
-        let sharedData = SharedTimerData(
-            currentSessionType: currentSessionType.rawValue,
-            timeRemaining: timeRemaining,
-            isRunning: timerState == .running,
-            completedSessionsToday: completedToday,
-            totalFocusTimeToday: totalFocusTime,
-            currentStreak: streak,
-            lastUpdated: Date()
-        )
-        
-        SharedTimerDataManager.shared.saveTimerData(sharedData)
-    }
-    
-    private func calculateCurrentStreak() -> Int {
-        let sessions = loadSessions()
-        guard !sessions.isEmpty else { return 0 }
-        
-        let calendar = Calendar.current
-        var streak = 0
-        var currentDate = calendar.startOfDay(for: Date())
-        
-        // Count consecutive days with at least one focus session
-        while true {
-            let hasSessions = sessions.contains { session in
-                session.type == .focus &&
-                calendar.isDate(session.completedAt, inSameDayAs: currentDate)
-            }
-            
-            if hasSessions {
-                streak += 1
-                currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
-            } else {
-                break
-            }
-        }
-        
-        return streak
-    }
     
     // MARK: - Focus Mode Integration
     

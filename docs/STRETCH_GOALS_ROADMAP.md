@@ -5,7 +5,6 @@
 | Feature | Impact | Feasibility | Complexity | Risk | Priority Score |
 |---------|--------|-------------|------------|------|----------------|
 | **Siri Shortcuts** | High | High | Low | Low | **9.5/10** |
-| **WidgetKit** | High | High | Medium | Low | **9.0/10** |
 | **Apple Watch** | High | Medium | High | Medium | **7.5/10** |
 | **Enhanced Analytics** | Medium | High | Low | Low | **7.0/10** |
 | **Focus Mode Integration** | Medium | High | Low | Low | **6.5/10** |
@@ -52,38 +51,7 @@ Features that provide maximum impact with minimal complexity and risk.
 
 ---
 
-#### 2️⃣ **WidgetKit Integration** [PRIORITY: HIGH]
-**Impact**: High | **Complexity**: Medium | **Risk**: Low
-
-**Why Second?**
-- High visibility on home/lock screen
-- Builds on existing TimerManager state
-- Modern iOS feature users expect
-- Clear MVP scope (timer + daily stats)
-
-**Implementation Plan**:
-```
-✓ Create Widget Extension target
-✓ Implement TimelineProvider
-✓ Design 3 widget sizes:
-  - Small: Current timer countdown
-  - Medium: Timer + today's session count
-  - Large: Timer + session count + streak
-✓ Add lock screen widgets (iOS 16+)
-✓ Implement Live Activities for active timer (iOS 16.1+)
-✓ Share data via App Groups
-✓ Test widget updates and battery impact
-```
-
-**Technical Dependencies**:
-- WidgetKit framework
-- App Groups for data sharing
-- Shared TimerManager state
-- Possible refactor of persistence to support sharing
-
----
-
-#### 3️⃣ **Enhanced Analytics with Charts** [PRIORITY: MEDIUM-HIGH] ✅ **COMPLETED**
+#### 2️⃣ **Enhanced Analytics with Charts** [PRIORITY: MEDIUM-HIGH] ✅ **COMPLETED**
 **Impact**: Medium | **Complexity**: Low | **Risk**: Low
 
 **Status**: ✅ **IMPLEMENTED**
@@ -125,7 +93,7 @@ Features that provide maximum impact with minimal complexity and risk.
 
 ### **Phase 2: Ecosystem Integration (2-4 weeks)**
 
-#### 4️⃣ **Focus Mode Integration** [PRIORITY: MEDIUM] ✅ **COMPLETED**
+#### 3️⃣ **Focus Mode Integration** [PRIORITY: MEDIUM] ✅ **COMPLETED**
 **Impact**: Medium | **Complexity**: Low | **Risk**: Low
 
 **Status**: ✅ **IMPLEMENTED**
@@ -176,10 +144,10 @@ Features that provide maximum impact with minimal complexity and risk.
 
 ---
 
-#### 5️⃣ **Apple Watch Companion App** [PRIORITY: MEDIUM]
+#### 4️⃣ **Apple Watch Companion App** [PRIORITY: MEDIUM]
 **Impact**: High | **Complexity**: High | **Risk**: Medium
 
-**Why Fifth?**
+**Why Fourth?**
 - Complex multi-target project
 - Requires WatchOS expertise
 - Needs careful UX design for small screen
@@ -209,7 +177,7 @@ Features that provide maximum impact with minimal complexity and risk.
 
 ---
 
-#### 6️⃣ **iCloud Sync (CloudKit)** [PRIORITY: MEDIUM-LOW] ✅ **COMPLETED**
+#### 5️⃣ **iCloud Sync (CloudKit)** [PRIORITY: MEDIUM-LOW] ✅ **COMPLETED**
 **Impact**: Medium | **Complexity**: Medium | **Risk**: Medium
 
 **Status**: ✅ **IMPLEMENTED**
@@ -296,7 +264,7 @@ Session Record:
 
 ### **Phase 3: Delight Features (3-6 weeks)**
 
-#### 7️⃣ **Gamification System** [PRIORITY: LOW-MEDIUM]
+#### 6️⃣ **Gamification System** [PRIORITY: LOW-MEDIUM]
 **Impact**: Medium | **Complexity**: Low | **Risk**: Low
 
 **Implementation Plan**:
@@ -315,7 +283,7 @@ Session Record:
 
 ---
 
-#### 8️⃣ **Custom Haptics & Sound Packs** [PRIORITY: LOW]
+#### 7️⃣ **Custom Haptics & Sound Packs** [PRIORITY: LOW]
 **Impact**: Low | **Complexity**: Low | **Risk**: Low
 
 **Implementation Plan**:
@@ -333,7 +301,7 @@ Session Record:
 
 ---
 
-#### 9️⃣ **Theme Marketplace** [PRIORITY: LOWEST]
+#### 8️⃣ **Theme Marketplace** [PRIORITY: LOWEST]
 **Impact**: Low | **Complexity**: High | **Risk**: High
 
 **Why Last?**
@@ -357,7 +325,7 @@ Session Record:
 
 ### **Recommended Refactoring for Stretch Goals**
 
-1. **Create Shared Framework** (for Widget + Watch):
+1. **Create Shared Framework** (for Apple Watch):
    ```
    PomodoroCore (Shared Framework)
    ├── Models/
@@ -370,12 +338,7 @@ Session Record:
        └── Date+Extensions.swift
    ```
 
-2. **Introduce App Groups**:
-   - Identifier: `group.com.yourteam.pomodoro`
-   - Share UserDefaults between targets
-   - Enable Widget data access
-
-3. **Persistence Protocol**:
+2. **Persistence Protocol**:
    ```swift
    protocol DataStoreProtocol {
        func save(settings: TimerSettings)
@@ -385,7 +348,7 @@ Session Record:
    }
    ```
 
-4. **Separate UI from Logic**:
+3. **Separate UI from Logic**:
    - TimerManager → remains in main app
    - New: TimerEngine (pure logic, no UI dependencies)
    - Enables testing and code sharing
@@ -402,17 +365,12 @@ Session Record:
    - No architectural changes needed
 
 ### **Week 2-3**
-3. Implement WidgetKit support
-4. Create shared data framework
-5. Set up App Groups
+3. Enhanced Analytics with Charts
+4. Focus Mode integration
 
-### **Week 4-5**
-6. Enhanced Analytics with Charts
-7. Focus Mode integration
-
-### **Week 6+**
-8. Apple Watch app (if prioritized)
-9. iCloud sync (if prioritized)
+### **Week 4+**
+5. Apple Watch app (if prioritized)
+6. iCloud sync (if prioritized)
 
 ---
 

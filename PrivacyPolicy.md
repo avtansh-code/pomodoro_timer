@@ -53,7 +53,6 @@ All data collected is used solely to:
 - Show your productivity statistics and session history
 - Calculate streaks and performance metrics
 - Sync your data across your devices (if iCloud sync is enabled)
-- Provide widgets and Live Activities
 - Enable Siri Shortcuts integration
 
 ## Data Storage and Security

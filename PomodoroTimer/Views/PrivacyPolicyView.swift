@@ -98,7 +98,7 @@ struct PrivacyPolicyView: View {
                     // How Data is Used
                     PolicySection(
                         title: "How Your Data Is Used",
-                        content: "All data collected is used solely to:\n\n• Display your timer settings and preferences\n• Show your productivity statistics\n• Calculate streaks and performance metrics\n• Sync across your devices (if enabled)\n• Provide widgets and Live Activities\n• Enable Siri Shortcuts"
+                        content: "All data collected is used solely to:\n\n• Display your timer settings and preferences\n• Show your productivity statistics\n• Calculate streaks and performance metrics\n• Sync across your devices (if enabled)\n• Enable Siri Shortcuts integration"
                     )
                     
                     Divider()
