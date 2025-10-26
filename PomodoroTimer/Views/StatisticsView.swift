@@ -10,7 +10,7 @@ import Charts
 
 struct StatisticsView: View {
     @ObservedObject var timerManager: TimerManager
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.appTheme) var theme
     
     @State private var todaySessions: [TimerSession] = []
     @State private var weeklySessions: [TimerSession] = []
@@ -77,13 +77,6 @@ struct StatisticsView: View {
             }
             .navigationTitle("Statistics")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        dismiss()
-                    }
-                }
-            }
             .onAppear {
                 loadStatistics()
             }
@@ -118,6 +111,7 @@ struct StatisticsView: View {
 @available(iOS 16.0, *)
 struct WeeklySessionsChart: View {
     let sessions: [TimerSession]
+    @Environment(\.appTheme) var theme
     
     private var dailyData: [(day: String, count: Int)] {
         let calendar = Calendar.current
@@ -139,9 +133,9 @@ struct WeeklySessionsChart: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "chart.bar.fill")
-                    .foregroundColor(.blue)
+                    .foregroundColor(theme.primaryColor)
                 Text("Sessions per Day")
-                    .font(.title2)
+                    .font(theme.typography.title2)
                     .fontWeight(.bold)
             }
             
@@ -150,7 +144,7 @@ struct WeeklySessionsChart: View {
                     x: .value("Day", item.day),
                     y: .value("Sessions", item.count)
                 )
-                .foregroundStyle(Color.blue.gradient)
+                .foregroundStyle(theme.primaryColor.gradient)
                 .cornerRadius(8)
             }
             .frame(height: 200)
@@ -173,6 +167,7 @@ struct WeeklySessionsChart: View {
 @available(iOS 16.0, *)
 struct FocusTimeTrendChart: View {
     let sessions: [TimerSession]
+    @Environment(\.appTheme) var theme
     
     private var trendData: [(date: Date, minutes: Double)] {
         let calendar = Calendar.current
@@ -195,9 +190,9 @@ struct FocusTimeTrendChart: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "chart.line.uptrend.xyaxis")
-                    .foregroundColor(.red)
+                    .foregroundColor(theme.primaryColor)
                 Text("Focus Time Trend")
-                    .font(.title2)
+                    .font(theme.typography.title2)
                     .fontWeight(.bold)
             }
             
@@ -212,14 +207,14 @@ struct FocusTimeTrendChart: View {
                         x: .value("Date", item.date, unit: .day),
                         y: .value("Minutes", item.minutes)
                     )
-                    .foregroundStyle(Color.red.gradient)
+                    .foregroundStyle(theme.primaryColor.gradient)
                     .interpolationMethod(.catmullRom)
                     
                     AreaMark(
                         x: .value("Date", item.date, unit: .day),
                         y: .value("Minutes", item.minutes)
                     )
-                    .foregroundStyle(Color.red.opacity(0.2).gradient)
+                    .foregroundStyle(theme.primaryColor.opacity(0.2).gradient)
                     .interpolationMethod(.catmullRom)
                 }
                 .frame(height: 200)
@@ -246,8 +241,9 @@ struct FocusTimeTrendChart: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.systemGray6))
+                .fill(theme.cardBackground)
         )
+        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Line chart showing focus time trend over the past week")
     }
@@ -258,6 +254,7 @@ struct FocusTimeTrendChart: View {
 @available(iOS 16.0, *)
 struct SessionTypeDistributionChart: View {
     let sessions: [TimerSession]
+    @Environment(\.appTheme) var theme
     
     private var distributionData: [(type: String, count: Int, color: Color)] {
         let focusCount = sessions.filter { $0.type == .focus }.count
@@ -275,9 +272,9 @@ struct SessionTypeDistributionChart: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "chart.pie.fill")
-                    .foregroundColor(.purple)
+                    .foregroundColor(theme.accentColor)
                 Text("Session Distribution")
-                    .font(.title2)
+                    .font(theme.typography.title2)
                     .fontWeight(.bold)
             }
             
@@ -328,8 +325,9 @@ struct SessionTypeDistributionChart: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.systemGray6))
+                .fill(theme.cardBackground)
         )
+        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Pie chart showing distribution of session types")
     }
@@ -339,12 +337,14 @@ struct SessionTypeDistributionChart: View {
 
 struct StreakCard: View {
     let streak: Int
+    @Environment(\.appTheme) var theme
     
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: "flame.fill")
                 .font(.system(size: 50))
                 .foregroundColor(.orange)
+                .shadow(color: .orange.opacity(0.3), radius: 10, x: 0, y: 5)
                 .accessibilityHidden(true)
             
             Text("\(streak)")
@@ -352,15 +352,29 @@ struct StreakCard: View {
                 .foregroundColor(.primary)
             
             Text(streak == 1 ? "Day Streak" : "Days Streak")
-                .font(.headline)
+                .font(theme.typography.headline)
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 30)
         .background(
             RoundedRectangle(cornerRadius: 20)
-                .fill(Color.orange.opacity(0.1))
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color.orange.opacity(0.15),
+                            Color.orange.opacity(0.05)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
         )
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .strokeBorder(Color.orange.opacity(0.2), lineWidth: 1)
+        )
+        .shadow(color: Color.orange.opacity(0.1), radius: 10, x: 0, y: 5)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Current streak: \(streak) \(streak == 1 ? "day" : "days")")
     }
@@ -370,14 +384,15 @@ struct StatsSection: View {
     let title: String
     let sessions: [TimerSession]
     let icon: String
+    @Environment(\.appTheme) var theme
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Image(systemName: icon)
-                    .foregroundColor(.accentColor)
+                    .foregroundColor(theme.accentColor)
                 Text(title)
-                    .font(.title2)
+                    .font(theme.typography.title2)
                     .fontWeight(.bold)
             }
             .accessibilityElement(children: .combine)
@@ -420,8 +435,9 @@ struct StatsSection: View {
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 16)
-                        .fill(Color(.systemGray6))
+                        .fill(theme.cardBackground)
                 )
+                .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
             }
         }
     }
@@ -485,6 +501,8 @@ struct StatRow: View {
 }
 
 struct MotivationalQuoteCard: View {
+    @Environment(\.appTheme) var theme
+    
     private let quotes = [
         "Stay focused and never give up! 🎯",
         "Small progress is still progress. 🌱",
@@ -503,7 +521,7 @@ struct MotivationalQuoteCard: View {
                 .foregroundColor(.yellow)
             
             Text(quotes.randomElement() ?? quotes[0])
-                .font(.body)
+                .font(theme.typography.body)
                 .fontWeight(.medium)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.primary)
@@ -512,12 +530,29 @@ struct MotivationalQuoteCard: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color.yellow.opacity(0.1))
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color.yellow.opacity(0.15),
+                            Color.yellow.opacity(0.05)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
         )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(Color.yellow.opacity(0.2), lineWidth: 1)
+        )
+        .shadow(color: Color.yellow.opacity(0.1), radius: 8, x: 0, y: 2)
         .accessibilityElement(children: .combine)
     }
 }
 
 #Preview {
-    StatisticsView(timerManager: TimerManager())
+    NavigationView {
+        StatisticsView(timerManager: TimerManager())
+            .appTheme(.classicRed)
+    }
 }

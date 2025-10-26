@@ -28,7 +28,9 @@ This document provides a comprehensive overview of all features available in the
 - ⏱️ **Adjustable Durations** - All session types from 1-120 minutes
 - 🔢 **Configurable Cycles** - Set sessions before long break (2-10)
 - 🎬 **Auto-Start Options** - Toggle for breaks and focus sessions separately
-- 🎨 **Theme Selection** - System, Light, or Dark mode
+- 🎨 **Advanced Theming System** - 5 beautiful predefined themes with live preview
+- 🌙 **Dark Mode Support** - All themes adapt to light and dark mode
+- 💾 **Persistent Preferences** - Theme selection saved automatically
 
 ---
 
@@ -218,11 +220,49 @@ Track your productivity with comprehensive statistics and insights.
 ## 🎨 Design & User Experience
 
 ### Visual Design
-- 🎨 **Minimalist UI** - Clean, distraction-free interface
-- 🌈 **Color-Coded Sessions** - Red (Focus), Green (Break), Blue (Long Break)
-- ⭕ **Circular Progress** - Visual countdown indicator
-- 💫 **Smooth Animations** - Polished transitions
-- 🌙 **Dark Mode** - Full support with auto-switching
+- 🎨 **Minimalist UI** - Clean, distraction-free interface with modern rounded design language
+- 🌈 **Color-Coded Sessions** - Gradient backgrounds adapt to session type
+- ⭕ **Circular Progress** - Animated countdown indicator with smooth transitions
+- 💫 **Smooth Animations** - Spring animations (0.3-0.6s) with haptic feedback
+- 🌙 **Dark Mode** - Full support with all themes optimized for both appearances
+- 🎨 **Depth & Layering** - Subtle shadows, gradients, and visual hierarchy
+
+### Theming System
+- 🎨 **5 Beautiful Themes** - Classic Red, Ocean Blue, Forest Green, Midnight Dark, Sunset Orange
+- 👁️ **Live Preview** - Horizontal scrolling theme cards with color previews
+- 🎯 **Instant Switching** - Change themes in real-time without restart
+- 🔤 **Typography System** - SF Rounded font with consistent hierarchy
+- 📐 **Design Tokens** - Unified spacing (4-32pt), border radius (8-20pt), shadows
+- 💾 **Persistent Storage** - Theme preference saved via `@AppStorage`
+- 🌍 **Environment Propagation** - Themes flow through SwiftUI environment
+- ✨ **Adaptive Colors** - All themes work perfectly in light and dark mode
+
+### Theme Details
+
+**Classic Red (Default)**
+- Primary: Tomato Red (#ED4242)
+- Best for: Traditional Pomodoro experience
+- Mood: Energetic, focused, classic
+
+**Ocean Blue**
+- Primary: Deep Blue (#2E5EAA)
+- Best for: Calm, analytical work
+- Mood: Professional, serene, stable
+
+**Forest Green**
+- Primary: Forest Green (#2D5F3F)
+- Best for: Creative tasks, writing
+- Mood: Natural, balanced, growth
+
+**Midnight Dark**
+- Primary: Charcoal (#2C3E50)
+- Best for: Night work, coding
+- Mood: Sophisticated, minimal, focused
+
+**Sunset Orange**
+- Primary: Warm Orange (#E67E22)
+- Best for: Creative work, brainstorming
+- Mood: Energetic, inspiring, warm
 
 ### Accessibility
 - ♿ **VoiceOver Support** - Complete screen reader compatibility
@@ -232,11 +272,12 @@ Track your productivity with comprehensive statistics and insights.
 - ⌨️ **Keyboard Navigation** - Full keyboard support
 
 ### App Structure
-- 📱 **Main Timer View** - Primary interface with large timer
-- ⚙️ **Settings View** - Comprehensive configuration options
-- 📊 **Statistics View** - Detailed analytics and insights
-- 🔒 **Privacy Policy View** - In-app privacy documentation
-- 🎨 **Launch Screen** - Beautiful branded splash screen
+- 📱 **Main Timer View** - Primary interface with circular progress ring
+- ⚙️ **Settings View** - Organized sections with theme selector
+- 📊 **Statistics View** - Theme-aware charts and cards
+- 🔒 **Privacy Policy View** - Modern, theme-integrated documentation
+- 🎨 **Launch Screen** - Professional branded splash with circular design
+- 🗂️ **TabView Navigation** - Three tabs for Timer, Stats, Settings (no modals)
 
 ---
 
@@ -252,9 +293,11 @@ Track your productivity with comprehensive statistics and insights.
 ### Architecture
 - 🏗️ **MVVM Pattern** - Clean, maintainable code structure
 - 📦 **Modular Design** - Separate Models, Views, Services
-- 🔄 **State Management** - Reactive updates with Combine
+- 🔄 **State Management** - Reactive updates with Combine and `@ObservedObject`
 - 💾 **Data Persistence** - UserDefaults + optional CloudKit
-- ⚡ **Performance** - Optimized for smooth 60fps
+- 🎨 **Theme Management** - `ThemeManager` with `@AppStorage` persistence
+- 🌍 **Environment System** - Theme propagation via SwiftUI environment
+- ⚡ **Performance** - Optimized for smooth 60fps animations
 
 ### Data Management
 - 💾 **Local Storage** - UserDefaults for settings and history
@@ -333,7 +376,10 @@ Track your productivity with comprehensive statistics and insights.
 
 ### Under Consideration
 - 🎵 Custom sounds/music integration
-- 🎨 Custom themes and colors
+- 🎨 User-defined custom themes and colors
+- 🌈 Theme marketplace/sharing
+- 🎨 Seasonal or mood-based theme variations
+- 📤 Theme import/export functionality
 - 📝 Task/project tracking
 - 👥 Team/shared timers
 - 🔄 Sync with calendar
@@ -345,6 +391,7 @@ Track your productivity with comprehensive statistics and insights.
 
 ### Available Guides
 - **[README.md](../README.md)** - Main project documentation
+- **[UI Redesign Guide](UI_REDESIGN_GUIDE.md)** - Design system and theming documentation
 - **[Focus Mode Guide](FOCUS_MODE_GUIDE.md)** - Complete Focus Mode setup
 - **[iCloud Setup Guide](ICLOUD_SETUP_GUIDE.md)** - Cloud sync configuration
 - **[Privacy Metadata](APP_STORE_PRIVACY_METADATA.md)** - App Store privacy info

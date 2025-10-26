@@ -19,13 +19,19 @@ struct PomodoroTimerApp: App {
         .onChange(of: scenePhase) { oldPhase, newPhase in
             switch newPhase {
             case .background:
-                timerManager.appDidEnterBackground()
-                PersistenceManager.shared.saveSettings(timerManager.settings)
+                Task {
+                    timerManager.appDidEnterBackground()
+                    PersistenceManager.shared.saveSettings(timerManager.settings)
+                }
             case .active:
-                timerManager.appWillEnterForeground()
-                // Sync with iCloud when app becomes active
-                PersistenceManager.shared.syncWithCloud {
-                    print("iCloud sync completed")
+                Task {
+                    timerManager.appWillEnterForeground()
+                    // Sync with iCloud in background
+                    Task.detached(priority: .background) {
+                        PersistenceManager.shared.syncWithCloud {
+                            print("iCloud sync completed")
+                        }
+                    }
                 }
             case .inactive:
                 break

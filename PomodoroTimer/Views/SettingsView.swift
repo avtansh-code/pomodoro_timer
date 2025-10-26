@@ -9,269 +9,358 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var timerManager: TimerManager
+    @ObservedObject var themeManager: ThemeManager
     @ObservedObject private var cloudSyncManager = CloudSyncManager.shared
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.colorScheme) var systemColorScheme
+    @Environment(\.appTheme) var theme
     
     var body: some View {
-        NavigationView {
-            Form {
-                // Duration Settings
-                Section(header: Text("Session Durations")) {
-                    DurationPicker(
-                        title: "Focus",
-                        duration: $timerManager.settings.focusDuration,
-                        icon: "brain.head.profile"
-                    )
-                    
-                    DurationPicker(
-                        title: "Short Break",
-                        duration: $timerManager.settings.shortBreakDuration,
-                        icon: "cup.and.saucer.fill"
-                    )
-                    
-                    DurationPicker(
-                        title: "Long Break",
-                        duration: $timerManager.settings.longBreakDuration,
-                        icon: "bed.double.fill"
-                    )
-                    
-                    Stepper("Sessions until long break: \(timerManager.settings.sessionsUntilLongBreak)",
-                            value: $timerManager.settings.sessionsUntilLongBreak,
-                            in: 2...10)
-                    .accessibilityLabel("Sessions until long break")
-                    .accessibilityValue("\(timerManager.settings.sessionsUntilLongBreak)")
-                }
+        Form {
+            // Theme Selection
+            themeSection
+            
+            // Duration Settings
+            durationSection
+            
+            // Auto-start Settings
+            autoStartSection
+            
+            // Focus Mode Integration
+            if #available(iOS 16.1, *) {
+                focusModeSection
+            }
+            
+            // Notifications & Feedback
+            notificationSection
+            
+            // iCloud Sync
+            iCloudSection
+            
+            // Data Management
+            dataSection
+            
+            // App Info
+            aboutSection
+        }
+        .navigationTitle("Settings")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    // MARK: - Theme Section
+    
+    private var themeSection: some View {
+        Section {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("App Theme")
+                    .font(theme.typography.headline)
+                    .foregroundColor(.primary)
                 
-                // Auto-start Settings
-                Section(header: Text("Auto-Start")) {
-                    Toggle(isOn: $timerManager.settings.autoStartBreaks) {
-                        HStack {
-                            Image(systemName: "play.circle.fill")
-                                .foregroundColor(.green)
-                            Text("Auto-start breaks")
-                        }
-                    }
-                    .accessibilityLabel("Auto-start breaks")
-                    
-                    Toggle(isOn: $timerManager.settings.autoStartFocus) {
-                        HStack {
-                            Image(systemName: "play.circle.fill")
-                                .foregroundColor(.red)
-                            Text("Auto-start focus")
-                        }
-                    }
-                    .accessibilityLabel("Auto-start focus sessions")
-                }
-                
-                // Focus Mode Integration
-                if #available(iOS 16.1, *) {
-                    Section(header: Text("Focus Mode")) {
-                        Toggle(isOn: $timerManager.settings.focusModeEnabled) {
-                            HStack {
-                                Image(systemName: "moon.circle.fill")
-                                    .foregroundColor(.indigo)
-                                Text("Enable Focus Mode")
-                            }
-                        }
-                        .accessibilityLabel("Enable Focus Mode during Pomodoro")
-                        
-                        if timerManager.settings.focusModeEnabled {
-                            Toggle(isOn: $timerManager.settings.syncWithFocusMode) {
-                                HStack {
-                                    Image(systemName: "arrow.triangle.2.circlepath")
-                                        .foregroundColor(.purple)
-                                    Text("Sync with iOS Focus")
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(AppTheme.allThemes) { themeOption in
+                            ThemePreviewCard(
+                                theme: themeOption,
+                                isSelected: themeManager.currentTheme.id == themeOption.id,
+                                onSelect: {
+                                    HapticManager.selection()
+                                    themeManager.applyTheme(themeOption)
                                 }
-                            }
-                            .accessibilityLabel("Sync timer with iOS Focus Mode")
-                            
-                            Text("Note: Focus Mode will be suggested during focus sessions. You can enable it manually from Control Center.")
-                                .font(.caption)
+                            )
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+            .listRowInsets(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
+        } header: {
+            Label("Appearance", systemImage: "paintbrush.fill")
+        }
+    }
+    
+    // MARK: - Duration Section
+    
+    private var durationSection: some View {
+        Section {
+            DurationPicker(
+                title: "Focus",
+                duration: $timerManager.settings.focusDuration,
+                icon: "brain.head.profile",
+                color: theme.primaryColor
+            )
+            
+            DurationPicker(
+                title: "Short Break",
+                duration: $timerManager.settings.shortBreakDuration,
+                icon: "cup.and.saucer.fill",
+                color: .green
+            )
+            
+            DurationPicker(
+                title: "Long Break",
+                duration: $timerManager.settings.longBreakDuration,
+                icon: "bed.double.fill",
+                color: .blue
+            )
+            
+            Stepper(
+                value: $timerManager.settings.sessionsUntilLongBreak,
+                in: 2...10
+            ) {
+                HStack {
+                    Image(systemName: "repeat")
+                        .foregroundColor(theme.accentColor)
+                        .frame(width: 24)
+                    Text("Sessions until long break")
+                    Spacer()
+                    Text("\(timerManager.settings.sessionsUntilLongBreak)")
+                        .foregroundColor(.secondary)
+                        .fontWeight(.semibold)
+                }
+            }
+            .accessibilityLabel("Sessions until long break: \(timerManager.settings.sessionsUntilLongBreak)")
+        } header: {
+            Label("Session Durations", systemImage: "clock.fill")
+        }
+    }
+    
+    // MARK: - Auto-start Section
+    
+    private var autoStartSection: some View {
+        Section {
+            Toggle(isOn: $timerManager.settings.autoStartBreaks) {
+                HStack(spacing: 12) {
+                    Image(systemName: "play.circle.fill")
+                        .foregroundColor(.green)
+                        .frame(width: 24)
+                    Text("Auto-start breaks")
+                }
+            }
+            .accessibilityLabel("Auto-start breaks")
+            
+            Toggle(isOn: $timerManager.settings.autoStartFocus) {
+                HStack(spacing: 12) {
+                    Image(systemName: "play.circle.fill")
+                        .foregroundColor(theme.primaryColor)
+                        .frame(width: 24)
+                    Text("Auto-start focus")
+                }
+            }
+            .accessibilityLabel("Auto-start focus sessions")
+        } header: {
+            Label("Auto-Start", systemImage: "play.circle")
+        } footer: {
+            Text("Automatically begin the next session when the current one completes.")
+                .font(theme.typography.caption)
+        }
+    }
+    
+    // MARK: - Focus Mode Section
+    
+    @available(iOS 16.1, *)
+    private var focusModeSection: some View {
+        Section {
+            Toggle(isOn: $timerManager.settings.focusModeEnabled) {
+                HStack(spacing: 12) {
+                    Image(systemName: "moon.circle.fill")
+                        .foregroundColor(.indigo)
+                        .frame(width: 24)
+                    Text("Enable Focus Mode")
+                }
+            }
+            .accessibilityLabel("Enable Focus Mode during Pomodoro")
+            
+            if timerManager.settings.focusModeEnabled {
+                Toggle(isOn: $timerManager.settings.syncWithFocusMode) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "arrow.triangle.2.circlepath")
+                            .foregroundColor(.purple)
+                            .frame(width: 24)
+                        Text("Sync with iOS Focus")
+                    }
+                }
+                .accessibilityLabel("Sync timer with iOS Focus Mode")
+            }
+        } header: {
+            Label("Focus Mode", systemImage: "moon.fill")
+        } footer: {
+            Text("Focus Mode will be suggested during focus sessions. Enable it manually from Control Center.")
+                .font(theme.typography.caption)
+        }
+    }
+    
+    // MARK: - Notification Section
+    
+    private var notificationSection: some View {
+        Section {
+            Toggle(isOn: $timerManager.settings.notificationsEnabled) {
+                HStack(spacing: 12) {
+                    Image(systemName: "bell.fill")
+                        .foregroundColor(.blue)
+                        .frame(width: 24)
+                    Text("Notifications")
+                }
+            }
+            .accessibilityLabel("Enable notifications")
+            
+            Toggle(isOn: $timerManager.settings.soundEnabled) {
+                HStack(spacing: 12) {
+                    Image(systemName: "speaker.wave.2.fill")
+                        .foregroundColor(.purple)
+                        .frame(width: 24)
+                    Text("Sound")
+                }
+            }
+            .accessibilityLabel("Enable sound")
+            
+            Toggle(isOn: $timerManager.settings.hapticEnabled) {
+                HStack(spacing: 12) {
+                    Image(systemName: "waveform")
+                        .foregroundColor(.orange)
+                        .frame(width: 24)
+                    Text("Haptic Feedback")
+                }
+            }
+            .accessibilityLabel("Enable haptic feedback")
+        } header: {
+            Label("Notifications & Feedback", systemImage: "bell.badge.fill")
+        }
+    }
+    
+    // MARK: - iCloud Section
+    
+    private var iCloudSection: some View {
+        Section {
+            Toggle(isOn: $timerManager.settings.iCloudSyncEnabled) {
+                HStack(spacing: 12) {
+                    Image(systemName: "icloud.fill")
+                        .foregroundColor(.blue)
+                        .frame(width: 24)
+                    Text("Enable iCloud Sync")
+                }
+            }
+            .accessibilityLabel("Enable iCloud sync")
+            .onChange(of: timerManager.settings.iCloudSyncEnabled) { oldValue, newValue in
+                if newValue {
+                    cloudSyncManager.startAutomaticSync()
+                } else {
+                    cloudSyncManager.stopAutomaticSync()
+                }
+            }
+            
+            if timerManager.settings.iCloudSyncEnabled {
+                HStack {
+                    Image(systemName: "clock.fill")
+                        .foregroundColor(.orange)
+                        .frame(width: 24)
+                    Text("Last Sync")
+                    Spacer()
+                    if let lastSync = cloudSyncManager.lastSyncDate {
+                        Text(formatTimeSinceSync(lastSync))
+                            .font(theme.typography.caption)
+                            .foregroundColor(.secondary)
+                    } else {
+                        Text("Never")
+                            .font(theme.typography.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                
+                HStack {
+                    Image(systemName: "clock.arrow.circlepath")
+                        .foregroundColor(.blue)
+                        .frame(width: 24)
+                    Text("Next Sync")
+                    Spacer()
+                    if cloudSyncManager.isSyncing {
+                        HStack(spacing: 4) {
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                                .scaleEffect(0.7)
+                            Text("Syncing...")
+                                .font(theme.typography.caption)
                                 .foregroundColor(.secondary)
                         }
-                    }
-                }
-                
-                // Notifications & Feedback
-                Section(header: Text("Notifications & Feedback")) {
-                    Toggle(isOn: $timerManager.settings.notificationsEnabled) {
-                        HStack {
-                            Image(systemName: "bell.fill")
-                                .foregroundColor(.blue)
-                            Text("Notifications")
-                        }
-                    }
-                    .accessibilityLabel("Enable notifications")
-                    
-                    Toggle(isOn: $timerManager.settings.soundEnabled) {
-                        HStack {
-                            Image(systemName: "speaker.wave.2.fill")
-                                .foregroundColor(.purple)
-                            Text("Sound")
-                        }
-                    }
-                    .accessibilityLabel("Enable sound")
-                    
-                    Toggle(isOn: $timerManager.settings.hapticEnabled) {
-                        HStack {
-                            Image(systemName: "waveform")
-                                .foregroundColor(.orange)
-                            Text("Haptic Feedback")
-                        }
-                    }
-                    .accessibilityLabel("Enable haptic feedback")
-                }
-                
-                // iCloud Sync
-                Section(header: Text("iCloud Sync")) {
-                    Toggle(isOn: $timerManager.settings.iCloudSyncEnabled) {
-                        HStack {
-                            Image(systemName: "icloud.fill")
-                                .foregroundColor(.blue)
-                            Text("Enable iCloud Sync")
-                        }
-                    }
-                    .accessibilityLabel("Enable iCloud sync")
-                    .onChange(of: timerManager.settings.iCloudSyncEnabled) { oldValue, newValue in
-                        if newValue {
-                            cloudSyncManager.startAutomaticSync()
-                        } else {
-                            cloudSyncManager.stopAutomaticSync()
-                        }
-                    }
-                    
-                    if timerManager.settings.iCloudSyncEnabled {
-                        HStack {
-                            Image(systemName: "clock.fill")
-                                .foregroundColor(.orange)
-                            Text("Last Sync")
-                            Spacer()
-                            if let lastSync = cloudSyncManager.lastSyncDate {
-                                Text(formatTimeSinceSync(lastSync))
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            } else {
-                                Text("Never")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        
-                        HStack {
-                            Image(systemName: "clock.arrow.circlepath")
-                                .foregroundColor(.blue)
-                            Text("Next Sync")
-                            Spacer()
-                            if cloudSyncManager.isSyncing {
-                                HStack(spacing: 4) {
-                                    ProgressView()
-                                        .progressViewStyle(.circular)
-                                        .scaleEffect(0.7)
-                                    Text("Syncing...")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                            } else if let nextSync = cloudSyncManager.nextSyncDate {
-                                Text(formatTimeUntilSync(nextSync))
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            } else {
-                                Text("Not scheduled")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        
-                        Text("Your settings and session history automatically sync once daily across all your devices signed in with the same iCloud account.")
-                            .font(.caption)
+                    } else if let nextSync = cloudSyncManager.nextSyncDate {
+                        Text(formatTimeUntilSync(nextSync))
+                            .font(theme.typography.caption)
                             .foregroundColor(.secondary)
-                    }
-                }
-                
-                // Theme Settings
-                Section(header: Text("Appearance")) {
-                    Picker("Theme", selection: $timerManager.settings.selectedTheme) {
-                        ForEach(TimerSettings.AppTheme.allCases, id: \.self) { theme in
-                            Text(theme.rawValue).tag(theme)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .accessibilityLabel("Theme selector")
-                }
-                
-                // Data Management
-                Section(header: Text("Data")) {
-                    Button(role: .destructive) {
-                        timerManager.clearAllSessions()
-                    } label: {
-                        HStack {
-                            Image(systemName: "trash.fill")
-                            Text("Clear All Statistics")
-                        }
-                    }
-                    .accessibilityLabel("Clear all statistics")
-                    
-                    if timerManager.settings.iCloudSyncEnabled {
-                        Button(role: .destructive) {
-                            deleteCloudData()
-                        } label: {
-                            HStack {
-                                Image(systemName: "icloud.slash.fill")
-                                Text("Delete iCloud Data")
-                            }
-                        }
-                        .accessibilityLabel("Delete all iCloud data")
-                    }
-                }
-                
-                // App Info
-                Section(header: Text("About")) {
-                    NavigationLink(destination: PrivacyPolicyView()) {
-                        HStack {
-                            Image(systemName: "hand.raised.fill")
-                                .foregroundColor(.blue)
-                            Text("Privacy Policy")
-                        }
-                    }
-                    .accessibilityLabel("View Privacy Policy")
-                    
-                    HStack {
-                        Text("Version")
-                        Spacer()
-                        Text("1.0.0")
+                    } else {
+                        Text("Not scheduled")
+                            .font(theme.typography.caption)
                             .foregroundColor(.secondary)
                     }
                 }
             }
-            .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        saveSettings()
-                        dismiss()
-                    }
-                }
+        } header: {
+            Label("iCloud Sync", systemImage: "icloud")
+        } footer: {
+            if timerManager.settings.iCloudSyncEnabled {
+                Text("Settings and session history sync once daily across all devices signed in with the same iCloud account.")
+                    .font(theme.typography.caption)
             }
         }
     }
     
-    private func saveSettings() {
-        PersistenceManager.shared.saveSettings(timerManager.settings)
-        
-        // Sync to iCloud if enabled
-        if timerManager.settings.iCloudSyncEnabled {
-            CloudSyncManager.shared.syncSettings(timerManager.settings)
+    // MARK: - Data Section
+    
+    private var dataSection: some View {
+        Section {
+            Button(role: .destructive) {
+                timerManager.clearAllSessions()
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "trash.fill")
+                        .frame(width: 24)
+                    Text("Clear All Statistics")
+                }
+            }
+            .accessibilityLabel("Clear all statistics")
+            
+            if timerManager.settings.iCloudSyncEnabled {
+                Button(role: .destructive) {
+                    deleteCloudData()
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "icloud.slash.fill")
+                            .frame(width: 24)
+                        Text("Delete iCloud Data")
+                    }
+                }
+                .accessibilityLabel("Delete all iCloud data")
+            }
+        } header: {
+            Label("Data Management", systemImage: "externaldrive.fill")
         }
     }
     
-    private func syncNow() {
-        CloudSyncManager.shared.syncSettings(timerManager.settings)
-        
-        let sessions = PersistenceManager.shared.getAllSessions()
-        CloudSyncManager.shared.syncAllSessions(sessions)
+    // MARK: - About Section
+    
+    private var aboutSection: some View {
+        Section {
+            NavigationLink(destination: PrivacyPolicyView()) {
+                HStack(spacing: 12) {
+                    Image(systemName: "hand.raised.fill")
+                        .foregroundColor(.blue)
+                        .frame(width: 24)
+                    Text("Privacy Policy")
+                }
+            }
+            .accessibilityLabel("View Privacy Policy")
+            
+            HStack(spacing: 12) {
+                Image(systemName: "info.circle.fill")
+                    .foregroundColor(.gray)
+                    .frame(width: 24)
+                Text("Version")
+                Spacer()
+                Text("1.0.2")
+                    .foregroundColor(.secondary)
+            }
+        } header: {
+            Label("About", systemImage: "info.circle")
+        }
     }
+    
+    // MARK: - Helper Methods
     
     private func deleteCloudData() {
         CloudSyncManager.shared.deleteAllCloudData { success in
@@ -286,21 +375,16 @@ struct SettingsView: View {
     private func formatTimeSinceSync(_ date: Date) -> String {
         let now = Date()
         let timeInterval = now.timeIntervalSince(date)
-        
-        // Convert to whole number minutes
         let totalMinutes = Int(timeInterval / 60)
         
         if totalMinutes < 1 {
             return "Just now"
         } else if totalMinutes < 60 {
-            // Less than 60 minutes, show in minutes
             return "\(totalMinutes) min ago"
-        } else if totalMinutes < 1440 { // Less than 24 hours (60 * 24 = 1440)
-            // Show in hours
+        } else if totalMinutes < 1440 {
             let hours = totalMinutes / 60
             return "\(hours) hour\(hours == 1 ? "" : "s") ago"
         } else {
-            // Show in days
             let days = totalMinutes / 1440
             return "\(days) day\(days == 1 ? "" : "s") ago"
         }
@@ -309,52 +393,103 @@ struct SettingsView: View {
     private func formatTimeUntilSync(_ date: Date) -> String {
         let now = Date()
         let timeInterval = date.timeIntervalSince(now)
-        
-        // Convert to whole number minutes
         let totalMinutes = Int(timeInterval / 60)
         
         if totalMinutes < 1 {
             return "In < 1 min"
         } else if totalMinutes < 60 {
-            // Less than 60 minutes, show in minutes
             return "In \(totalMinutes) min"
-        } else if totalMinutes < 1440 { // Less than 24 hours (60 * 24 = 1440)
-            // Show in hours
+        } else if totalMinutes < 1440 {
             let hours = totalMinutes / 60
             return "In \(hours) hour\(hours == 1 ? "" : "s")"
         } else {
-            // Show in days
             let days = totalMinutes / 1440
             return "In \(days) day\(days == 1 ? "" : "s")"
         }
     }
 }
 
+// MARK: - Theme Preview Card
+
+struct ThemePreviewCard: View {
+    let theme: AppTheme
+    let isSelected: Bool
+    let onSelect: () -> Void
+    
+    var body: some View {
+        Button(action: onSelect) {
+            VStack(spacing: 8) {
+                // Color preview circles
+                HStack(spacing: 4) {
+                    Circle()
+                        .fill(theme.primaryColor)
+                        .frame(width: 20, height: 20)
+                    Circle()
+                        .fill(theme.secondaryColor)
+                        .frame(width: 20, height: 20)
+                    Circle()
+                        .fill(theme.accentColor)
+                        .frame(width: 20, height: 20)
+                }
+                
+                Text(theme.name)
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundColor(isSelected ? theme.primaryColor : .secondary)
+                    .lineLimit(1)
+            }
+            .frame(width: 100, height: 80)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(.systemGray6))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .strokeBorder(
+                        isSelected ? theme.primaryColor : Color.clear,
+                        lineWidth: 2
+                    )
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+// MARK: - Duration Picker
+
 struct DurationPicker: View {
     let title: String
     @Binding var duration: TimeInterval
     let icon: String
+    let color: Color
     
     var body: some View {
         HStack {
             Image(systemName: icon)
-                .foregroundColor(.accentColor)
+                .foregroundColor(color)
+                .frame(width: 24)
             Text(title)
             
             Spacer()
             
-            Stepper("\(Int(duration / 60)) min",
-                    value: Binding(
-                        get: { duration / 60 },
-                        set: { duration = $0 * 60 }
-                    ),
-                    in: 1...120)
-            .accessibilityLabel("\(title) duration")
-            .accessibilityValue("\(Int(duration / 60)) minutes")
+            Stepper(
+                value: Binding(
+                    get: { duration / 60 },
+                    set: { duration = $0 * 60 }
+                ),
+                in: 1...120
+            ) {
+                Text("\(Int(duration / 60)) min")
+                    .foregroundColor(.secondary)
+                    .fontWeight(.semibold)
+            }
+            .accessibilityLabel("\(title) duration: \(Int(duration / 60)) minutes")
         }
     }
 }
 
 #Preview {
-    SettingsView(timerManager: TimerManager())
+    NavigationView {
+        SettingsView(timerManager: TimerManager(), themeManager: ThemeManager())
+            .appTheme(.classicRed)
+    }
 }

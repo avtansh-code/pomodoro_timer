@@ -9,74 +9,42 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var timerManager = TimerManager(settings: PersistenceManager.shared.loadSettings())
-    @State private var showSettings = false
-    @State private var showStatistics = false
+    @StateObject private var themeManager = ThemeManager()
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                // Background gradient based on session type
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        sessionBackgroundColor.opacity(0.1),
-                        Color(.systemBackground)
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
-                
-                MainTimerView(timerManager: timerManager)
-                    .navigationTitle("Mr. Pomodoro")
-                    .navigationBarTitleDisplayMode(.large)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button(action: {
-                                showStatistics = true
-                            }) {
-                                Image(systemName: "chart.bar.fill")
-                                    .font(.title3)
-                            }
-                            .accessibilityLabel("View statistics")
-                        }
-                        
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(action: {
-                                showSettings = true
-                            }) {
-                                Image(systemName: "gearshape.fill")
-                                    .font(.title3)
-                            }
-                            .accessibilityLabel("Open settings")
-                        }
-                    }
-            }
+        TabView {
+            // Timer Tab
+            TimerTabView(timerManager: timerManager)
+                .tabItem {
+                    Label("Timer", systemImage: "timer")
+                }
+                .tag(0)
+            
+            // Statistics Tab
+            StatisticsTabView(timerManager: timerManager)
+                .tabItem {
+                    Label("Stats", systemImage: "chart.bar.fill")
+                }
+                .tag(1)
+            
+            // Settings Tab
+            SettingsTabView(timerManager: timerManager, themeManager: themeManager)
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.fill")
+                }
+                .tag(2)
         }
+        .appTheme(themeManager.currentTheme)
         .preferredColorScheme(timerManager.settings.selectedTheme.colorScheme)
-        .sheet(isPresented: $showSettings) {
-            SettingsView(timerManager: timerManager)
-                .preferredColorScheme(timerManager.settings.selectedTheme.colorScheme)
-        }
-        .sheet(isPresented: $showStatistics) {
-            StatisticsView(timerManager: timerManager)
-        }
-        .onAppear {
-            timerManager.requestNotificationPermission()
-            setupIntentObservers()
+        .task {
+            // Defer non-critical initializations
+            await MainActor.run {
+                timerManager.requestNotificationPermission()
+                setupIntentObservers()
+            }
         }
         .onDisappear {
             NotificationCenter.default.removeObserver(self)
-        }
-    }
-    
-    private var sessionBackgroundColor: Color {
-        switch timerManager.currentSessionType {
-        case .focus:
-            return .red
-        case .shortBreak:
-            return .green
-        case .longBreak:
-            return .blue
         }
     }
     
@@ -86,7 +54,53 @@ struct ContentView: View {
             object: nil,
             queue: .main
         ) { _ in
-            showStatistics = true
+            // Statistics tab is now always visible
+        }
+    }
+}
+
+// MARK: - Timer Tab View
+
+struct TimerTabView: View {
+    @ObservedObject var timerManager: TimerManager
+    @Environment(\.appTheme) var theme
+    
+    var body: some View {
+        NavigationView {
+            ZStack {
+                // Background gradient
+                theme.gradientFor(sessionType: timerManager.currentSessionType)
+                    .opacity(0.08)
+                    .ignoresSafeArea()
+                    .animation(.easeInOut(duration: 0.6), value: timerManager.currentSessionType)
+                
+                MainTimerView(timerManager: timerManager)
+            }
+            .navigationTitle("Focus Timer")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+}
+
+// MARK: - Statistics Tab View
+
+struct StatisticsTabView: View {
+    @ObservedObject var timerManager: TimerManager
+    
+    var body: some View {
+        StatisticsView(timerManager: timerManager)
+    }
+}
+
+// MARK: - Settings Tab View
+
+struct SettingsTabView: View {
+    @ObservedObject var timerManager: TimerManager
+    @ObservedObject var themeManager: ThemeManager
+    
+    var body: some View {
+        NavigationView {
+            SettingsView(timerManager: timerManager, themeManager: themeManager)
         }
     }
 }
