@@ -199,7 +199,7 @@ Track your focus sessions at a glance with beautiful widgets!
 
 ### Setup Instructions
 
-Widgets require additional Xcode configuration. See **[WIDGET_SETUP_GUIDE.md](WIDGET_SETUP_GUIDE.md)** for detailed setup instructions including:
+Widgets require additional Xcode configuration. See **[WIDGET_SETUP_GUIDE.md](docs/WIDGET_SETUP_GUIDE.md)** for detailed setup instructions including:
 - App Groups configuration
 - Widget Extension target creation
 - Complete widget code
