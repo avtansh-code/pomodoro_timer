@@ -6,12 +6,13 @@
 }
 
 :root {
-    --primary-color: #FF6B6B;
-    --secondary-color: #4ECDC4;
-    --accent-color: #45B7D1;
-    --success-color: #96CEB4;
-    --warning-color: #FFEAA7;
-    --danger-color: #FD79A8;
+    --primary-color: #FF3B30;
+    --focus-color: #FF3B30;
+    --break-color: #34C759;
+    --longbreak-color: #007AFF;
+    --accent-color: #FFE66D;
+    --success-color: #34C759;
+    --warning-color: #FF9500;
     
     --text-primary: #2D3436;
     --text-secondary: #636E72;
@@ -200,7 +201,7 @@ nav {
 /* Hero Section */
 .hero {
     padding: 4rem 0 6rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1d1d1f 0%, #2d2d2f 100%);
     color: var(--text-white);
     position: relative;
     overflow: hidden;
@@ -213,7 +214,7 @@ nav {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 107, 107, 0.9) 0%, rgba(69, 183, 209, 0.9) 100%);
+    background: linear-gradient(135deg, rgba(255, 59, 48, 0.15) 0%, rgba(0, 122, 255, 0.15) 50%, rgba(52, 199, 89, 0.15) 100%);
 }
 
 .hero-content {
@@ -292,7 +293,7 @@ nav {
 .phone-screen {
     width: 100%;
     height: 100%;
-    background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+    background: #000000;
     border-radius: 30px;
     display: flex;
     align-items: center;
@@ -309,14 +310,15 @@ nav {
 .timer-circle {
     width: 200px;
     height: 200px;
-    border: 4px solid rgba(255, 107, 107, 0.3);
-    border-top: 4px solid #FF6B6B;
+    border: 6px solid rgba(255, 59, 48, 0.2);
+    border-top: 6px solid #FF3B30;
+    border-right: 6px solid #FF3B30;
     border-radius: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    animation: spin 20s linear infinite;
+    animation: spin 25s linear infinite;
 }
 
 .timer-time {
@@ -470,9 +472,26 @@ nav {
 /* Download Section */
 .download {
     padding: 6rem 0;
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    background: linear-gradient(135deg, #1d1d1f 0%, #2d2d2f 100%);
     color: var(--text-white);
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.download::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 59, 48, 0.1) 0%, rgba(52, 199, 89, 0.1) 100%);
+}
+
+.download-content {
+    position: relative;
+    z-index: 2;
 }
 
 .download-content h2 {
