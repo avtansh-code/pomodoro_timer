@@ -24,6 +24,10 @@ struct PomodoroTimerApp: App {
                 PersistenceManager.shared.saveSettings(timerManager.settings)
             case .active:
                 timerManager.appWillEnterForeground()
+                // Sync with iCloud when app becomes active
+                PersistenceManager.shared.syncWithCloud {
+                    print("iCloud sync completed")
+                }
             case .inactive:
                 break
             @unknown default:

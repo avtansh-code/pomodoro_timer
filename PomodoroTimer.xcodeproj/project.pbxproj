@@ -64,6 +64,13 @@
 			);
 			target = 520586C62EADFCE30001EE1F /* PomodoroWidgetExtension */;
 		};
+		520586F12EAE06AF0001EE1F /* Exceptions for "PomodoroTimer" folder in "PomodoroTimer" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 529A0BA82E915A64007CD213 /* PomodoroTimer */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -78,6 +85,7 @@
 		529A0BAB2E915A64007CD213 /* PomodoroTimer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				520586F12EAE06AF0001EE1F /* Exceptions for "PomodoroTimer" folder in "PomodoroTimer" target */,
 				520586E72EADFD670001EE1F /* Exceptions for "PomodoroTimer" folder in "PomodoroWidgetExtension" target */,
 			);
 			path = PomodoroTimer;
@@ -470,6 +478,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PomodoroTimer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PomoDoro;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -518,6 +527,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PomodoroTimer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PomoDoro;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;

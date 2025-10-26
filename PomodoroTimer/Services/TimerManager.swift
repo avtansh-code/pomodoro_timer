@@ -113,7 +113,7 @@ class TimerManager: ObservableObject {
         
         // Save completed session
         let session = TimerSession(type: currentSessionType, duration: getDuration(for: currentSessionType))
-        saveSession(session)
+        PersistenceManager.shared.saveSession(session)
         
         // Play sound and haptic feedback
         if settings.soundEnabled {
@@ -240,25 +240,12 @@ class TimerManager: ObservableObject {
     
     // MARK: - Persistence
     
-    private func saveSession(_ session: TimerSession) {
-        var sessions = loadSessions()
-        sessions.append(session)
-        
-        if let encoded = try? JSONEncoder().encode(sessions) {
-            UserDefaults.standard.set(encoded, forKey: "SavedSessions")
-        }
-    }
-    
     func loadSessions() -> [TimerSession] {
-        guard let data = UserDefaults.standard.data(forKey: "SavedSessions"),
-              let sessions = try? JSONDecoder().decode([TimerSession].self, from: data) else {
-            return []
-        }
-        return sessions
+        return PersistenceManager.shared.getAllSessions()
     }
     
     func clearAllSessions() {
-        UserDefaults.standard.removeObject(forKey: "SavedSessions")
+        PersistenceManager.shared.clearAllSessions()
         completedFocusSessions = 0
     }
     

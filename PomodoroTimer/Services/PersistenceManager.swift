@@ -11,6 +11,7 @@ class PersistenceManager {
     static let shared = PersistenceManager()
     
     private let settingsKey = "TimerSettings"
+    private let sessionsKey = "SavedSessions"
     
     private init() {}
     
@@ -92,11 +93,56 @@ class PersistenceManager {
         return streak
     }
     
+    func saveSession(_ session: TimerSession) {
+        var sessions = loadAllSessions()
+        sessions.append(session)
+        
+        if let encoded = try? JSONEncoder().encode(sessions) {
+            UserDefaults.standard.set(encoded, forKey: sessionsKey)
+        }
+        
+        // Sync to iCloud if enabled
+        let settings = loadSettings()
+        if settings.iCloudSyncEnabled {
+            CloudSyncManager.shared.syncSession(session)
+        }
+    }
+    
     private func loadAllSessions() -> [TimerSession] {
-        guard let data = UserDefaults.standard.data(forKey: "SavedSessions"),
+        guard let data = UserDefaults.standard.data(forKey: sessionsKey),
               let sessions = try? JSONDecoder().decode([TimerSession].self, from: data) else {
             return []
         }
         return sessions
+    }
+    
+    func clearAllSessions() {
+        UserDefaults.standard.removeObject(forKey: sessionsKey)
+    }
+    
+    // MARK: - iCloud Sync Integration
+    
+    func syncWithCloud(completion: @escaping () -> Void) {
+        let settings = loadSettings()
+        guard settings.iCloudSyncEnabled else {
+            completion()
+            return
+        }
+        
+        // Merge settings
+        CloudSyncManager.shared.mergeWithCloud(localSettings: settings) { [weak self] mergedSettings in
+            self?.saveSettings(mergedSettings)
+            
+            // Merge sessions
+            let localSessions = self?.loadAllSessions() ?? []
+            CloudSyncManager.shared.mergeSessions(localSessions: localSessions) { mergedSessions in
+                // Save merged sessions
+                if let encoded = try? JSONEncoder().encode(mergedSessions) {
+                    UserDefaults.standard.set(encoded, forKey: self?.sessionsKey ?? "SavedSessions")
+                }
+                
+                completion()
+            }
+        }
     }
 }

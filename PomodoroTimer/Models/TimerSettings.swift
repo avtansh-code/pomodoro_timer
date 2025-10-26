@@ -22,6 +22,7 @@ class TimerSettings: ObservableObject, Codable {
     @Published var selectedTheme: AppTheme
     @Published var focusModeEnabled: Bool
     @Published var syncWithFocusMode: Bool
+    @Published var iCloudSyncEnabled: Bool
     
     enum AppTheme: String, Codable, CaseIterable {
         case system = "System"
@@ -50,6 +51,7 @@ class TimerSettings: ObservableObject, Codable {
         case selectedTheme
         case focusModeEnabled
         case syncWithFocusMode
+        case iCloudSyncEnabled
     }
     
     init(
@@ -64,7 +66,8 @@ class TimerSettings: ObservableObject, Codable {
         notificationsEnabled: Bool = true,
         selectedTheme: AppTheme = .system,
         focusModeEnabled: Bool = false,
-        syncWithFocusMode: Bool = false
+        syncWithFocusMode: Bool = false,
+        iCloudSyncEnabled: Bool = false
     ) {
         self.focusDuration = focusDuration
         self.shortBreakDuration = shortBreakDuration
@@ -78,6 +81,7 @@ class TimerSettings: ObservableObject, Codable {
         self.selectedTheme = selectedTheme
         self.focusModeEnabled = focusModeEnabled
         self.syncWithFocusMode = syncWithFocusMode
+        self.iCloudSyncEnabled = iCloudSyncEnabled
     }
     
     required init(from decoder: Decoder) throws {
@@ -94,6 +98,7 @@ class TimerSettings: ObservableObject, Codable {
         selectedTheme = try container.decode(AppTheme.self, forKey: .selectedTheme)
         focusModeEnabled = try container.decodeIfPresent(Bool.self, forKey: .focusModeEnabled) ?? false
         syncWithFocusMode = try container.decodeIfPresent(Bool.self, forKey: .syncWithFocusMode) ?? false
+        iCloudSyncEnabled = try container.decodeIfPresent(Bool.self, forKey: .iCloudSyncEnabled) ?? false
     }
     
     func encode(to encoder: Encoder) throws {
@@ -110,5 +115,6 @@ class TimerSettings: ObservableObject, Codable {
         try container.encode(selectedTheme, forKey: .selectedTheme)
         try container.encode(focusModeEnabled, forKey: .focusModeEnabled)
         try container.encode(syncWithFocusMode, forKey: .syncWithFocusMode)
+        try container.encode(iCloudSyncEnabled, forKey: .iCloudSyncEnabled)
     }
 }

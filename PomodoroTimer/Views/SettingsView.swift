@@ -121,6 +121,56 @@ struct SettingsView: View {
                     .accessibilityLabel("Enable haptic feedback")
                 }
                 
+                // iCloud Sync
+                Section(header: Text("iCloud Sync")) {
+                    Toggle(isOn: $timerManager.settings.iCloudSyncEnabled) {
+                        HStack {
+                            Image(systemName: "icloud.fill")
+                                .foregroundColor(.blue)
+                            Text("Enable iCloud Sync")
+                        }
+                    }
+                    .accessibilityLabel("Enable iCloud sync")
+                    
+                    if timerManager.settings.iCloudSyncEnabled {
+                        HStack {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .foregroundColor(.green)
+                            Text("Sync Status")
+                            Spacer()
+                            Text(CloudSyncManager.shared.syncStatus.message)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        if let lastSync = CloudSyncManager.shared.lastSyncDate {
+                            HStack {
+                                Image(systemName: "clock.fill")
+                                    .foregroundColor(.orange)
+                                Text("Last Sync")
+                                Spacer()
+                                Text(lastSync, style: .relative)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        
+                        Button {
+                            syncNow()
+                        } label: {
+                            HStack {
+                                Image(systemName: "arrow.clockwise")
+                                Text("Sync Now")
+                            }
+                        }
+                        .disabled(CloudSyncManager.shared.isSyncing)
+                        
+                        Text("Your settings and session history will be synced across all your devices signed in with the same iCloud account.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                
                 // Theme Settings
                 Section(header: Text("Appearance")) {
                     Picker("Theme", selection: $timerManager.settings.selectedTheme) {
@@ -143,6 +193,18 @@ struct SettingsView: View {
                         }
                     }
                     .accessibilityLabel("Clear all statistics")
+                    
+                    if timerManager.settings.iCloudSyncEnabled {
+                        Button(role: .destructive) {
+                            deleteCloudData()
+                        } label: {
+                            HStack {
+                                Image(systemName: "icloud.slash.fill")
+                                Text("Delete iCloud Data")
+                            }
+                        }
+                        .accessibilityLabel("Delete all iCloud data")
+                    }
                 }
                 
                 // App Info
@@ -170,6 +232,28 @@ struct SettingsView: View {
     
     private func saveSettings() {
         PersistenceManager.shared.saveSettings(timerManager.settings)
+        
+        // Sync to iCloud if enabled
+        if timerManager.settings.iCloudSyncEnabled {
+            CloudSyncManager.shared.syncSettings(timerManager.settings)
+        }
+    }
+    
+    private func syncNow() {
+        CloudSyncManager.shared.syncSettings(timerManager.settings)
+        
+        let sessions = PersistenceManager.shared.getAllSessions()
+        CloudSyncManager.shared.syncAllSessions(sessions)
+    }
+    
+    private func deleteCloudData() {
+        CloudSyncManager.shared.deleteAllCloudData { success in
+            if success {
+                print("iCloud data deleted successfully")
+            } else {
+                print("Failed to delete iCloud data")
+            }
+        }
     }
 }
 
