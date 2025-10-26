@@ -8,14 +8,71 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var timerManager = TimerManager(settings: PersistenceManager.shared.loadSettings())
+    @State private var showSettings = false
+    @State private var showStatistics = false
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView {
+            ZStack {
+                // Background gradient based on session type
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        sessionBackgroundColor.opacity(0.1),
+                        Color(.systemBackground)
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
+                
+                MainTimerView(timerManager: timerManager)
+                    .navigationTitle("Pomodoro")
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button(action: {
+                                showStatistics = true
+                            }) {
+                                Image(systemName: "chart.bar.fill")
+                                    .font(.title3)
+                            }
+                            .accessibilityLabel("View statistics")
+                        }
+                        
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                showSettings = true
+                            }) {
+                                Image(systemName: "gearshape.fill")
+                                    .font(.title3)
+                            }
+                            .accessibilityLabel("Open settings")
+                        }
+                    }
+            }
         }
-        .padding()
+        .preferredColorScheme(timerManager.settings.selectedTheme.colorScheme)
+        .sheet(isPresented: $showSettings) {
+            SettingsView(timerManager: timerManager)
+        }
+        .sheet(isPresented: $showStatistics) {
+            StatisticsView(timerManager: timerManager)
+        }
+        .onAppear {
+            timerManager.requestNotificationPermission()
+        }
+    }
+    
+    private var sessionBackgroundColor: Color {
+        switch timerManager.currentSessionType {
+        case .focus:
+            return .red
+        case .shortBreak:
+            return .green
+        case .longBreak:
+            return .blue
+        }
     }
 }
 
