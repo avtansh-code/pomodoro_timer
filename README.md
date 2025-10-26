@@ -140,12 +140,44 @@ PomodoroTimer/
 - **Apple HIG Compliance** - Follows iOS Human Interface Guidelines
 - **Accessibility First** - Designed to be usable by everyone
 
+## 🗣️ Siri Shortcuts
+
+Control your Pomodoro timer hands-free using Siri or the Shortcuts app!
+
+### Available Commands
+
+- **"Start a Pomodoro Timer"** - Begins a new focus session
+- **"Pause Pomodoro Timer"** - Pauses the current timer
+- **"Resume Pomodoro Timer"** - Resumes a paused timer
+- **"Reset Pomodoro Timer"** - Resets the timer to the beginning
+- **"Show my Pomodoro Timer stats"** - Opens your statistics
+
+### How to Use
+
+1. **With Siri**: Simply say "Hey Siri" followed by any command above
+2. **Shortcuts App**: 
+   - Open the Shortcuts app
+   - Tap the "+" button to create a new shortcut
+   - Search for "Pomodoro Timer" to see all available actions
+   - Add actions to your custom workflows
+
+### Custom Duration
+
+You can also start a Pomodoro with a custom duration:
+- Use the Start Pomodoro action in Shortcuts
+- Specify the duration in minutes (optional parameter)
+
+### Example Shortcuts
+
+- **Morning Routine**: Start Pomodoro → Set Focus Mode → Open Calendar
+- **Deep Work**: Start Pomodoro → Enable Do Not Disturb → Open IDE
+- **Quick Break**: Show stats → Start break timer
+
 ## 📝 Future Enhancements
 
 Potential features for future versions:
 - ⌚ Apple Watch companion app
 - ☁️ iCloud sync across devices
-- 🗣️ Siri Shortcuts integration
 - 🎯 Focus Mode API integration
 - 📊 More detailed analytics and charts
 - 🏆 Achievement system and badges

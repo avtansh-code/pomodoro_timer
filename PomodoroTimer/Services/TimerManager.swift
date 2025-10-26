@@ -31,6 +31,7 @@ class TimerManager: ObservableObject {
         self.settings = settings
         self.timeRemaining = settings.focusDuration
         setupAudioSession()
+        setupIntentObservers()
     }
     
     // MARK: - Timer Controls
@@ -273,6 +274,82 @@ class TimerManager: ObservableObject {
         let request = UNNotificationRequest(identifier: "TimerComplete", content: content, trigger: trigger)
         
         UNUserNotificationCenter.current().add(request)
+    }
+    
+    // MARK: - AppIntents Support
+    
+    private func setupIntentObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleStartPomodoroIntent(_:)),
+            name: NSNotification.Name("StartPomodoroFromIntent"),
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handlePauseTimerIntent),
+            name: NSNotification.Name("PauseTimerFromIntent"),
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleResumeTimerIntent),
+            name: NSNotification.Name("ResumeTimerFromIntent"),
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleResetTimerIntent),
+            name: NSNotification.Name("ResetTimerFromIntent"),
+            object: nil
+        )
+    }
+    
+    @objc private func handleStartPomodoroIntent(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            // Handle custom duration if provided
+            if let userInfo = notification.userInfo,
+               let customDuration = userInfo["duration"] as? Int {
+                let durationInSeconds = TimeInterval(customDuration * 60)
+                self.timeRemaining = durationInSeconds
+            } else {
+                // Use default duration for current session type
+                if self.timerState == .idle {
+                    self.currentSessionType = .focus
+                    self.timeRemaining = self.settings.focusDuration
+                }
+            }
+            
+            self.startTimer()
+        }
+    }
+    
+    @objc private func handlePauseTimerIntent() {
+        DispatchQueue.main.async { [weak self] in
+            self?.pauseTimer()
+        }
+    }
+    
+    @objc private func handleResumeTimerIntent() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self, self.timerState == .paused else { return }
+            self.startTimer()
+        }
+    }
+    
+    @objc private func handleResetTimerIntent() {
+        DispatchQueue.main.async { [weak self] in
+            self?.resetTimer()
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 

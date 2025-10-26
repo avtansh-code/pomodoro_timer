@@ -61,6 +61,10 @@ struct ContentView: View {
         }
         .onAppear {
             timerManager.requestNotificationPermission()
+            setupIntentObservers()
+        }
+        .onDisappear {
+            NotificationCenter.default.removeObserver(self)
         }
     }
     
@@ -72,6 +76,16 @@ struct ContentView: View {
             return .green
         case .longBreak:
             return .blue
+        }
+    }
+    
+    private func setupIntentObservers() {
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("ShowStatisticsFromIntent"),
+            object: nil,
+            queue: .main
+        ) { [self] _ in
+            showStatistics = true
         }
     }
 }
