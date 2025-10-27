@@ -360,7 +360,7 @@ struct SettingsView: View {
                     .frame(width: 24)
                 Text("Version")
                 Spacer()
-                Text("1.0.2")
+                Text("1.1.0")
                     .foregroundColor(.secondary)
             }
         } header: {

@@ -1,6 +1,6 @@
 # 🍅 Mr. Pomodoro - User Guide
 
-**Version:** 1.0.2  
+**Version:** 1.1.0  
 **Last Updated:** January 26, 2026  
 **iOS Version:** 18.0+
 
@@ -934,5 +934,5 @@ We hope this app helps you achieve your goals and build better productivity habi
 ---
 
 *Last Updated: January 26, 2026*  
-*App Version: 1.0.2*  
+*App Version: 1.1.0*  
 *Guide Version: 1.0*

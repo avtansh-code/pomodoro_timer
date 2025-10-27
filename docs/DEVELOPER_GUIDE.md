@@ -1,6 +1,6 @@
 # 🛠️ Mr. Pomodoro - Developer Guide
 
-**Version:** 1.0.2  
+**Version:** 1.1.0  
 **Last Updated:** January 26, 2026  
 **Xcode:** 26.0.1  
 **iOS SDK:** 26.0  
@@ -1206,7 +1206,7 @@ When adding new features:
 ---
 
 **Last Updated:** January 26, 2026  
-**Version:** 1.0.2  
+**Version:** 1.1.0  
 **Maintainer:** Development Team
 
 *For user-facing documentation, see USER_GUIDE.md*

@@ -1,6 +1,6 @@
 # 🎨 Mr. Pomodoro - Design System Guide
 
-**Version:** 1.0.2  
+**Version:** 1.1.0  
 **Last Updated:** January 26, 2026  
 **Design System Version:** 1.0
 
@@ -881,6 +881,6 @@ For questions or issues related to the design system:
 
 **Last Updated:** January 26, 2026  
 **Design System Version:** 1.0  
-**App Version:** 1.0.2
+**App Version:** 1.1.0
 
 *This design system is a living document and will evolve with the app.*

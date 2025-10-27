@@ -1,6 +1,6 @@
 # 📱 Mr. Pomodoro - App Store Submission Guide
 
-**Version:** 1.0.2  
+**Version:** 1.1.0  
 **Last Updated:** January 26, 2026  
 **Submission Status:** Ready for Review
 
@@ -229,12 +229,12 @@ pomodoro,timer,focus,productivity,study,work,break,task,time management,concentr
 - `mindfulness` (11 chars)
 - `goals` (5 chars)
 
-### What's New (Version 1.0.2)
+### What's New (Version 1.1.0)
 
 **Character Limit:** 4,000 characters
 
 ```
-Version 1.0.2 - Initial Release
+Version 1.1.0 - Initial Release
 
 Welcome to Mr. Pomodoro! 🍅
 
@@ -694,7 +694,7 @@ Thank you!
 - [ ] Rating (complete questionnaire)
 
 #### Version Information
-- [ ] Version Number (1.0.2)
+- [ ] Version Number (1.1.0)
 - [ ] Build Number (3)
 - [ ] Copyright
 - [ ] What's New in This Version
@@ -892,5 +892,5 @@ Thank you!
 ---
 
 *Last Updated: January 26, 2026*  
-*App Version: 1.0.2*  
+*App Version: 1.1.0*  
 *Submission Guide Version: 1.0*

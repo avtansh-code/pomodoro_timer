@@ -188,7 +188,7 @@ This app is **fully optimized for iOS 18** and the **iPhone 17** lineup:
 IPHONEOS_DEPLOYMENT_TARGET = 18.0
 SDKROOT = auto (iOS 26.0)
 TARGETED_DEVICE_FAMILY = 1,2 (iPhone and iPad)
-MARKETING_VERSION = 1.0.2
+MARKETING_VERSION = 1.1.0
 CURRENT_PROJECT_VERSION = 3
 SWIFT_VERSION = 5.0
 SWIFT_APPROACHABLE_CONCURRENCY = YES
@@ -407,7 +407,7 @@ Suggestions and improvements are welcome! Feel free to:
 
 ---
 
-**Version**: 1.0.2 (Build 3)  
+**Version**: 1.1.0 (Build 3)  
 **Last Updated**: January 2026  
 **Minimum iOS**: 18.0  
 **Built with**: Xcode 26.0.1 / iOS SDK 26.0
