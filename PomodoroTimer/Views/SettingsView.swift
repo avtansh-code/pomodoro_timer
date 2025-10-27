@@ -49,8 +49,8 @@ struct SettingsView: View {
             // Notifications & Feedback
             notificationSection
             
-            // iCloud Sync
-            iCloudSection
+            // iCloud Sync - Hidden for now
+            // iCloudSection
             
             // Developer Tools (Debug only)
             #if DEBUG

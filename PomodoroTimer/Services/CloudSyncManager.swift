@@ -336,79 +336,106 @@ class CloudSyncManager: ObservableObject {
         
         print("Starting iCloud data deletion...")
         
-        // Delete all settings using query operation
-        deleteRecordsOfType("Settings") { [weak self] success in
+        // Delete settings directly using known record ID
+        deleteSettings { [weak self] settingsSuccess in
             guard let self = self else {
                 DispatchQueue.main.async { completion(false) }
                 return
             }
             
-            if success {
-                print("✅ Settings deleted successfully from iCloud, proceeding to sessions...")
-                // Continue to delete sessions
-                self.deleteRecordsOfType("Session", completion: completion)
-            } else {
-                print("❌ Failed to delete settings from iCloud")
-                DispatchQueue.main.async { completion(false) }
+            // Continue to delete sessions regardless of settings result
+            // (settings might not exist, which is okay)
+            self.deleteAllSessions { sessionsSuccess in
+                let overallSuccess = settingsSuccess || sessionsSuccess
+                if overallSuccess {
+                    print("✅ iCloud data deletion completed")
+                } else {
+                    print("⚠️ iCloud data deletion completed with some errors")
+                }
+                DispatchQueue.main.async { completion(overallSuccess) }
             }
         }
     }
     
-    private func deleteRecordsOfType(_ recordType: String, completion: @escaping (Bool) -> Void) {
-        print("🔍 Querying iCloud for \(recordType) records to delete...")
+    private func deleteSettings(completion: @escaping (Bool) -> Void) {
+        print("🗑️ Deleting Settings from iCloud...")
         
-        // Use CKQueryOperation with TRUEPREDICATE to get all records
-        let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
-        let queryOperation = CKQueryOperation(query: query)
-        queryOperation.qualityOfService = .userInitiated
+        // Use the known record ID for settings
+        let recordID = CKRecord.ID(recordName: "UserSettings")
+        
+        privateDatabase.delete(withRecordID: recordID) { deletedRecordID, error in
+            if let error = error {
+                let nsError = error as NSError
+                // Check if it's a "record not found" error - that's okay
+                if nsError.code == CKError.unknownItem.rawValue {
+                    print("ℹ️ No Settings record found to delete (already clean)")
+                    DispatchQueue.main.async { completion(true) }
+                } else {
+                    print("❌ Failed to delete Settings: \(error.localizedDescription)")
+                    DispatchQueue.main.async { completion(false) }
+                }
+            } else {
+                print("✅ Settings deleted successfully from iCloud")
+                DispatchQueue.main.async { completion(true) }
+            }
+        }
+    }
+    
+    private func deleteAllSessions(completion: @escaping (Bool) -> Void) {
+        print("🔍 Fetching Sessions from iCloud to delete...")
+        
+        // Use CKQueryOperation instead of fetch(withQuery:) to avoid queryable field requirements
+        let query = CKQuery(recordType: "Session", predicate: NSPredicate(value: true))
+        let operation = CKQueryOperation(query: query)
+        operation.qualityOfService = .userInitiated
+        operation.desiredKeys = ["sessionId", "type"] // Only fetch these fields for logging
         
         var recordIDsToDelete: [CKRecord.ID] = []
         
-        queryOperation.recordMatchedBlock = { recordID, result in
+        operation.recordMatchedBlock = { recordID, result in
             switch result {
             case .success(let record):
+                let sessionId = record["sessionId"] as? String ?? "unknown"
+                let type = record["type"] as? String ?? "unknown"
+                print("  📝 Found Session to delete: ID=\(sessionId), Type=\(type)")
                 recordIDsToDelete.append(record.recordID)
-                
-                if recordType == "Session" {
-                    // Log session details for debugging
-                    let sessionId = record["sessionId"] as? String ?? "unknown"
-                    let type = record["type"] as? String ?? "unknown"
-                    let completedAt = record["completedAt"] as? Date ?? Date()
-                    let wasCompleted = (record["wasCompleted"] as? Int ?? 1) != 0
-                    print("  📝 Found Session: ID=\(sessionId), Type=\(type), Completed=\(wasCompleted), Date=\(completedAt)")
-                } else if recordType == "Settings" {
-                    print("  ⚙️ Found Settings record: \(record.recordID.recordName)")
-                }
             case .failure(let error):
-                print("  ⚠️ Error fetching \(recordType) record: \(error.localizedDescription)")
+                print("  ⚠️ Error fetching session record: \(error.localizedDescription)")
             }
         }
         
-        queryOperation.queryResultBlock = { [weak self] result in
+        operation.queryResultBlock = { [weak self] result in
             guard let self = self else {
-                print("❌ Self deallocated during \(recordType) query completion")
+                print("❌ Self deallocated during session fetch")
                 DispatchQueue.main.async { completion(false) }
                 return
             }
             
             switch result {
             case .success:
-                print("📦 Found \(recordIDsToDelete.count) \(recordType) record(s) to delete")
+                print("📦 Found \(recordIDsToDelete.count) Session record(s) to delete")
                 
                 if recordIDsToDelete.isEmpty {
-                    print("ℹ️ No \(recordType) records found to delete")
+                    print("ℹ️ No Session records found to delete")
                     DispatchQueue.main.async { completion(true) }
                 } else {
-                    print("🗑️ Preparing to delete \(recordIDsToDelete.count) \(recordType) record(s) from iCloud...")
-                    self.deleteRecords(recordIDsToDelete, recordType: recordType, completion: completion)
+                    self.deleteRecords(recordIDsToDelete, recordType: "Session", completion: completion)
                 }
+                
             case .failure(let error):
-                print("❌ Failed to query \(recordType) for deletion: \(error.localizedDescription)")
-                DispatchQueue.main.async { completion(false) }
+                let nsError = error as NSError
+                // Check if it's a "zone not found" error - that's okay, means no data exists
+                if nsError.code == CKError.zoneNotFound.rawValue || nsError.code == CKError.unknownItem.rawValue {
+                    print("ℹ️ No Session records found to delete (zone doesn't exist or no records)")
+                    DispatchQueue.main.async { completion(true) }
+                } else {
+                    print("❌ Failed to fetch Sessions for deletion: \(error.localizedDescription)")
+                    DispatchQueue.main.async { completion(false) }
+                }
             }
         }
         
-        privateDatabase.add(queryOperation)
+        privateDatabase.add(operation)
     }
     
     private func deleteRecords(_ recordIDs: [CKRecord.ID], recordType: String, completion: @escaping (Bool) -> Void) {
