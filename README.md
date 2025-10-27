@@ -47,7 +47,17 @@ A clean, customizable, and user-friendly Pomodoro timer built with SwiftUI for i
 - **Weekly Overview** - View your productivity over the past 7 days
 - **Streak Tracking** - Monitor your consecutive days of productivity
 - **Session History** - Detailed breakdown of focus time vs. break time
+- **Visual Charts** - Weekly session trends and focus time graphs
+- **Session Distribution** - Pie charts showing focus vs. break breakdown
 - **Motivational Quotes** - Random inspirational messages to keep you motivated
+
+### 📚 Learning & Guidance
+- **Pomodoro Benefits View** - Comprehensive guide to the Pomodoro Technique
+- **Technique History** - Learn about Francesco Cirillo's time management method
+- **Step-by-Step Instructions** - Clear walkthrough of how to use the technique
+- **Benefits Overview** - Understand why Pomodoro improves focus and productivity
+- **Best Practices** - Tips for maximizing your productivity
+- **Quick Start Guide** - Get productive immediately with one-tap timer launch
 
 ### 🔔 Notifications & Feedback
 - **Local Notifications** - Get notified when sessions complete (even when app is backgrounded)
@@ -90,7 +100,7 @@ PomodoroTimer/
 
 ### Prerequisites
 - **Xcode 26.0.1** (or later)
-- **iOS 18.0+** (Minimum deployment target)
+- **iOS 18.6+** (Minimum deployment target)
 - **Swift 5.0+** with modern concurrency
 
 ### Installation
@@ -163,7 +173,7 @@ Additional statistics features displaying your session breakdown, focus vs. brea
 
 This app is **fully optimized for iOS 18** and the **iPhone 17** lineup:
 
-### iOS 18 Features
+### iOS 18.6 Features
 - ✅ **CloudKit API Updates** - Uses iOS 18's new Result-based fetch APIs
 - ✅ **Swift 6 Ready** - Modern concurrency patterns with strict sendability
 - ✅ **Latest SDK** - Built with iOS SDK 26.0 (Xcode 26.0.1)
@@ -177,15 +187,15 @@ This app is **fully optimized for iOS 18** and the **iPhone 17** lineup:
 - 📱 **iPhone Air** - Lightweight experience optimized
 
 ### Device Requirements
-- **Minimum iOS**: 18.0
-- **Deployment Target**: iOS 18.0
+- **Minimum iOS**: 18.6
+- **Deployment Target**: iOS 18.6
 - **SDK Version**: iOS 26.0
 - **Xcode**: 26.0.1 or later
 - **Supported Platforms**: iPhone and iPad
 
 ### Build Configuration
 ```
-IPHONEOS_DEPLOYMENT_TARGET = 18.0
+IPHONEOS_DEPLOYMENT_TARGET = 18.6
 SDKROOT = auto (iOS 26.0)
 TARGETED_DEVICE_FAMILY = 1,2 (iPhone and iPad)
 MARKETING_VERSION = 1.1.0
@@ -408,8 +418,8 @@ Suggestions and improvements are welcome! Feel free to:
 ---
 
 **Version**: 1.1.0 (Build 3)  
-**Last Updated**: January 2026  
-**Minimum iOS**: 18.0  
+**Last Updated**: October 27, 2025  
+**Minimum iOS**: 18.6  
 **Built with**: Xcode 26.0.1 / iOS SDK 26.0
 
 Made with ❤️ and ☕ using SwiftUI

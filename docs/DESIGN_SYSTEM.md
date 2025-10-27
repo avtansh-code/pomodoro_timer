@@ -1,7 +1,7 @@
 # 🎨 Mr. Pomodoro - Design System Guide
 
-**Version:** 1.1.0  
-**Last Updated:** January 26, 2026  
+**Version:** 1.1.0
+**Last Updated:** October 27, 2025
 **Design System Version:** 1.0
 
 This guide documents the complete design system for the Pomodoro Timer app, including theming architecture, visual specifications, component library, and design principles.

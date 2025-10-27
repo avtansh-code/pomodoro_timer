@@ -234,6 +234,7 @@ Found an issue or have a suggestion for the documentation?
 
 **Documentation Version:** 2.0  
 **Last Updated:** January 26, 2026  
-**App Version:** 1.1.0
+**App Version:** 1.1.0  
+**Last Updated:** October 27, 2025
 
 *This documentation is maintained alongside the codebase and updated with each release.*
