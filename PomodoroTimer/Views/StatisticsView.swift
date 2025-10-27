@@ -24,70 +24,68 @@ struct StatisticsView: View {
     }
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                // Animated background gradient
-                theme.focusGradient
-                    .opacity(0.12)
-                    .ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 24) {
-                    // Time Range Picker
-                    Picker("Time Range", selection: $selectedTimeRange) {
-                        ForEach(TimeRange.allCases, id: \.self) { range in
-                            Text(range.rawValue).tag(range)
-                        }
+        ZStack {
+            // Animated background gradient
+            theme.focusGradient
+                .opacity(0.12)
+                .ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 24) {
+                // Time Range Picker
+                Picker("Time Range", selection: $selectedTimeRange) {
+                    ForEach(TimeRange.allCases, id: \.self) { range in
+                        Text(range.rawValue).tag(range)
                     }
-                    .pickerStyle(.segmented)
-                    .padding(.horizontal)
-                    
-                    // Current Streak Card
-                    StreakCard(streak: currentStreak)
-                    
-                    // Weekly Sessions Chart
-                    if #available(iOS 16.0, *) {
-                        WeeklySessionsChart(sessions: currentSessions)
-                    }
-                    
-                    // Focus Time Trend Chart
-                    if #available(iOS 16.0, *) {
-                        FocusTimeTrendChart(sessions: currentSessions)
-                    }
-                    
-                    // Session Type Distribution
-                    if #available(iOS 16.0, *) {
-                        SessionTypeDistributionChart(sessions: currentSessions)
-                    }
-                    
-                    // Today's Stats
-                    StatsSection(
-                        title: "Today",
-                        sessions: todaySessions,
-                        icon: "calendar"
-                    )
-                    
-                    // Summary Stats based on selected range
-                    StatsSection(
-                        title: selectedTimeRange.rawValue,
-                        sessions: currentSessions,
-                        icon: "calendar.badge.clock"
-                    )
-                    
-                    // Motivational Quote
-                    MotivationalQuoteCard()
-                    }
-                    .padding()
                 }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                
+                // Current Streak Card
+                StreakCard(streak: currentStreak)
+                
+                // Weekly Sessions Chart
+                if #available(iOS 16.0, *) {
+                    WeeklySessionsChart(sessions: currentSessions)
+                }
+                
+                // Focus Time Trend Chart
+                if #available(iOS 16.0, *) {
+                    FocusTimeTrendChart(sessions: currentSessions)
+                }
+                
+                // Session Type Distribution
+                if #available(iOS 16.0, *) {
+                    SessionTypeDistributionChart(sessions: currentSessions)
+                }
+                
+                // Today's Stats
+                StatsSection(
+                    title: "Today",
+                    sessions: todaySessions,
+                    icon: "calendar"
+                )
+                
+                // Summary Stats based on selected range
+                StatsSection(
+                    title: selectedTimeRange.rawValue,
+                    sessions: currentSessions,
+                    icon: "calendar.badge.clock"
+                )
+                
+                // Motivational Quote
+                MotivationalQuoteCard()
+                }
+                .padding()
             }
-            .navigationTitle("Statistics")
-            .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                loadStatistics()
-            }
-            .onChange(of: selectedTimeRange) { oldValue, newValue in
-                // Stats will update automatically through computed property
-            }
+        }
+        .navigationTitle("Statistics")
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            loadStatistics()
+        }
+        .onChange(of: selectedTimeRange) { oldValue, newValue in
+            // Stats will update automatically through computed property
         }
     }
     
@@ -348,7 +346,7 @@ struct StreakCard: View {
                 .font(.system(size: 50))
                 .foregroundColor(.orange)
                 .shadow(color: .orange.opacity(0.3), radius: 10, x: 0, y: 5)
-                .accessibilityHidden(true)
+                .accessibilityLabel("flame")
             
             Text("\(streak)")
                 .font(.system(size: 48, weight: .bold, design: .rounded))
@@ -498,8 +496,6 @@ struct StatRow: View {
                 .fontWeight(.semibold)
                 .foregroundColor(.primary)
         }
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(label): \(value)")
     }
 }
 
@@ -522,6 +518,7 @@ struct MotivationalQuoteCard: View {
             Image(systemName: "sparkles")
                 .font(.title2)
                 .foregroundColor(.yellow)
+                .accessibilityLabel("sparkles")
             
             Text(quotes.randomElement() ?? quotes[0])
                 .font(theme.typography.body)

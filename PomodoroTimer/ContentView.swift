@@ -97,7 +97,9 @@ struct StatisticsTabView: View {
     @ObservedObject var timerManager: TimerManager
     
     var body: some View {
-        StatisticsView(timerManager: timerManager)
+        NavigationView {
+            StatisticsView(timerManager: timerManager)
+        }
     }
 }
 

@@ -365,7 +365,8 @@ struct SettingsView: View {
                     Text("Reset App Completely")
                 }
             }
-            .accessibilityLabel("Reset app to default settings")
+            .accessibilityLabel("Reset App Completely")
+            .accessibilityHint("Reset app to default settings and delete all statistics")
             .confirmationDialog(
                 "Reset App Completely",
                 isPresented: $showingResetAppConfirmation,
@@ -460,6 +461,8 @@ struct SettingsView: View {
                 Text("1.1.0")
                     .foregroundColor(.secondary)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Version 1.1.0")
         } header: {
             Label("About", systemImage: "info.circle")
         }
