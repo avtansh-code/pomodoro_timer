@@ -65,6 +65,7 @@ extension XCTestCase {
     }
     
     /// Create a mock timer manager with short durations for testing
+    @MainActor
     func createMockTimerManager() -> TimerManager {
         let settings = TimerSettingsFactory.createShortDurationSettings()
         return TimerManager(settings: settings)

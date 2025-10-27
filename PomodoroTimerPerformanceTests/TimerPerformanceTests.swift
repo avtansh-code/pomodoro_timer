@@ -8,6 +8,7 @@
 import XCTest
 @testable import PomodoroTimer
 
+@MainActor
 final class TimerPerformanceTests: XCTestCase {
     
     var timerManager: TimerManager!
@@ -15,15 +16,15 @@ final class TimerPerformanceTests: XCTestCase {
     
     // MARK: - Setup & Teardown
     
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
         persistenceManager = PersistenceManager.shared
         
         let settings = TimerSettings()
         settings.focusDuration = 5 // Short duration for faster tests
         settings.shortBreakDuration = 2
         settings.longBreakDuration = 3
-        timerManager = TimerManager(settings: settings)
+        timerManager = TimerManager(settings: settings, persistenceManager: persistenceManager)
         
         persistenceManager.clearAllSessions()
     }

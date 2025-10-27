@@ -162,23 +162,22 @@ class CloudSyncManager: ObservableObject {
                 
                 switch firstMatch.1 {
                 case .success(let record):
-            
-                    let settings = TimerSettings(
-                        focusDuration: record["focusDuration"] as? TimeInterval ?? 25 * 60,
-                        shortBreakDuration: record["shortBreakDuration"] as? TimeInterval ?? 5 * 60,
-                        longBreakDuration: record["longBreakDuration"] as? TimeInterval ?? 15 * 60,
-                        sessionsUntilLongBreak: record["sessionsUntilLongBreak"] as? Int ?? 4,
-                        autoStartBreaks: record["autoStartBreaks"] as? Bool ?? false,
-                        autoStartFocus: record["autoStartFocus"] as? Bool ?? false,
-                        soundEnabled: record["soundEnabled"] as? Bool ?? true,
-                        hapticEnabled: record["hapticEnabled"] as? Bool ?? true,
-                        notificationsEnabled: record["notificationsEnabled"] as? Bool ?? true,
-                        selectedTheme: TimerSettings.AppTheme(rawValue: record["selectedTheme"] as? String ?? "System") ?? .system,
-                        focusModeEnabled: record["focusModeEnabled"] as? Bool ?? false,
-                        syncWithFocusMode: record["syncWithFocusMode"] as? Bool ?? false
-                    )
-                    
-                    DispatchQueue.main.async {
+                    Task { @MainActor in
+                        let settings = TimerSettings(
+                            focusDuration: record["focusDuration"] as? TimeInterval ?? 25 * 60,
+                            shortBreakDuration: record["shortBreakDuration"] as? TimeInterval ?? 5 * 60,
+                            longBreakDuration: record["longBreakDuration"] as? TimeInterval ?? 15 * 60,
+                            sessionsUntilLongBreak: record["sessionsUntilLongBreak"] as? Int ?? 4,
+                            autoStartBreaks: record["autoStartBreaks"] as? Bool ?? false,
+                            autoStartFocus: record["autoStartFocus"] as? Bool ?? false,
+                            soundEnabled: record["soundEnabled"] as? Bool ?? true,
+                            hapticEnabled: record["hapticEnabled"] as? Bool ?? true,
+                            notificationsEnabled: record["notificationsEnabled"] as? Bool ?? true,
+                            selectedTheme: TimerSettings.AppTheme(rawValue: record["selectedTheme"] as? String ?? "System") ?? .system,
+                            focusModeEnabled: record["focusModeEnabled"] as? Bool ?? false,
+                            syncWithFocusMode: record["syncWithFocusMode"] as? Bool ?? false
+                        )
+                        
                         completion(settings)
                     }
                 case .failure(let error):

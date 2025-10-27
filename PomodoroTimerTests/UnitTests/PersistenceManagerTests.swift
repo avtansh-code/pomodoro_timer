@@ -30,6 +30,7 @@ final class PersistenceManagerTests: XCTestCase {
     
     // MARK: - Settings Persistence Tests
     
+    @MainActor
     func testSaveAndLoadSettings() {
         let settings = TimerSettingsFactory.createCustomSettings(
             focusDuration: 30 * 60,
@@ -51,6 +52,7 @@ final class PersistenceManagerTests: XCTestCase {
         XCTAssertEqual(loadedSettings.selectedTheme, settings.selectedTheme)
     }
     
+    @MainActor
     func testLoadDefaultSettingsWhenNoneExist() {
         let loadedSettings = persistenceManager.loadSettings()
         
@@ -63,6 +65,7 @@ final class PersistenceManagerTests: XCTestCase {
         XCTAssertEqual(loadedSettings.selectedTheme, .system)
     }
     
+    @MainActor
     func testSaveSettingsWithAllProperties() {
         let settings = TimerSettingsFactory.createCustomSettings(
             focusDuration: 45 * 60,
@@ -267,6 +270,7 @@ final class PersistenceManagerTests: XCTestCase {
     
     // MARK: - iCloud Sync Integration Tests
     
+    @MainActor
     func testSyncWithCloudWhenDisabled() {
         let settings = TimerSettingsFactory.createCustomSettings(iCloudSyncEnabled: false)
         persistenceManager.saveSettings(settings)
@@ -280,6 +284,7 @@ final class PersistenceManagerTests: XCTestCase {
         waitForExpectations(timeout: 1.0)
     }
     
+    @MainActor
     func testSyncWithCloudWhenEnabled() {
         let settings = TimerSettingsFactory.createCustomSettings(iCloudSyncEnabled: true)
         persistenceManager.saveSettings(settings)
@@ -328,6 +333,7 @@ final class PersistenceManagerTests: XCTestCase {
         XCTAssertEqual(sessions.first?.duration, largeDuration)
     }
     
+    @MainActor
     func testCorruptedSettingsData() {
         // Manually set corrupted data
         mockUserDefaults.set("invalid json data", forKey: "TimerSettings")

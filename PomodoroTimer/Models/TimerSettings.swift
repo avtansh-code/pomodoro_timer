@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
+@MainActor
 class TimerSettings: ObservableObject, Codable {
     @Published var focusDuration: TimeInterval
     @Published var shortBreakDuration: TimeInterval

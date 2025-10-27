@@ -28,6 +28,7 @@ final class TimerSettingsTests: XCTestCase {
     
     // MARK: - Initialization Tests
     
+    @MainActor
     func testDefaultSettingsInitialization() {
         let settings = TimerSettings()
         
@@ -46,6 +47,7 @@ final class TimerSettingsTests: XCTestCase {
         XCTAssertFalse(settings.iCloudSyncEnabled)
     }
     
+    @MainActor
     func testCustomSettingsInitialization() {
         let settings = TimerSettingsFactory.createCustomSettings(
             focusDuration: 30 * 60,
@@ -110,6 +112,7 @@ final class TimerSettingsTests: XCTestCase {
     
     // MARK: - Codable Tests
     
+    @MainActor
     func testTimerSettingsEncoding() throws {
         let settings = TimerSettingsFactory.createDefaultSettings()
         
@@ -119,6 +122,7 @@ final class TimerSettingsTests: XCTestCase {
         XCTAssertFalse(data.isEmpty)
     }
     
+    @MainActor
     func testTimerSettingsDecoding() throws {
         let originalSettings = TimerSettingsFactory.createCustomSettings(
             focusDuration: 30 * 60,
@@ -130,9 +134,7 @@ final class TimerSettingsTests: XCTestCase {
         let data = try encoder.encode(originalSettings)
         
         let decoder = JSONDecoder()
-        let decodedSettings = try MainActor.assumeIsolated {
-            try decoder.decode(TimerSettings.self, from: data)
-        }
+        let decodedSettings = try decoder.decode(TimerSettings.self, from: data)
         
         XCTAssertEqual(decodedSettings.focusDuration, originalSettings.focusDuration)
         XCTAssertEqual(decodedSettings.shortBreakDuration, originalSettings.shortBreakDuration)
@@ -142,6 +144,7 @@ final class TimerSettingsTests: XCTestCase {
         XCTAssertEqual(decodedSettings.iCloudSyncEnabled, originalSettings.iCloudSyncEnabled)
     }
     
+    @MainActor
     func testTimerSettingsEncodingDecodingAllProperties() throws {
         let originalSettings = TimerSettingsFactory.createCustomSettings(
             focusDuration: 30 * 60,
@@ -163,9 +166,7 @@ final class TimerSettingsTests: XCTestCase {
         let data = try encoder.encode(originalSettings)
         
         let decoder = JSONDecoder()
-        let decodedSettings = try MainActor.assumeIsolated {
-            try decoder.decode(TimerSettings.self, from: data)
-        }
+        let decodedSettings = try decoder.decode(TimerSettings.self, from: data)
         
         XCTAssertEqual(decodedSettings.focusDuration, originalSettings.focusDuration)
         XCTAssertEqual(decodedSettings.shortBreakDuration, originalSettings.shortBreakDuration)
@@ -205,14 +206,17 @@ final class TimerSettingsTests: XCTestCase {
             try decoder.decode(TimerSettings.self, from: data)
         }
         
-        XCTAssertEqual(settings.focusDuration, 1500)
-        XCTAssertFalse(settings.focusModeEnabled, "Should default to false")
-        XCTAssertFalse(settings.syncWithFocusMode, "Should default to false")
-        XCTAssertFalse(settings.iCloudSyncEnabled, "Should default to false")
+        MainActor.assumeIsolated {
+            XCTAssertEqual(settings.focusDuration, 1500)
+            XCTAssertFalse(settings.focusModeEnabled, "Should default to false")
+            XCTAssertFalse(settings.syncWithFocusMode, "Should default to false")
+            XCTAssertFalse(settings.iCloudSyncEnabled, "Should default to false")
+        }
     }
     
     // MARK: - ObservableObject Tests
     
+    @MainActor
     func testSettingsPublishesChanges() {
         let settings = TimerSettings()
         let expectation = self.expectation(description: "Settings should publish changes")
@@ -226,6 +230,7 @@ final class TimerSettingsTests: XCTestCase {
         waitForExpectations(timeout: 1.0)
     }
     
+    @MainActor
     func testMultiplePropertyChangesPublish() {
         let settings = TimerSettings()
         var changeCount = 0
@@ -250,6 +255,7 @@ final class TimerSettingsTests: XCTestCase {
     
     // MARK: - Settings Validation Tests
     
+    @MainActor
     func testMinimumDurationValues() {
         let settings = TimerSettings(
             focusDuration: 1,
@@ -264,6 +270,7 @@ final class TimerSettingsTests: XCTestCase {
         XCTAssertEqual(settings.sessionsUntilLongBreak, 1)
     }
     
+    @MainActor
     func testMaximumDurationValues() {
         let maxDuration: TimeInterval = 3 * 60 * 60 // 3 hours
         let settings = TimerSettings(
@@ -281,6 +288,7 @@ final class TimerSettingsTests: XCTestCase {
     
     // MARK: - Edge Cases
     
+    @MainActor
     func testZeroDurationSettings() {
         let settings = TimerSettings(
             focusDuration: 0,
@@ -295,6 +303,7 @@ final class TimerSettingsTests: XCTestCase {
         XCTAssertEqual(settings.sessionsUntilLongBreak, 0)
     }
     
+    @MainActor
     func testNegativeValuesNotAllowed() {
         // Swift's TimeInterval allows negative values, but we should document expected behavior
         let settings = TimerSettings(

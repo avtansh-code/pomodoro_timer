@@ -9,10 +9,12 @@ import Foundation
 @testable import PomodoroTimer
 
 struct TimerSettingsFactory {
+    @MainActor
     static func createDefaultSettings() -> TimerSettings {
         return TimerSettings()
     }
     
+    @MainActor
     static func createCustomSettings(
         focusDuration: TimeInterval = 25 * 60,
         shortBreakDuration: TimeInterval = 5 * 60,
@@ -45,6 +47,7 @@ struct TimerSettingsFactory {
         )
     }
     
+    @MainActor
     static func createShortDurationSettings() -> TimerSettings {
         return TimerSettings(
             focusDuration: TestConstants.testShortDuration,
@@ -54,6 +57,7 @@ struct TimerSettingsFactory {
         )
     }
     
+    @MainActor
     static func createAutoStartSettings() -> TimerSettings {
         return TimerSettings(
             autoStartBreaks: true,
@@ -61,6 +65,7 @@ struct TimerSettingsFactory {
         )
     }
     
+    @MainActor
     static func createDisabledNotificationsSettings() -> TimerSettings {
         return TimerSettings(
             soundEnabled: false,
@@ -69,6 +74,7 @@ struct TimerSettingsFactory {
         )
     }
     
+    @MainActor
     static func createFocusModeEnabledSettings() -> TimerSettings {
         return TimerSettings(
             focusModeEnabled: true,
@@ -76,6 +82,7 @@ struct TimerSettingsFactory {
         )
     }
     
+    @MainActor
     static func createiCloudEnabledSettings() -> TimerSettings {
         return TimerSettings(
             iCloudSyncEnabled: true
