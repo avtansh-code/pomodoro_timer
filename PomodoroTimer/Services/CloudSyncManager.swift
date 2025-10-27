@@ -217,6 +217,7 @@ class CloudSyncManager: ObservableObject {
         record["type"] = session.type.rawValue as CKRecordValue
         record["duration"] = session.duration as CKRecordValue
         record["completedAt"] = session.completedAt as CKRecordValue
+        record["wasCompleted"] = (session.wasCompleted ? 1 : 0) as CKRecordValue
         
         privateDatabase.save(record) { savedRecord, error in
             if let error = error {
@@ -251,11 +252,16 @@ class CloudSyncManager: ObservableObject {
                         return nil
                     }
                     
+                    // Read wasCompleted field, default to true for backwards compatibility
+                    let wasCompletedInt = record["wasCompleted"] as? Int ?? 1
+                    let wasCompleted = wasCompletedInt != 0
+                    
                     return TimerSession(
                         id: sessionId,
                         type: type,
                         duration: duration,
-                        completedAt: completedAt
+                        completedAt: completedAt,
+                        wasCompleted: wasCompleted
                     )
                 }
                 
@@ -290,6 +296,7 @@ class CloudSyncManager: ObservableObject {
             record["type"] = session.type.rawValue as CKRecordValue
             record["duration"] = session.duration as CKRecordValue
             record["completedAt"] = session.completedAt as CKRecordValue
+            record["wasCompleted"] = (session.wasCompleted ? 1 : 0) as CKRecordValue
             return record
         }
         
@@ -337,19 +344,21 @@ class CloudSyncManager: ObservableObject {
             }
             
             if success {
-                print("Settings deleted successfully, proceeding to sessions...")
+                print("✅ Settings deleted successfully from iCloud, proceeding to sessions...")
                 // Continue to delete sessions
                 self.deleteRecordsOfType("Session", completion: completion)
             } else {
-                print("Failed to delete settings")
+                print("❌ Failed to delete settings from iCloud")
                 DispatchQueue.main.async { completion(false) }
             }
         }
     }
     
     private func deleteRecordsOfType(_ recordType: String, completion: @escaping (Bool) -> Void) {
-        let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
+        print("🔍 Querying iCloud for \(recordType) records to delete...")
         
+        // Use CKQueryOperation with TRUEPREDICATE to get all records
+        let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
         let queryOperation = CKQueryOperation(query: query)
         queryOperation.qualityOfService = .userInitiated
         
@@ -357,30 +366,44 @@ class CloudSyncManager: ObservableObject {
         
         queryOperation.recordMatchedBlock = { recordID, result in
             switch result {
-            case .success:
-                recordIDsToDelete.append(recordID)
+            case .success(let record):
+                recordIDsToDelete.append(record.recordID)
+                
+                if recordType == "Session" {
+                    // Log session details for debugging
+                    let sessionId = record["sessionId"] as? String ?? "unknown"
+                    let type = record["type"] as? String ?? "unknown"
+                    let completedAt = record["completedAt"] as? Date ?? Date()
+                    let wasCompleted = (record["wasCompleted"] as? Int ?? 1) != 0
+                    print("  📝 Found Session: ID=\(sessionId), Type=\(type), Completed=\(wasCompleted), Date=\(completedAt)")
+                } else if recordType == "Settings" {
+                    print("  ⚙️ Found Settings record: \(record.recordID.recordName)")
+                }
             case .failure(let error):
-                print("Error matching record \(recordID): \(error.localizedDescription)")
+                print("  ⚠️ Error fetching \(recordType) record: \(error.localizedDescription)")
             }
         }
         
         queryOperation.queryResultBlock = { [weak self] result in
             guard let self = self else {
+                print("❌ Self deallocated during \(recordType) query completion")
                 DispatchQueue.main.async { completion(false) }
                 return
             }
             
             switch result {
             case .success:
+                print("📦 Found \(recordIDsToDelete.count) \(recordType) record(s) to delete")
+                
                 if recordIDsToDelete.isEmpty {
-                    print("No \(recordType) records to delete")
+                    print("ℹ️ No \(recordType) records found to delete")
                     DispatchQueue.main.async { completion(true) }
                 } else {
-                    print("Deleting \(recordIDsToDelete.count) \(recordType) record(s)...")
-                    self.deleteRecords(recordIDsToDelete, completion: completion)
+                    print("🗑️ Preparing to delete \(recordIDsToDelete.count) \(recordType) record(s) from iCloud...")
+                    self.deleteRecords(recordIDsToDelete, recordType: recordType, completion: completion)
                 }
             case .failure(let error):
-                print("Failed to query \(recordType) for deletion: \(error.localizedDescription)")
+                print("❌ Failed to query \(recordType) for deletion: \(error.localizedDescription)")
                 DispatchQueue.main.async { completion(false) }
             }
         }
@@ -388,18 +411,39 @@ class CloudSyncManager: ObservableObject {
         privateDatabase.add(queryOperation)
     }
     
-    private func deleteRecords(_ recordIDs: [CKRecord.ID], completion: @escaping (Bool) -> Void) {
+    private func deleteRecords(_ recordIDs: [CKRecord.ID], recordType: String, completion: @escaping (Bool) -> Void) {
+        print("🚀 Executing delete operation for \(recordIDs.count) \(recordType) record(s)...")
+        
         let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIDs)
         operation.qualityOfService = .userInitiated
+        
+        // Track progress
+        var deletedCount = 0
+        var failedCount = 0
+        
+        operation.perRecordDeleteBlock = { recordID, result in
+            switch result {
+            case .success:
+                deletedCount += 1
+                print("  ✅ Deleted \(recordType) record: \(recordID.recordName)")
+            case .failure(let error):
+                failedCount += 1
+                print("  ❌ Failed to delete \(recordType) record \(recordID.recordName): \(error.localizedDescription)")
+            }
+        }
         
         operation.modifyRecordsResultBlock = { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
-                    print("Records deleted successfully")
+                    print("✅ Successfully deleted \(deletedCount) \(recordType) record(s) from iCloud")
+                    if failedCount > 0 {
+                        print("⚠️ \(failedCount) \(recordType) record(s) failed to delete")
+                    }
                     completion(true)
                 case .failure(let error):
-                    print("Failed to delete records: \(error.localizedDescription)")
+                    print("❌ Delete operation failed for \(recordType): \(error.localizedDescription)")
+                    print("   Deleted: \(deletedCount), Failed: \(failedCount)")
                     completion(false)
                 }
             }
