@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct PomodoroTimerApp: App {
     @Environment(\.scenePhase) private var scenePhase
-    @StateObject private var timerManager = TimerManager(settings: PersistenceManager.shared.loadSettings())
+    @StateObject private var timerManager = TimerManager(settings: PersistenceManager.shared.loadSettings(), persistenceManager: PersistenceManager.shared)
     
     var body: some Scene {
         WindowGroup {
@@ -19,13 +19,21 @@ struct PomodoroTimerApp: App {
         .onChange(of: scenePhase) { oldPhase, newPhase in
             switch newPhase {
             case .background:
-                timerManager.appDidEnterBackground()
-                PersistenceManager.shared.saveSettings(timerManager.settings)
+                Task {
+                    timerManager.appDidEnterBackground()
+                    PersistenceManager.shared.saveSettings(timerManager.settings)
+                }
             case .active:
-                timerManager.appWillEnterForeground()
-                // Sync with iCloud when app becomes active
-                PersistenceManager.shared.syncWithCloud {
-                    print("iCloud sync completed")
+                Task {
+                    timerManager.appWillEnterForeground()
+                    // Sync with iCloud in background
+                    Task(priority: .background) {
+                        await MainActor.run {
+                            PersistenceManager.shared.syncWithCloud {
+                                print("iCloud sync completed")
+                            }
+                        }
+                    }
                 }
             case .inactive:
                 break

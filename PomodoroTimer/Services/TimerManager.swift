@@ -18,6 +18,7 @@ enum TimerState: Sendable, Equatable {
     case paused
 }
 
+@MainActor
 class TimerManager: ObservableObject {
     @Published var currentSessionType: SessionType = .focus
     @Published var timerState: TimerState = .idle
@@ -29,9 +30,15 @@ class TimerManager: ObservableObject {
     private var backgroundTime: Date?
     private var audioPlayer: AVAudioPlayer?
     private var focusModeManager: Any? // Will be FocusModeManager for iOS 16.1+
+    private let persistenceManager: PersistenceManager
     
-    init(settings: TimerSettings = TimerSettings()) {
+    convenience init() {
+        self.init(settings: TimerSettings(), persistenceManager: PersistenceManager.shared)
+    }
+    
+    init(settings: TimerSettings, persistenceManager: PersistenceManager) {
         self.settings = settings
+        self.persistenceManager = persistenceManager
         self.timeRemaining = settings.focusDuration
         setupAudioSession()
         setupIntentObservers()
@@ -51,11 +58,16 @@ class TimerManager: ObservableObject {
         }
         
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            self?.tick()
+            guard let self = self else { return }
+            Task { @MainActor [weak self] in
+                self?.tick()
+            }
         }
         
-        // Keep timer running when app goes to background
-        RunLoop.current.add(timer!, forMode: .common)
+        if let timer = timer {
+            // Keep timer running when app goes to background
+            RunLoop.current.add(timer, forMode: .common)
+        }
     }
     
     func pauseTimer() {
@@ -101,7 +113,7 @@ class TimerManager: ObservableObject {
         
         // Save completed session
         let session = TimerSession(type: currentSessionType, duration: getDuration(for: currentSessionType))
-        PersistenceManager.shared.saveSession(session)
+        persistenceManager.saveSession(session)
         
         // Play sound and haptic feedback
         if settings.soundEnabled {
@@ -229,12 +241,39 @@ class TimerManager: ObservableObject {
     // MARK: - Persistence
     
     func loadSessions() -> [TimerSession] {
-        return PersistenceManager.shared.getAllSessions()
+        return persistenceManager.getAllSessions()
     }
     
     func clearAllSessions() {
-        PersistenceManager.shared.clearAllSessions()
+        persistenceManager.clearAllSessions()
         completedFocusSessions = 0
+    }
+    
+    func resetAppCompletely() {
+        // Stop any running timer
+        timer?.invalidate()
+        timer = nil
+        
+        // Reset all state
+        timerState = .idle
+        currentSessionType = .focus
+        completedFocusSessions = 0
+        
+        // Clear all data
+        persistenceManager.resetAllData()
+        
+        // Reload default settings
+        settings = TimerSettings()
+        timeRemaining = settings.focusDuration
+        
+        // Remove all notifications
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        
+        // Disable Focus Mode if active
+        if settings.focusModeEnabled && currentSessionType == .focus {
+            disableFocusModeIfAvailable()
+        }
     }
     
     // MARK: - Background Handling
@@ -354,7 +393,9 @@ class TimerManager: ObservableObject {
     
     private func setupFocusModeIfAvailable() {
         if #available(iOS 16.1, *) {
-            focusModeManager = FocusModeManager.shared
+            Task { @MainActor in
+                focusModeManager = FocusModeManager.shared
+            }
         }
     }
     

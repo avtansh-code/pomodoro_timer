@@ -16,7 +16,14 @@ A clean, customizable, and user-friendly Pomodoro timer built with SwiftUI for i
 - **Adjustable Durations** - Customize focus, short break, and long break durations (1-120 minutes)
 - **Configurable Cycles** - Set the number of sessions before a long break (2-10)
 - **Auto-Start Options** - Toggle auto-start for breaks and focus sessions
-- **Theme Selection** - Choose between System, Light, or Dark mode
+- **Theme Selection** - Choose from 5 beautiful themes:
+  - Classic Red (Default)
+  - Ocean Blue
+  - Forest Green
+  - Midnight Dark
+  - Sunset Orange
+- **Dynamic Theme Switching** - Change themes instantly with live preview
+- **Dark Mode Support** - All themes adapt perfectly to light and dark mode
 - **Notification Controls** - Enable/disable sounds, haptics, and push notifications
 
 ### ☁️ iCloud Sync (Optional)
@@ -62,15 +69,20 @@ The app follows the **MVVM (Model-View-ViewModel)** pattern with a clean, modula
 PomodoroTimer/
 ├── Models/
 │   ├── TimerSession.swift      # Session data model
-│   └── TimerSettings.swift     # User preferences model
+│   ├── TimerSettings.swift     # User preferences model
+│   └── AppTheme.swift          # Theme definitions and typography
 ├── Services/
 │   ├── TimerManager.swift      # Core timer logic and state management
-│   └── PersistenceManager.swift # Data persistence (UserDefaults)
+│   ├── PersistenceManager.swift # Data persistence (UserDefaults)
+│   ├── ThemeManager.swift      # Theme management and persistence
+│   ├── CloudSyncManager.swift  # iCloud sync functionality
+│   └── FocusModeManager.swift  # iOS Focus Mode integration
 ├── Views/
 │   ├── MainTimerView.swift     # Main timer interface
 │   ├── SettingsView.swift      # Configuration screen
-│   └── StatisticsView.swift    # Stats and analytics
-├── ContentView.swift           # Root view coordinator
+│   ├── StatisticsView.swift    # Stats and analytics
+│   └── PrivacyPolicyView.swift # Privacy policy display
+├── ContentView.swift           # Root view with TabView navigation
 └── PomodoroTimerApp.swift      # App entry point with lifecycle handling
 ```
 
@@ -176,7 +188,7 @@ This app is **fully optimized for iOS 18** and the **iPhone 17** lineup:
 IPHONEOS_DEPLOYMENT_TARGET = 18.0
 SDKROOT = auto (iOS 26.0)
 TARGETED_DEVICE_FAMILY = 1,2 (iPhone and iPad)
-MARKETING_VERSION = 1.0.2
+MARKETING_VERSION = 1.1.0
 CURRENT_PROJECT_VERSION = 3
 SWIFT_VERSION = 5.0
 SWIFT_APPROACHABLE_CONCURRENCY = YES
@@ -208,18 +220,37 @@ SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor
 ## 🎨 Design Philosophy
 
 - **Minimalist UI** - Focus on the timer, minimize distractions
-- **Color-Coded Sessions** - Visual distinction between session types (Red = Focus, Green = Short Break, Blue = Long Break)
-- **Smooth Animations** - Polished transitions and progress animations
+- **Modern Design System** - Clean, rounded design language with depth
+- **Color-Coded Sessions** - Visual distinction between session types with gradient backgrounds
+- **Modular Theming** - 5 predefined themes with consistent design tokens
+- **Smooth Animations** - Spring animations and haptic feedback (0.3-0.6s durations)
 - **Apple HIG Compliance** - Follows iOS Human Interface Guidelines
-- **Accessibility First** - Designed to be usable by everyone
+- **Accessibility First** - WCAG AA compliant, VoiceOver support, Dynamic Type
+- **Adaptive Interface** - TabView navigation for better discoverability
+
+### 🎨 Theming System
+
+The app features a comprehensive theming system that provides:
+
+- **5 Beautiful Themes** - Each with unique color palettes and gradients
+- **Persistent Preferences** - Theme selection saved using `@AppStorage`
+- **Environment Propagation** - Themes flow through SwiftUI environment
+- **Typography Scale** - Consistent font hierarchy (SF Rounded)
+- **Design Tokens** - Spacing (4-32pt), border radius (8-20pt), shadows
+- **Theme Preview Cards** - Visual theme selection in Settings
+- **Full Dark Mode** - All themes optimized for light and dark appearances
+
+For detailed design specifications, see **[UI Redesign Guide](docs/UI_REDESIGN_GUIDE.md)**
 
 ### 🖼️ Launch Screen
 
-The app features a beautiful launch screen with:
+The app features a modern, professional launch screen with:
 
-- **Warm Gradient Background** - Red to orange gradient matching the Pomodoro theme
-- **Centered Tomato Icon** - Clean, minimalist timer icon
-- **Dark Mode Support** - Automatically adapts to system appearance
+- **Brand Color Background** - Classic red (#ED4242) matching app theme
+- **Circular Design Element** - Semi-transparent white circle with tomato icon 🍅
+- **App Branding** - "Mr. Pomodoro" in bold, clean typography
+- **Tagline** - "Focus • Breathe • Achieve" reinforcing the app's purpose
+- **Version Display** - Subtle version indicator at bottom
 - **Universal Sizing** - Optimized for all iPhone and iPad devices
 - **Storyboard-Based** - Configured via `LaunchScreen.storyboard`
 
@@ -256,13 +287,38 @@ You can also start a Pomodoro with a custom duration:
 - **Deep Work**: Start Pomodoro → Enable Do Not Disturb → Open IDE
 - **Quick Break**: Show stats → Start break timer
 
-## 📚 Additional Documentation
+## 📚 Documentation
 
-For detailed information about specific features:
+Complete documentation is available in the **[docs](docs/)** folder. The documentation has been reorganized into focused, comprehensive guides:
 
-- **[Focus Mode Integration Guide](docs/FOCUS_MODE_GUIDE.md)** - Complete guide to using Focus Mode with the app
-- **[iCloud Sync Setup Guide](docs/ICLOUD_SETUP_GUIDE.md)** - How to enable and configure iCloud sync
-- **[App Store Privacy Metadata](docs/APP_STORE_PRIVACY_METADATA.md)** - Privacy practices and data handling
+### For Users
+- **[User Guide](docs/USER_GUIDE.md)** (22KB) - Complete end-user documentation
+  - Getting started, features, statistics, customization
+  - iCloud Sync, Focus Mode, Siri Shortcuts setup
+  - Privacy, troubleshooting, FAQ, tips & best practices
+
+### For Developers
+- **[Developer Guide](docs/DEVELOPER_GUIDE.md)** (28KB) - Technical reference
+  - Architecture (MVVM), development setup, project structure
+  - Complete testing strategy (unit, performance, UI tests)
+  - iCloud & Focus Mode integration implementation
+  - Background execution, performance, debugging, CI/CD
+
+### For App Store
+- **[App Store Submission Guide](docs/APP_STORE_SUBMISSION.md)** (26KB) - Submission package
+  - Pre-submission checklist, marketing copy, keywords
+  - Privacy configuration & compliance report (99/100 score)
+  - Screenshots guide, review notes, post-launch strategy
+
+### For Designers
+- **[Design System Guide](docs/DESIGN_SYSTEM.md)** (18KB) - Design reference
+  - Design philosophy, theming system (5 themes)
+  - Typography, colors, layout specifications
+  - Component library, animation guidelines, accessibility
+
+### Quick Links
+- **[Documentation Overview](docs/README.md)** - Navigation guide for all docs
+- **[Privacy Policy](PrivacyPolicy.md)** - Complete privacy policy
 
 ## 🚀 Future Enhancements
 
@@ -273,6 +329,9 @@ Potential features for future versions:
 - 🎯 Live Activities support (iOS 16.1+)
 - 🔔 Rich notifications with action buttons
 - 📈 Weekly/monthly productivity reports
+- 🎨 User-defined custom themes and colors
+- 🌍 Seasonal/mood-based theme variations
+- 📤 Theme import/export functionality
 
 ## 🔒 Privacy & Data Protection
 
@@ -348,7 +407,7 @@ Suggestions and improvements are welcome! Feel free to:
 
 ---
 
-**Version**: 1.0.2 (Build 3)  
+**Version**: 1.1.0 (Build 3)  
 **Last Updated**: January 2026  
 **Minimum iOS**: 18.0  
 **Built with**: Xcode 26.0.1 / iOS SDK 26.0
