@@ -8,7 +8,7 @@
 import Foundation
 
 class PersistenceManager {
-    nonisolated(unsafe) static let shared = PersistenceManager()
+    static let shared = PersistenceManager()
     
     private let settingsKey = "TimerSettings"
     private let sessionsKey = "SavedSessions"

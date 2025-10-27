@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct PomodoroTimerApp: App {
     @Environment(\.scenePhase) private var scenePhase
-    @StateObject private var timerManager = TimerManager(settings: PersistenceManager.shared.loadSettings())
+    @StateObject private var timerManager = TimerManager(settings: PersistenceManager.shared.loadSettings(), persistenceManager: PersistenceManager.shared)
     
     var body: some Scene {
         WindowGroup {

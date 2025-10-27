@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var timerManager = TimerManager(settings: PersistenceManager.shared.loadSettings())
+    @StateObject private var timerManager = TimerManager(settings: PersistenceManager.shared.loadSettings(), persistenceManager: PersistenceManager.shared)
     @StateObject private var themeManager = ThemeManager()
     
     var body: some View {

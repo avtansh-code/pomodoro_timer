@@ -36,7 +36,7 @@ class TimerManager: ObservableObject {
         self.init(settings: TimerSettings(), persistenceManager: PersistenceManager.shared)
     }
     
-    init(settings: TimerSettings, persistenceManager: PersistenceManager = PersistenceManager.shared) {
+    init(settings: TimerSettings, persistenceManager: PersistenceManager) {
         self.settings = settings
         self.persistenceManager = persistenceManager
         self.timeRemaining = settings.focusDuration
@@ -58,11 +58,16 @@ class TimerManager: ObservableObject {
         }
         
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            self?.tick()
+            guard let self = self else { return }
+            Task { @MainActor [weak self] in
+                self?.tick()
+            }
         }
         
-        // Keep timer running when app goes to background
-        RunLoop.current.add(timer!, forMode: .common)
+        if let timer = timer {
+            // Keep timer running when app goes to background
+            RunLoop.current.add(timer, forMode: .common)
+        }
     }
     
     func pauseTimer() {
@@ -361,7 +366,9 @@ class TimerManager: ObservableObject {
     
     private func setupFocusModeIfAvailable() {
         if #available(iOS 16.1, *) {
-            focusModeManager = FocusModeManager.shared
+            Task { @MainActor in
+                focusModeManager = FocusModeManager.shared
+            }
         }
     }
     
