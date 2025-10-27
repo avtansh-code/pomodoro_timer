@@ -25,25 +25,17 @@
                                 </constraints>
                             </imageView>
                             
-                            <!-- App Name -->
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mr. Pomodoro" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="app-name">
-                                <rect key="frame" x="40" y="496" width="313" height="48"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="40"/>
+                            <!-- Main Tagline -->
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Focus with ease. Flow with purpose." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="main-tagline">
+                                <rect key="frame" x="30" y="456" width="333" height="22"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                 <color key="textColor" red="0.20" green="0.20" blue="0.20" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            
-                            <!-- Tagline -->
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Focus • Breathe • Achieve" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tagline">
-                                <rect key="frame" x="40" y="554" width="313" height="22"/>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                <color key="textColor" red="0.98" green="0.45" blue="0.26" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             
                             <!-- Decorative Accent Line -->
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="accent-line">
-                                <rect key="frame" x="146.5" y="591" width="100" height="2"/>
+                                <rect key="frame" x="146.5" y="493" width="100" height="2"/>
                                 <color key="backgroundColor" red="0.98" green="0.45" blue="0.26" alpha="0.3" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="line-width"/>
@@ -64,20 +56,15 @@
                         <constraints>
                             <!-- Logo Image -->
                             <constraint firstItem="logo-image" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="logo-center-x"/>
-                            <constraint firstItem="logo-image" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-50" id="logo-center-y"/>
+                            <constraint firstItem="logo-image" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-90" id="logo-center-y"/>
                             
-                            <!-- App Name -->
-                            <constraint firstItem="app-name" firstAttribute="top" secondItem="logo-image" secondAttribute="bottom" constant="20" id="name-top"/>
-                            <constraint firstItem="app-name" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="40" id="name-leading"/>
-                            <constraint firstItem="Ze5-6b-2t3" firstAttribute="trailing" secondItem="app-name" secondAttribute="trailing" constant="40" id="name-trailing"/>
-                            
-                            <!-- Tagline -->
-                            <constraint firstItem="tagline" firstAttribute="top" secondItem="app-name" secondAttribute="bottom" constant="10" id="tagline-top"/>
-                            <constraint firstItem="tagline" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="40" id="tagline-leading"/>
-                            <constraint firstItem="Ze5-6b-2t3" firstAttribute="trailing" secondItem="tagline" secondAttribute="trailing" constant="40" id="tagline-trailing"/>
+                            <!-- Main Tagline -->
+                            <constraint firstItem="main-tagline" firstAttribute="top" secondItem="logo-image" secondAttribute="bottom" constant="20" id="tagline-top"/>
+                            <constraint firstItem="main-tagline" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="30" id="tagline-leading"/>
+                            <constraint firstItem="Ze5-6b-2t3" firstAttribute="trailing" secondItem="main-tagline" secondAttribute="trailing" constant="30" id="tagline-trailing"/>
                             
                             <!-- Accent Line -->
-                            <constraint firstItem="accent-line" firstAttribute="top" secondItem="tagline" secondAttribute="bottom" constant="15" id="line-top"/>
+                            <constraint firstItem="accent-line" firstAttribute="top" secondItem="main-tagline" secondAttribute="bottom" constant="15" id="line-top"/>
                             <constraint firstItem="accent-line" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="line-center-x"/>
                             
                             <!-- Version Label -->
