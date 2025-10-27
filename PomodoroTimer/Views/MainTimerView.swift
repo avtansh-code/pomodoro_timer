@@ -23,26 +23,27 @@ struct MainTimerView: View {
                 VStack(spacing: 0) {
                     // Session Type Header
                     sessionHeader
-                        .padding(.top, 20)
+                        .padding(.top, geometry.size.height * 0.03)
                     
-                    Spacer(minLength: 40)
+                    Spacer(minLength: geometry.size.height * 0.05)
                     
                     // Circular Progress Timer
                     circularTimer
+                        .frame(height: geometry.size.height * 0.5)
                     
-                    Spacer(minLength: 40)
+                    Spacer(minLength: geometry.size.height * 0.05)
                     
                     // Control Buttons
                     controlButtons
-                        .padding(.horizontal, 24)
+                        .padding(.horizontal, max(geometry.size.width * 0.05, 24))
                     
                     // Skip Button
                     skipButton
-                        .padding(.top, 24)
+                        .padding(.top, geometry.size.height * 0.03)
                     
-                    Spacer(minLength: 20)
+                    Spacer(minLength: geometry.size.height * 0.02)
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, max(geometry.size.width * 0.05, 16))
             }
         }
     }
@@ -68,39 +69,46 @@ struct MainTimerView: View {
     // MARK: - Circular Timer
     
     private var circularTimer: some View {
-        ZStack {
-            // Background circle
-            Circle()
-                .stroke(
-                    theme.colorFor(sessionType: timerManager.currentSessionType).opacity(0.2),
-                    lineWidth: 20
-                )
-                .frame(width: 280, height: 280)
+        GeometryReader { geometry in
+            let size = min(geometry.size.width, geometry.size.height) * 0.75
+            let lineWidth = max(size * 0.07, 15)
+            let fontSize = max(size * 0.20, 48)
             
-            // Progress circle
-            Circle()
-                .trim(from: 0, to: progress)
-                .stroke(
-                    theme.colorFor(sessionType: timerManager.currentSessionType),
-                    style: StrokeStyle(lineWidth: 20, lineCap: .round)
-                )
-                .frame(width: 280, height: 280)
-                .rotationEffect(.degrees(-90))
-                .animation(.linear(duration: 1), value: progress)
-            
-            // Timer display
-            VStack(spacing: 12) {
-                Text(timeString)
-                    .font(theme.typography.timerFont)
-                    .monospacedDigit()
-                    .foregroundColor(.primary)
-                    .accessibilityLabel("Time remaining: \(timeString)")
+            ZStack {
+                // Background circle
+                Circle()
+                    .stroke(
+                        theme.colorFor(sessionType: timerManager.currentSessionType).opacity(0.2),
+                        lineWidth: lineWidth
+                    )
+                    .frame(width: size, height: size)
                 
-                // State indicator
-                stateIndicator
+                // Progress circle
+                Circle()
+                    .trim(from: 0, to: progress)
+                    .stroke(
+                        theme.colorFor(sessionType: timerManager.currentSessionType),
+                        style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
+                    )
+                    .frame(width: size, height: size)
+                    .rotationEffect(.degrees(-90))
+                    .animation(.linear(duration: 1), value: progress)
+                
+                // Timer display
+                VStack(spacing: max(size * 0.04, 8)) {
+                    Text(timeString)
+                        .font(.system(size: fontSize, weight: .bold, design: .rounded))
+                        .monospacedDigit()
+                        .foregroundColor(.primary)
+                        .accessibilityLabel("Time remaining: \(timeString)")
+                    
+                    // State indicator
+                    stateIndicator
+                }
             }
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .shadow(color: theme.colorFor(sessionType: timerManager.currentSessionType).opacity(0.15), radius: 20, x: 0, y: 10)
         }
-        .shadow(color: theme.colorFor(sessionType: timerManager.currentSessionType).opacity(0.15), radius: 20, x: 0, y: 10)
     }
     
     private var stateIndicator: some View {

@@ -88,6 +88,7 @@ struct TimerTabView: View {
             .navigationTitle("Focus Timer")
             .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationViewStyle(.stack)
     }
 }
 
@@ -100,6 +101,7 @@ struct StatisticsTabView: View {
         NavigationView {
             StatisticsView(timerManager: timerManager)
         }
+        .navigationViewStyle(.stack)
     }
 }
 
