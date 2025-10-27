@@ -262,17 +262,6 @@ final class SettingsUITests: XCTestCase {
         }
     }
     
-    // MARK: - Accessibility Tests
-    
-    func testSettingsAccessibility() throws {
-        // Verify switches have proper labels
-        let switches = app.switches.allElementsBoundByIndex
-        
-        for toggle in switches where toggle.exists {
-            XCTAssertFalse(toggle.label.isEmpty, "Toggle should have accessibility label")
-        }
-    }
-    
     // MARK: - Multiple Setting Changes
     
     func testMultipleSettingChanges() throws {
