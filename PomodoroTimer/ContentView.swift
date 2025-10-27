@@ -10,9 +10,10 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var timerManager = TimerManager(settings: PersistenceManager.shared.loadSettings(), persistenceManager: PersistenceManager.shared)
     @StateObject private var themeManager = ThemeManager()
+    @State private var selectedTab = 0
     
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             // Timer Tab
             TimerTabView(timerManager: timerManager)
                 .tabItem {
@@ -55,6 +56,14 @@ struct ContentView: View {
             queue: .main
         ) { _ in
             // Statistics tab is now always visible
+        }
+        
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("SwitchToTimerTab"),
+            object: nil,
+            queue: .main
+        ) { _ in
+            selectedTab = 0
         }
     }
 }

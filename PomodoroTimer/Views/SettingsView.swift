@@ -26,6 +26,9 @@ struct SettingsView: View {
                 .ignoresSafeArea()
             
             Form {
+                // Learn about Pomodoro - Featured at top
+                learnSection
+                
                 // Theme Selection
                 themeSection
             
@@ -261,6 +264,12 @@ struct SettingsView: View {
             .onChange(of: timerManager.settings.iCloudSyncEnabled) { oldValue, newValue in
                 if newValue {
                     cloudSyncManager.startAutomaticSync()
+                    // Trigger immediate sync when enabled
+                    cloudSyncManager.syncSettings(timerManager.settings)
+                    let sessions = PersistenceManager.shared.getAllSessions()
+                    if !sessions.isEmpty {
+                        cloudSyncManager.syncAllSessions(sessions)
+                    }
                 } else {
                     cloudSyncManager.stopAutomaticSync()
                 }
@@ -399,6 +408,31 @@ struct SettingsView: View {
         } footer: {
             Text("Use these options to manage your app data. All destructive actions require confirmation.")
                 .font(theme.typography.caption)
+        }
+    }
+    
+    // MARK: - Learn Section
+    
+    private var learnSection: some View {
+        Section {
+            NavigationLink(destination: PomodoroBenefitsView()) {
+                HStack(spacing: 12) {
+                    Image(systemName: "lightbulb.fill")
+                        .foregroundColor(.orange)
+                        .frame(width: 24)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Learn about Pomodoro")
+                            .font(.system(size: 16, weight: .semibold))
+                        Text("Discover the science behind focused work")
+                            .font(.system(size: 13))
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+            .accessibilityLabel("Learn about the Pomodoro Technique")
+        } header: {
+            Label("Get Started", systemImage: "book.fill")
         }
     }
     
