@@ -249,6 +249,33 @@ class TimerManager: ObservableObject {
         completedFocusSessions = 0
     }
     
+    func resetAppCompletely() {
+        // Stop any running timer
+        timer?.invalidate()
+        timer = nil
+        
+        // Reset all state
+        timerState = .idle
+        currentSessionType = .focus
+        completedFocusSessions = 0
+        
+        // Clear all data
+        persistenceManager.resetAllData()
+        
+        // Reload default settings
+        settings = TimerSettings()
+        timeRemaining = settings.focusDuration
+        
+        // Remove all notifications
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        
+        // Disable Focus Mode if active
+        if settings.focusModeEnabled && currentSessionType == .focus {
+            disableFocusModeIfAvailable()
+        }
+    }
+    
     // MARK: - Background Handling
     
     func appDidEnterBackground() {

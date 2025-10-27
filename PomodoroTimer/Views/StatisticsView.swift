@@ -15,14 +15,12 @@ struct StatisticsView: View {
     @State private var todaySessions: [TimerSession] = []
     @State private var weeklySessions: [TimerSession] = []
     @State private var monthlySessions: [TimerSession] = []
-    @State private var allSessions: [TimerSession] = []
     @State private var currentStreak: Int = 0
     @State private var selectedTimeRange: TimeRange = .week
     
     enum TimeRange: String, CaseIterable {
         case week = "Week"
         case month = "Month"
-        case all = "All Time"
     }
     
     var body: some View {
@@ -99,8 +97,6 @@ struct StatisticsView: View {
             return weeklySessions
         case .month:
             return monthlySessions
-        case .all:
-            return allSessions
         }
     }
     
@@ -108,7 +104,6 @@ struct StatisticsView: View {
         todaySessions = PersistenceManager.shared.getTodaySessions()
         weeklySessions = PersistenceManager.shared.getWeeklySessions()
         monthlySessions = PersistenceManager.shared.getMonthlySessions()
-        allSessions = PersistenceManager.shared.getAllSessions()
         currentStreak = PersistenceManager.shared.getCurrentStreak()
     }
 }

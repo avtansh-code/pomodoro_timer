@@ -14,6 +14,10 @@ struct SettingsView: View {
     @ObservedObject private var cloudSyncManager = CloudSyncManager.shared
     @Environment(\.appTheme) var theme
     
+    @State private var showingClearStatsConfirmation = false
+    @State private var showingResetAppConfirmation = false
+    @State private var showingDeleteCloudConfirmation = false
+    
     var body: some View {
         ZStack {
             // Animated background gradient
@@ -321,7 +325,7 @@ struct SettingsView: View {
     private var dataSection: some View {
         Section {
             Button(role: .destructive) {
-                timerManager.clearAllSessions()
+                showingClearStatsConfirmation = true
             } label: {
                 HStack(spacing: 12) {
                     Image(systemName: "trash.fill")
@@ -330,10 +334,45 @@ struct SettingsView: View {
                 }
             }
             .accessibilityLabel("Clear all statistics")
+            .confirmationDialog(
+                "Clear All Statistics",
+                isPresented: $showingClearStatsConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button("Clear Statistics", role: .destructive) {
+                    timerManager.clearAllSessions()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This will permanently delete all your session history and statistics. This action cannot be undone.")
+            }
+            
+            Button(role: .destructive) {
+                showingResetAppConfirmation = true
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "arrow.counterclockwise.circle.fill")
+                        .frame(width: 24)
+                    Text("Reset App Completely")
+                }
+            }
+            .accessibilityLabel("Reset app to default settings")
+            .confirmationDialog(
+                "Reset App Completely",
+                isPresented: $showingResetAppConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button("Reset Everything", role: .destructive) {
+                    timerManager.resetAppCompletely()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This will reset all settings to defaults and delete all statistics. The app will return to its initial state. This action cannot be undone.")
+            }
             
             if timerManager.settings.iCloudSyncEnabled {
                 Button(role: .destructive) {
-                    deleteCloudData()
+                    showingDeleteCloudConfirmation = true
                 } label: {
                     HStack(spacing: 12) {
                         Image(systemName: "icloud.slash.fill")
@@ -342,9 +381,24 @@ struct SettingsView: View {
                     }
                 }
                 .accessibilityLabel("Delete all iCloud data")
+                .confirmationDialog(
+                    "Delete iCloud Data",
+                    isPresented: $showingDeleteCloudConfirmation,
+                    titleVisibility: .visible
+                ) {
+                    Button("Delete iCloud Data", role: .destructive) {
+                        deleteCloudData()
+                    }
+                    Button("Cancel", role: .cancel) {}
+                } message: {
+                    Text("This will permanently delete all your data stored in iCloud. This action cannot be undone.")
+                }
             }
         } header: {
             Label("Data Management", systemImage: "externaldrive.fill")
+        } footer: {
+            Text("Use these options to manage your app data. All destructive actions require confirmation.")
+                .font(theme.typography.caption)
         }
     }
     

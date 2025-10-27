@@ -133,6 +133,19 @@ class PersistenceManager {
         userDefaults.removeObject(forKey: sessionsKey)
     }
     
+    // MARK: - Complete Reset
+    
+    func resetAllData() {
+        // Clear all sessions
+        clearAllSessions()
+        
+        // Reset settings to defaults
+        userDefaults.removeObject(forKey: settingsKey)
+        
+        // Clear any cached data
+        userDefaults.synchronize()
+    }
+    
     // MARK: - iCloud Sync Integration
     
     func syncWithCloud(completion: @escaping () -> Void) {
