@@ -430,8 +430,8 @@ struct SettingsView: View {
                 }
                 .padding(.vertical, 4)
             }
-            .accessibilityIdentifier("Learn about Pomodoro")
-            .accessibilityLabel("Learn about the Pomodoro Technique")
+            .accessibilityLabel("Learn about Pomodoro")
+            .accessibilityHint("Navigate to learn about the Pomodoro Technique")
         } header: {
             Label("Get Started", systemImage: "book.fill")
         }
