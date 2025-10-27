@@ -280,6 +280,8 @@ struct SettingsView: View {
                     }
                 } else {
                     cloudSyncManager.stopAutomaticSync()
+                    // Delete iCloud data when sync is disabled
+                    deleteCloudDataSilently()
                 }
             }
             
@@ -531,6 +533,23 @@ struct SettingsView: View {
                 isDeletingCloudData = false
                 cloudDeleteSuccess = success
                 showingCloudDeleteResult = true
+                
+                // Disable iCloud sync after successful deletion
+                if success {
+                    timerManager.settings.iCloudSyncEnabled = false
+                    cloudSyncManager.stopAutomaticSync()
+                }
+            }
+        }
+    }
+    
+    private func deleteCloudDataSilently() {
+        // Delete iCloud data without showing UI feedback
+        CloudSyncManager.shared.deleteAllCloudData { success in
+            if success {
+                print("✅ iCloud data deleted successfully when sync was disabled")
+            } else {
+                print("⚠️ Failed to delete iCloud data when sync was disabled")
             }
         }
     }
