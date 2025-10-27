@@ -16,7 +16,7 @@ struct MainTimerView: View {
             ZStack {
                 // Animated background gradient
                 theme.gradientFor(sessionType: timerManager.currentSessionType)
-                    .opacity(0.12)
+                    .opacity(backgroundOpacity)
                     .ignoresSafeArea()
                     .animation(.easeInOut(duration: 0.6), value: timerManager.currentSessionType)
                 
@@ -251,6 +251,17 @@ struct MainTimerView: View {
     }
     
     // MARK: - Computed Properties
+    
+    private var backgroundOpacity: Double {
+        switch timerManager.currentSessionType {
+        case .focus:
+            return 0.15  // Slightly more prominent for focus mode
+        case .shortBreak:
+            return 0.10  // Lighter for short break
+        case .longBreak:
+            return 0.08  // Even lighter for long break
+        }
+    }
     
     private var progress: CGFloat {
         let currentDuration: TimeInterval

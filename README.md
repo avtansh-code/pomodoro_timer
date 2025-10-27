@@ -150,24 +150,12 @@ PomodoroTimer/
 
 ## 📸 Screenshots
 
-### Focus Session
-![Focus Timer](screenshots/focus.png)
-
-The main timer interface during a focus session. Features a clean, minimalist design with a circular progress indicator, large countdown display, and intuitive controls. The red color scheme helps maintain focus and indicates an active work session.
-
-### Break Time
-![Break Timer](screenshots/break.png)
-
-Break session view with a calming green color scheme. The interface clearly shows when you're on a break, encouraging you to step away and recharge. Auto-transition options help maintain your productivity rhythm without manual intervention.
-
-### Statistics Dashboard
-![Statistics View 1](screenshots/stats_1.png)
-
-Comprehensive statistics showing your productivity metrics including current streak, today's completed sessions, total focus time, and a weekly overview chart. Track your progress and stay motivated with daily performance insights.
-
-![Statistics View 2](screenshots/stats_2.png)
-
-Additional statistics features displaying your session breakdown, focus vs. break time ratio, and inspirational quotes to keep you motivated. The visual data representation helps you understand your productivity patterns.
+View app screenshots in the **[screenshots](screenshots/)** folder:
+- `focus_mode.png` - Main timer interface during a focus session
+- `short_break_mode.png` - Short break session view with calming color scheme
+- `long_break_mode.png` - Long break session view for extended relaxation
+- `stats_1.png` - Statistics dashboard with productivity metrics
+- `stats_2.png` - Session breakdown and motivational quotes
 
 ## 📱 iOS 18 & iPhone 17 Support
 
