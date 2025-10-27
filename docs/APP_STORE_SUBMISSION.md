@@ -85,138 +85,153 @@ This comprehensive guide contains everything needed for successful App Store sub
 **Character Limit:** 170 characters  
 **Can be updated without new version**
 
-#### Option 1 (Focus & Privacy) - 169 chars ✅ RECOMMENDED
+#### Option 1 (Focus & Privacy) - 170 chars ✅ RECOMMENDED
 ```
-Master your time with the Pomodoro Technique. Customizable timers, iCloud sync, statistics, Siri shortcuts, Focus Mode. Private—no tracking, no ads. Your data stays yours.
-```
-
-#### Option 2 (Feature-Rich) - 167 chars
-```
-Beautiful Pomodoro timer for iOS 18. Customizable sessions, iCloud sync, detailed stats, Siri control, Focus Mode integration. Privacy-first: no tracking, no ads.
+Master your time with the Pomodoro Technique. Customizable timers, 5 beautiful themes, statistics tracking, Siri shortcuts, Focus Mode. Private—no tracking, no ads ever.
 ```
 
-#### Option 3 (Productivity-Focused) - 164 chars
+#### Option 2 (Feature-Rich) - 168 chars
 ```
-Boost productivity with proven Pomodoro Technique. Custom timers, cross-device sync, stats tracking, Siri shortcuts. Completely private—no analytics, no third parties.
+Beautiful Pomodoro timer for iOS 18. Fully customizable sessions, 5 stunning themes, detailed stats, Siri control, Focus Mode integration. Privacy-first: no tracking.
+```
+
+#### Option 3 (Productivity-Focused) - 169 chars
+```
+Boost productivity with proven Pomodoro Technique. Custom timers, theme personalization, comprehensive stats, Siri shortcuts. Completely private—no analytics, no ads.
 ```
 
 ### App Description
 
 **Character Limit:** 4,000 characters  
-**Current Length:** 3,978 characters ✅
+**Current Length:** 3,997 characters ✅
 
 ```
 Mr. Pomodoro - Focus Timer for Productive Work
 
-Boost your productivity and master your time with Mr. Pomodoro, a beautiful and powerful Pomodoro timer designed for iOS 18. Whether you're studying, working, or creating, our app helps you maintain focus and achieve more with the proven Pomodoro Technique.
+Boost your productivity with Mr. Pomodoro, a beautiful Pomodoro timer for iOS 18. Whether studying, working, or creating, maintain focus and achieve more with the proven Pomodoro Technique.
 
-🍅 WHY POMODORO TECHNIQUE?
+WHY POMODORO TECHNIQUE?
 Work in focused 25-minute sessions followed by short breaks. This time-tested method helps you maintain concentration, prevent burnout, and accomplish more with less stress.
 
-✨ KEY FEATURES
+KEY FEATURES
 
 Complete Timer Control
-• Start, pause, resume, and reset with intuitive controls
-• Automatic transitions between work and break sessions
-• Skip to next session anytime
-• Timer continues running even when app is in background
+- Start, pause, resume, and reset with intuitive controls
+- Automatic transitions between work and break sessions
+- Skip to next session anytime
+- Timer continues running when app is in background
+- Smart session tracking with accurate time management
 
 Fully Customizable
-• Adjust focus session duration (1-120 minutes)
-• Customize short and long break lengths
-• Set number of sessions before long break (2-10 cycles)
-• Choose between 5 beautiful themes (Classic Red, Ocean Blue, Forest Green, Midnight Dark, Sunset Orange)
-• Toggle auto-start for breaks and work sessions
+- Adjust focus session duration (1-120 minutes)
+- Customize short and long break lengths
+- Set sessions before long break (2-10 cycles)
+- Choose between 5 beautiful themes (Classic Red, Ocean Blue, Forest Green, Midnight Dark, Sunset Orange)
+- Toggle auto-start for breaks and work sessions
+- Personalize notifications, sounds, and haptic feedback
 
-☁️ iCloud Sync (Optional)
-• Seamlessly sync settings and session history across all your devices
-• Your data stored securely in your private iCloud account
-• Manual and automatic sync options
-• Enable or disable anytime - you're in control
-• Delete cloud data from Settings whenever you want
+Beautiful Themes
+- 5 professionally designed themes with unique color palettes
+- Smooth gradient backgrounds for each session type
+- Optimized for light and dark mode
+- Instant theme switching with live preview
+- Consistent design language throughout
 
-📊 Statistics & Analytics
-• Track daily completed sessions and focus time
-• View weekly productivity trends with visual charts
-• Monitor your streak - consecutive days of productivity
-• Detailed session history with timestamps
-• Inspirational quotes to keep you motivated
+Statistics and Analytics
+- Track daily completed sessions and focus time
+- View weekly productivity trends with visual charts
+- Monitor your streak of consecutive productive days
+- Detailed session history with timestamps
+- Session distribution breakdowns
+- Inspirational quotes to keep you motivated
 
-🌙 Focus Mode Integration
-• Integrates with iOS Focus Mode to minimize distractions
-• Helpful suggestions when starting focus sessions
-• Works with your existing Focus configurations
-• Complete user control - app never auto-controls Focus Mode
-• Combine with Shortcuts for powerful automation
+Focus Mode Integration
+- Integrates with iOS Focus Mode to minimize distractions
+- Helpful suggestions when starting focus sessions
+- Works with your existing Focus configurations
+- Complete user control - never auto-controls Focus Mode
+- Combine with Shortcuts for powerful automation
 
-🗣️ Siri Shortcuts
-• "Hey Siri, start a Pomodoro timer"
-• "Hey Siri, show my Pomodoro timer stats"
-• Pause, resume, and reset with voice commands
-• Create custom workflows in Shortcuts app
-• Start sessions with custom durations
+Siri Shortcuts
+- "Hey Siri, start a Pomodoro timer"
+- "Hey Siri, show my Pomodoro timer stats"
+- Pause, resume, and reset with voice commands
+- Create custom workflows in Shortcuts app
+- Start sessions with custom durations
+- Full App Intents integration
 
-🔔 Smart Notifications
-• Get notified when sessions complete
-• Works even when app is closed
-• Customizable sound alerts
-• Haptic feedback for better UX
-• Full control over notification preferences
+Learn the Technique
+- Comprehensive Pomodoro Technique guide built-in
+- Step-by-step instructions for beginners
+- Best practices and productivity tips
+- History of Francesco Cirillo's time management method
 
-♿ Accessibility First
-• Full VoiceOver support for screen readers
-• Dynamic Type respects your font size preferences
-• Clear visual hierarchy and high contrast design
-• Accessibility labels on all interactive elements
+Smart Notifications
+- Get notified when sessions complete
+- Works even when app is closed
+- Customizable sound alerts
+- Haptic feedback for better experience
+- Full control over notification preferences
 
-🔒 PRIVACY YOU CAN TRUST
+Accessibility First
+- Full VoiceOver support for screen readers
+- Dynamic Type respects font size preferences
+- Clear visual hierarchy and high contrast design
+- Accessibility labels on all interactive elements
+- WCAG AA compliant interface
+
+PRIVACY YOU CAN TRUST
 Your privacy is our highest priority:
-• No analytics or usage tracking
-• No third-party services or data sharing
-• No advertising or ad tracking
-• No account creation required
-• All data stored locally on your device
-• Optional iCloud sync uses YOUR private account
-• You control everything - view, modify, or delete data anytime
+- No analytics or usage tracking
+- No third-party services or data sharing
+- No advertising or ad tracking
+- No account creation required
+- All data stored locally on your device
+- Complete offline functionality
+- You control everything - view, modify, or delete data anytime
+- GDPR and CCPA compliant by design
 
-📱 PERFECT FOR
-• Students studying for exams
-• Remote workers staying focused
-• Writers battling procrastination
-• Developers coding in deep work sessions
-• Anyone wanting to build better focus habits
+PERFECT FOR
+- Students studying for exams
+- Remote workers staying focused
+- Writers battling procrastination
+- Developers in deep work sessions
+- Anyone building better focus habits
+- Teams practicing time-boxed work
 
-🎯 DESIGNED FOR iOS 18
-• Optimized for iPhone 17 and all iOS 18 devices
-• Modern SwiftUI interface
-• Smooth animations and polished design
-• Follows Apple Human Interface Guidelines
-• Universal app - works on iPhone and iPad
+DESIGNED FOR iOS 18
+- Optimized for iPhone 17 and all iOS 18 devices
+- Modern SwiftUI interface with smooth animations
+- Polished design with attention to detail
+- Follows Apple Human Interface Guidelines
+- Universal app for iPhone and iPad
+- Built with iOS 18.6 SDK
 
-💡 GETTING STARTED
+GETTING STARTED
 1. Launch the app and start your first focus session
-2. Customize durations in Settings to match your work style
-3. Enable iCloud sync to keep data across devices (optional)
+2. Customize durations in Settings to match your style
+3. Choose your favorite theme
 4. Set up Siri shortcuts for hands-free control
-5. Review your statistics to track progress
+5. Review statistics daily to track progress
 
-🚀 COMING SOON
-• Apple Watch companion app
-• Enhanced analytics with more insights
-• Achievement system and badges
-• Live Activities support
-• Weekly and monthly productivity reports
+COMING SOON
+- Apple Watch companion app
+- Enhanced analytics with deeper insights
+- Achievement system and badges
+- Live Activities support
+- Weekly and monthly reports
+- Custom theme creation
 
-Download Mr. Pomodoro today and transform how you work. Build better focus habits, accomplish more, and take control of your time - all while keeping your data completely private.
+Download Mr. Pomodoro today and transform how you work. Build better focus habits, accomplish more, and take control of your time - all while keeping your data completely private and secure.
 ```
 
 ### Keywords
 
 **Character Limit:** 100 characters (comma-separated)
 
-#### Recommended Keywords (99 characters) ✅
+#### Recommended Keywords (100 characters) ✅
 ```
-pomodoro,timer,focus,productivity,study,work,break,task,time management,concentration,tracking
+pomodoro,timer,focus,productivity,study,work,break,task,time management,concentration,habit,theme
 ```
 
 #### Alternative Keywords to Consider
@@ -243,17 +258,24 @@ This is our initial release, packed with features to help you boost productivity
 NEW FEATURES:
 • Complete Pomodoro timer with customizable durations
 • 5 beautiful themes to personalize your experience
-• iCloud sync for seamless multi-device usage
 • Focus Mode integration for distraction-free work
 • Comprehensive statistics and streak tracking
 • Siri Shortcuts for voice control
 • Full accessibility support
+• Detailed productivity analytics
+• Pomodoro Technique learning guide
+
+BEAUTIFUL DESIGN:
+• 5 professionally designed themes
+• Smooth gradient backgrounds
+• Optimized for light and dark mode
+• Polished animations and transitions
 
 PRIVACY-FIRST:
 • No tracking or analytics
 • No third-party services
 • All data stays on your device
-• Optional iCloud uses your private account
+• Complete offline functionality
 
 We'd love to hear your feedback! Please rate and review the app.
 

@@ -123,6 +123,7 @@ struct ScreenshotPreparationView: View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
     }
     
     // MARK: - Actions

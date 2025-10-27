@@ -26,14 +26,6 @@ A clean, customizable, and user-friendly Pomodoro timer built with SwiftUI for i
 - **Dark Mode Support** - All themes adapt perfectly to light and dark mode
 - **Notification Controls** - Enable/disable sounds, haptics, and push notifications
 
-### ☁️ iCloud Sync (Optional)
-- **Cross-Device Sync** - Seamlessly sync settings and session history across all your Apple devices
-- **Private & Secure** - Data stored in your private iCloud account, encrypted by Apple
-- **Automatic Sync** - Settings sync automatically; sessions sync daily or on-demand
-- **Manual Control** - Sync now button and ability to enable/disable sync anytime
-- **Conflict Resolution** - Smart merging of data from multiple devices
-- **Data Management** - View sync status, last sync time, and delete cloud data from Settings
-
 ### 🌙 Focus Mode Integration
 - **iOS Focus Mode** - Suggests enabling Focus Mode when starting focus sessions
 - **Minimize Distractions** - Automatically helps block notifications during work sessions
@@ -292,14 +284,14 @@ Complete documentation is available in the **[docs](docs/)** folder. The documen
 ### For Users
 - **[User Guide](docs/USER_GUIDE.md)** (22KB) - Complete end-user documentation
   - Getting started, features, statistics, customization
-  - iCloud Sync, Focus Mode, Siri Shortcuts setup
+  - Focus Mode, Siri Shortcuts setup
   - Privacy, troubleshooting, FAQ, tips & best practices
 
 ### For Developers
 - **[Developer Guide](docs/DEVELOPER_GUIDE.md)** (28KB) - Technical reference
   - Architecture (MVVM), development setup, project structure
   - Complete testing strategy (unit, performance, UI tests)
-  - iCloud & Focus Mode integration implementation
+  - Focus Mode integration implementation
   - Background execution, performance, debugging, CI/CD
 
 ### For App Store
@@ -342,19 +334,13 @@ Your privacy is our top priority. Mr. Pomodoro is designed with a privacy-first 
 - ✅ Session history and statistics
 - ✅ Focus Mode preferences
 
-**Optional iCloud Sync:**
-- ☁️ If enabled, data syncs to **your private iCloud account**
-- 🔐 Encrypted using Apple's security infrastructure
-- 🎛️ You control sync - enable/disable anytime
-- 🗑️ You can delete iCloud data from Settings
-
 ### What We DON'T Collect
 
 - ❌ **No Analytics** - We don't track your usage
 - ❌ **No Third-Party Services** - No external data sharing
 - ❌ **No Advertising** - No ads, no ad tracking
 - ❌ **No Account Creation** - No email, username, or personal info required
-- ❌ **No Network Requests** - Except optional iCloud sync via Apple's secure infrastructure
+- ❌ **No Network Requests** - All data stays on your device
 - ❌ **No Location Data** - We never access your location
 - ❌ **No Personal Information** - We don't collect or store any personal data
 
@@ -379,7 +365,7 @@ For complete details about our privacy practices, see:
 - 📄 **[Full Privacy Policy](PrivacyPolicy.md)** - Comprehensive documentation
 - 📱 **In-App**: Settings → About → Privacy Policy
 
-**Privacy Summary**: All data stored locally on your device. Optional iCloud sync to your private account. No tracking, no analytics, no third parties. You control everything.
+**Privacy Summary**: All data stored locally on your device. No tracking, no analytics, no third parties. You control everything.
 
 ## 📄 License
 

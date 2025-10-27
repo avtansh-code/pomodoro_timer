@@ -140,36 +140,41 @@ struct WeeklySessionsChart: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: "chart.bar.fill")
-                    .foregroundColor(theme.primaryColor)
-                Text("Sessions per Day")
-                    .font(theme.typography.title2)
-                    .fontWeight(.bold)
-            }
+        GeometryReader { geometry in
+            let chartHeight = max(geometry.size.width * 0.4, 200)
             
-            Chart(dailyData, id: \.day) { item in
-                BarMark(
-                    x: .value("Day", item.day),
-                    y: .value("Sessions", item.count)
-                )
-                .foregroundStyle(theme.primaryColor.gradient)
-                .cornerRadius(8)
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Image(systemName: "chart.bar.fill")
+                        .foregroundColor(theme.primaryColor)
+                    Text("Sessions per Day")
+                        .font(theme.typography.title2)
+                        .fontWeight(.bold)
+                }
+                
+                Chart(dailyData, id: \.day) { item in
+                    BarMark(
+                        x: .value("Day", item.day),
+                        y: .value("Sessions", item.count)
+                    )
+                    .foregroundStyle(theme.primaryColor.gradient)
+                    .cornerRadius(8)
+                }
+                .frame(height: chartHeight)
+                .chartYAxis {
+                    AxisMarks(position: .leading)
+                }
             }
-            .frame(height: 200)
-            .chartYAxis {
-                AxisMarks(position: .leading)
-            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(theme.cardBackground)
+            )
+            .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Bar chart showing sessions per day for the past week")
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(theme.cardBackground)
-        )
-        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("Bar chart showing sessions per day for the past week")
+        .frame(height: max(UIScreen.main.bounds.width * 0.5, 250))
     }
 }
 
@@ -201,65 +206,71 @@ struct FocusTimeTrendChart: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: "chart.line.uptrend.xyaxis")
-                    .foregroundColor(theme.primaryColor)
-                Text("Focus Time Trend")
-                    .font(theme.typography.title2)
-                    .fontWeight(.bold)
-            }
+        GeometryReader { geometry in
+            let chartHeight = max(geometry.size.width * 0.4, 200)
+            let emptyStateHeight = max(chartHeight * 0.4, 80)
             
-            if trendData.allSatisfy({ $0.minutes == 0 }) {
-                Text("No focus sessions yet")
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, 80)
-            } else {
-                Chart(trendData, id: \.date) { item in
-                    LineMark(
-                        x: .value("Date", item.date, unit: .day),
-                        y: .value("Minutes", item.minutes)
-                    )
-                    .foregroundStyle(theme.primaryColor.gradient)
-                    .interpolationMethod(.catmullRom)
-                    
-                    AreaMark(
-                        x: .value("Date", item.date, unit: .day),
-                        y: .value("Minutes", item.minutes)
-                    )
-                    .foregroundStyle(theme.primaryColor.opacity(0.2).gradient)
-                    .interpolationMethod(.catmullRom)
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Image(systemName: "chart.line.uptrend.xyaxis")
+                        .foregroundColor(theme.primaryColor)
+                    Text("Focus Time Trend")
+                        .font(theme.typography.title2)
+                        .fontWeight(.bold)
                 }
-                .frame(height: 200)
-                .chartYAxis {
-                    AxisMarks(position: .leading) { value in
-                        AxisValueLabel {
-                            if let minutes = value.as(Double.self) {
-                                Text("\(Int(minutes))m")
+                
+                if trendData.allSatisfy({ $0.minutes == 0 }) {
+                    Text("No focus sessions yet")
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.vertical, emptyStateHeight)
+                } else {
+                    Chart(trendData, id: \.date) { item in
+                        LineMark(
+                            x: .value("Date", item.date, unit: .day),
+                            y: .value("Minutes", item.minutes)
+                        )
+                        .foregroundStyle(theme.primaryColor.gradient)
+                        .interpolationMethod(.catmullRom)
+                        
+                        AreaMark(
+                            x: .value("Date", item.date, unit: .day),
+                            y: .value("Minutes", item.minutes)
+                        )
+                        .foregroundStyle(theme.primaryColor.opacity(0.2).gradient)
+                        .interpolationMethod(.catmullRom)
+                    }
+                    .frame(height: chartHeight)
+                    .chartYAxis {
+                        AxisMarks(position: .leading) { value in
+                            AxisValueLabel {
+                                if let minutes = value.as(Double.self) {
+                                    Text("\(Int(minutes))m")
+                                }
                             }
                         }
                     }
-                }
-                .chartXAxis {
-                    AxisMarks(values: .stride(by: .day)) { value in
-                        if let date = value.as(Date.self) {
-                            AxisValueLabel {
-                                Text(date, format: .dateTime.weekday(.abbreviated))
+                    .chartXAxis {
+                        AxisMarks(values: .stride(by: .day)) { value in
+                            if let date = value.as(Date.self) {
+                                AxisValueLabel {
+                                    Text(date, format: .dateTime.weekday(.abbreviated))
+                                }
                             }
                         }
                     }
                 }
             }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(theme.cardBackground)
+            )
+            .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Line chart showing focus time trend over the past week")
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(theme.cardBackground)
-        )
-        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("Line chart showing focus time trend over the past week")
+        .frame(height: max(UIScreen.main.bounds.width * 0.5, 250))
     }
 }
 
@@ -283,67 +294,73 @@ struct SessionTypeDistributionChart: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: "chart.pie.fill")
-                    .foregroundColor(theme.accentColor)
-                Text("Session Distribution")
-                    .font(theme.typography.title2)
-                    .fontWeight(.bold)
-            }
+        GeometryReader { geometry in
+            let chartSize = min(geometry.size.width * 0.35, 150)
+            let emptyStateHeight = max(geometry.size.width * 0.2, 80)
             
-            if distributionData.isEmpty {
-                Text("No sessions yet")
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, 80)
-            } else {
-                HStack(spacing: 20) {
-                    // Pie Chart
-                    Chart(distributionData, id: \.type) { item in
-                        SectorMark(
-                            angle: .value("Count", item.count),
-                            innerRadius: .ratio(0.5),
-                            angularInset: 2
-                        )
-                        .foregroundStyle(item.color.gradient)
-                        .cornerRadius(4)
-                    }
-                    .frame(width: 120, height: 120)
-                    
-                    // Legend
-                    VStack(alignment: .leading, spacing: 8) {
-                        ForEach(distributionData, id: \.type) { item in
-                            HStack(spacing: 8) {
-                                Circle()
-                                    .fill(item.color)
-                                    .frame(width: 12, height: 12)
-                                
-                                Text(item.type)
-                                    .font(.caption)
-                                    .foregroundColor(.primary)
-                                
-                                Spacer()
-                                
-                                Text("\(item.count)")
-                                    .font(.caption)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.primary)
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Image(systemName: "chart.pie.fill")
+                        .foregroundColor(theme.accentColor)
+                    Text("Session Distribution")
+                        .font(theme.typography.title2)
+                        .fontWeight(.bold)
+                }
+                
+                if distributionData.isEmpty {
+                    Text("No sessions yet")
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.vertical, emptyStateHeight)
+                } else {
+                    HStack(spacing: min(geometry.size.width * 0.05, 20)) {
+                        // Pie Chart
+                        Chart(distributionData, id: \.type) { item in
+                            SectorMark(
+                                angle: .value("Count", item.count),
+                                innerRadius: .ratio(0.5),
+                                angularInset: 2
+                            )
+                            .foregroundStyle(item.color.gradient)
+                            .cornerRadius(4)
+                        }
+                        .frame(width: chartSize, height: chartSize)
+                        
+                        // Legend
+                        VStack(alignment: .leading, spacing: 8) {
+                            ForEach(distributionData, id: \.type) { item in
+                                HStack(spacing: 8) {
+                                    Circle()
+                                        .fill(item.color)
+                                        .frame(width: 12, height: 12)
+                                    
+                                    Text(item.type)
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                    
+                                    Spacer()
+                                    
+                                    Text("\(item.count)")
+                                        .font(.caption)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.primary)
+                                }
                             }
                         }
                     }
+                    .padding(.vertical, 8)
                 }
-                .padding(.vertical, 8)
             }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(theme.cardBackground)
+            )
+            .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Pie chart showing distribution of session types")
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(theme.cardBackground)
-        )
-        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("Pie chart showing distribution of session types")
+        .frame(height: max(UIScreen.main.bounds.width * 0.4, 200))
     }
 }
 

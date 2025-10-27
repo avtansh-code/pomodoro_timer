@@ -87,6 +87,15 @@ class TimerManager: ObservableObject {
     }
     
     func skipSession() {
+        // Save skipped session to stats
+        let elapsedTime = getDuration(for: currentSessionType) - timeRemaining
+        let session = TimerSession(
+            type: currentSessionType,
+            duration: elapsedTime,
+            wasCompleted: false
+        )
+        persistenceManager.saveSession(session)
+        
         resetTimer()
         switchToNextSession()
     }

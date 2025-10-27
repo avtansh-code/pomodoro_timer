@@ -17,6 +17,9 @@ struct SettingsView: View {
     @State private var showingClearStatsConfirmation = false
     @State private var showingResetAppConfirmation = false
     @State private var showingDeleteCloudConfirmation = false
+    @State private var isDeletingCloudData = false
+    @State private var showingCloudDeleteResult = false
+    @State private var cloudDeleteSuccess = false
     
     var body: some View {
         ZStack {
@@ -46,8 +49,8 @@ struct SettingsView: View {
             // Notifications & Feedback
             notificationSection
             
-            // iCloud Sync
-            iCloudSection
+            // iCloud Sync - Hidden for now
+            // iCloudSection
             
             // Developer Tools (Debug only)
             #if DEBUG
@@ -277,6 +280,8 @@ struct SettingsView: View {
                     }
                 } else {
                     cloudSyncManager.stopAutomaticSync()
+                    // Delete iCloud data when sync is disabled
+                    deleteCloudDataSilently()
                 }
             }
             
@@ -418,11 +423,19 @@ struct SettingsView: View {
                     showingDeleteCloudConfirmation = true
                 } label: {
                     HStack(spacing: 12) {
-                        Image(systemName: "icloud.slash.fill")
-                            .frame(width: 24)
-                        Text("Delete iCloud Data")
+                        if isDeletingCloudData {
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                                .scaleEffect(0.8)
+                                .frame(width: 24)
+                        } else {
+                            Image(systemName: "icloud.slash.fill")
+                                .frame(width: 24)
+                        }
+                        Text(isDeletingCloudData ? "Deleting..." : "Delete iCloud Data")
                     }
                 }
+                .disabled(isDeletingCloudData)
                 .accessibilityLabel("Delete all iCloud data")
                 .confirmationDialog(
                     "Delete iCloud Data",
@@ -434,7 +447,17 @@ struct SettingsView: View {
                     }
                     Button("Cancel", role: .cancel) {}
                 } message: {
-                    Text("This will permanently delete all your data stored in iCloud. This action cannot be undone.")
+                    Text("This will permanently delete all your data stored in iCloud, including settings and session history. This action cannot be undone.")
+                }
+                .alert(
+                    cloudDeleteSuccess ? "iCloud Data Deleted" : "Deletion Failed",
+                    isPresented: $showingCloudDeleteResult
+                ) {
+                    Button("OK", role: .cancel) {}
+                } message: {
+                    Text(cloudDeleteSuccess 
+                        ? "All data has been permanently deleted from iCloud. Local data remains on this device."
+                        : "Unable to delete iCloud data. Please check your internet connection and iCloud status, then try again.")
                 }
             }
         } header: {
@@ -504,11 +527,29 @@ struct SettingsView: View {
     // MARK: - Helper Methods
     
     private func deleteCloudData() {
+        isDeletingCloudData = true
+        CloudSyncManager.shared.deleteAllCloudData { success in
+            DispatchQueue.main.async {
+                isDeletingCloudData = false
+                cloudDeleteSuccess = success
+                showingCloudDeleteResult = true
+                
+                // Disable iCloud sync after successful deletion
+                if success {
+                    timerManager.settings.iCloudSyncEnabled = false
+                    cloudSyncManager.stopAutomaticSync()
+                }
+            }
+        }
+    }
+    
+    private func deleteCloudDataSilently() {
+        // Delete iCloud data without showing UI feedback
         CloudSyncManager.shared.deleteAllCloudData { success in
             if success {
-                print("iCloud data deleted successfully")
+                print("✅ iCloud data deleted successfully when sync was disabled")
             } else {
-                print("Failed to delete iCloud data")
+                print("⚠️ Failed to delete iCloud data when sync was disabled")
             }
         }
     }
