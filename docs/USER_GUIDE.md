@@ -1,8 +1,8 @@
 # 🍅 Mr. Pomodoro - User Guide
 
 **Version:** 1.1.0  
-**Last Updated:** January 26, 2026  
-**iOS Version:** 18.0+
+**Last Updated:** October 27, 2025  
+**iOS Version:** 18.6+
 
 Welcome to Mr. Pomodoro! This comprehensive guide will help you master the app and boost your productivity using the Pomodoro Technique.
 
@@ -281,7 +281,7 @@ Seamlessly sync your settings and session history across all your Apple devices.
 #### Enabling iCloud Sync
 
 **Prerequisites:**
-- iOS 18.0 or later
+- iOS 18.6 or later
 - iCloud account signed in on device
 - iCloud Drive enabled
 - Internet connection
@@ -856,7 +856,7 @@ A: Very little! Base app + your session history. Typically under 50MB.
 A: No! Efficient background timers have minimal battery impact.
 
 **Q: What iOS version is required?**
-A: iOS 18.0 or later.
+A: iOS 18.6 or later.
 
 **Q: Can I use Siri Shortcuts?**
 A: Yes! Full Siri integration with multiple commands.
@@ -933,6 +933,6 @@ We hope this app helps you achieve your goals and build better productivity habi
 
 ---
 
-*Last Updated: January 26, 2026*  
+*Last Updated: October 27, 2025*  
 *App Version: 1.1.0*  
 *Guide Version: 1.0*

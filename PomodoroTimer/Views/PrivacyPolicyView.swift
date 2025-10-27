@@ -24,11 +24,11 @@ struct PrivacyPolicyView: View {
                         .font(theme.typography.title3)
                         .foregroundColor(theme.primaryColor)
                     
-                    Text("Effective Date: October 26, 2025")
+                    Text("Effective Date: October 27, 2025")
                         .font(theme.typography.subheadline)
                         .foregroundColor(.secondary)
                     
-                    Text("Last Updated: October 26, 2025")
+                    Text("Last Updated: October 27, 2025")
                         .font(theme.typography.subheadline)
                         .foregroundColor(.secondary)
                 }
