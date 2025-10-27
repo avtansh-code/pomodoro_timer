@@ -10,11 +10,11 @@ import Combine
 
 class ThemeManager: ObservableObject {
     @Published var currentTheme: AppTheme
-    @AppStorage("selectedThemeId") private var selectedThemeId: String = "classic_red"
+    @AppStorage("selectedThemeId") private var selectedThemeId: String = "forest_green"
     
     init() {
         // Initialize with default first
-        self.currentTheme = .classicRed
+        self.currentTheme = .forestGreen
         
         // Then load saved theme if available
         if let theme = AppTheme.allThemes.first(where: { $0.id == self.selectedThemeId }) {

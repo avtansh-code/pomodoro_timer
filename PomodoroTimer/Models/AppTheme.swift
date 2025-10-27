@@ -256,7 +256,7 @@ struct AppTheme: Identifiable {
 // MARK: - Environment Key
 
 struct ThemeKey: EnvironmentKey {
-    static let defaultValue: AppTheme = .classicRed
+    static let defaultValue: AppTheme = .forestGreen
 }
 
 extension EnvironmentValues {

@@ -21,17 +21,17 @@ struct ThemeSelectionView: View {
                 .ignoresSafeArea()
             
             ScrollView {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 2), spacing: 16) {
-                ForEach(AppTheme.allThemes) { themeOption in
-                    ThemeCard(
-                        theme: themeOption,
-                        isSelected: themeManager.currentTheme.id == themeOption.id,
-                        onSelect: {
-                            HapticManager.selection()
-                            themeManager.applyTheme(themeOption)
-                        }
-                    )
-                }
+                VStack(spacing: 12) {
+                    ForEach(AppTheme.allThemes) { themeOption in
+                        ThemeCard(
+                            theme: themeOption,
+                            isSelected: themeManager.currentTheme.id == themeOption.id,
+                            onSelect: {
+                                HapticManager.selection()
+                                themeManager.applyTheme(themeOption)
+                            }
+                        )
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 20)
@@ -51,38 +51,39 @@ struct ThemeCard: View {
     
     var body: some View {
         Button(action: onSelect) {
-            VStack(spacing: 16) {
+            HStack(spacing: 16) {
                 // Color preview circles
-                HStack(spacing: 8) {
+                HStack(spacing: 6) {
                     Circle()
                         .fill(theme.primaryColor)
-                        .frame(width: 32, height: 32)
+                        .frame(width: 28, height: 28)
                     Circle()
                         .fill(theme.secondaryColor)
-                        .frame(width: 32, height: 32)
+                        .frame(width: 28, height: 28)
                     Circle()
                         .fill(theme.accentColor)
-                        .frame(width: 32, height: 32)
+                        .frame(width: 28, height: 28)
                 }
                 
+                // Theme name
                 Text(theme.name)
-                    .font(.system(size: 16, weight: .semibold, design: .rounded))
-                    .foregroundColor(isSelected ? theme.primaryColor : .primary)
+                    .font(.system(size: 17, weight: .semibold, design: .rounded))
+                    .foregroundColor(.primary)
                     .lineLimit(1)
                 
+                Spacer()
+                
+                // Checkmark for selected theme
                 if isSelected {
-                    HStack(spacing: 4) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(theme.primaryColor)
-                            .font(.system(size: 16, weight: .medium))
-                        Text("Selected")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(theme.primaryColor)
-                    }
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(theme.primaryColor)
+                        .font(.system(size: 24, weight: .medium))
+                        .transition(.scale.combined(with: .opacity))
                 }
             }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
             .frame(maxWidth: .infinity)
-            .frame(height: 140)
             .background(
                 RoundedRectangle(cornerRadius: 16)
                     .fill(Color(.systemBackground))
@@ -96,11 +97,10 @@ struct ThemeCard: View {
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
                     .strokeBorder(
-                        isSelected ? theme.primaryColor : Color.clear,
-                        lineWidth: 2
+                        isSelected ? theme.primaryColor : Color.gray.opacity(0.2),
+                        lineWidth: isSelected ? 2 : 1
                     )
             )
-            .scaleEffect(isSelected ? 1.02 : 1.0)
             .animation(.easeInOut(duration: 0.2), value: isSelected)
         }
         .buttonStyle(PlainButtonStyle())
