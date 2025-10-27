@@ -111,6 +111,7 @@ struct SettingsTabView: View {
         NavigationView {
             SettingsView(timerManager: timerManager, themeManager: themeManager)
         }
+        .navigationViewStyle(.stack)
     }
 }
 

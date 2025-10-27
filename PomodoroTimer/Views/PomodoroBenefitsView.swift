@@ -43,9 +43,16 @@ struct PomodoroBenefitsView: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 24)
             }
+            .accessibilityIdentifier("BenefitsScrollView")
         }
         .navigationTitle("The Pomodoro Way")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                // Empty - allows automatic back button
+                EmptyView()
+            }
+        }
     }
     
     // MARK: - Header Section
@@ -67,6 +74,8 @@ struct PomodoroBenefitsView: View {
                 .font(theme.typography.largeTitle)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
+                .accessibilityIdentifier("The Power of Pomodoro")
+                .accessibilityLabel("The Power of Pomodoro")
             
             Text("Focus deeper. Work smarter. Rest better.")
                 .font(theme.typography.title3)
@@ -87,6 +96,7 @@ struct PomodoroBenefitsView: View {
                     Text("The Pomodoro Technique was created in the late 1980s by **Francesco Cirillo**, an Italian university student seeking a better way to study and manage his time.")
                         .font(theme.typography.body)
                         .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityLabel("The Pomodoro Technique was created in the late 1980s by Francesco Cirillo, an Italian university student seeking a better way to study and manage his time.")
                     
                     Text("Named after the tomato-shaped kitchen timer (*pomodoro* means \"tomato\" in Italian) he used to track his work intervals, this simple yet powerful method has since helped millions worldwide achieve better focus and productivity.")
                         .font(theme.typography.body)
@@ -220,6 +230,7 @@ struct PomodoroBenefitsView: View {
     private var considerationsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             SectionHeader(icon: "exclamationmark.triangle.fill", title: "Things to Keep in Mind", color: .orange)
+                .accessibilityAddTraits(.isHeader)
             
             InfoCard {
                 VStack(alignment: .leading, spacing: 12) {
@@ -296,6 +307,7 @@ struct PomodoroBenefitsView: View {
                 .cornerRadius(12)
                 .shadow(color: theme.primaryColor.opacity(0.3), radius: 8, y: 4)
             }
+            .accessibilityIdentifier("Start Your First Pomodoro")
             .padding(.horizontal, 8)
         }
         .padding(.top, 16)
