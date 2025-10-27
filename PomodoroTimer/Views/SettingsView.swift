@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct SettingsView: View {
     @ObservedObject var timerManager: TimerManager
@@ -49,28 +50,35 @@ struct SettingsView: View {
     
     private var themeSection: some View {
         Section {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("App Theme")
-                    .font(theme.typography.headline)
-                    .foregroundColor(.primary)
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(AppTheme.allThemes) { themeOption in
-                            ThemePreviewCard(
-                                theme: themeOption,
-                                isSelected: themeManager.currentTheme.id == themeOption.id,
-                                onSelect: {
-                                    HapticManager.selection()
-                                    themeManager.applyTheme(themeOption)
-                                }
-                            )
-                        }
+            NavigationLink(destination: ThemeSelectionView(themeManager: themeManager)) {
+                HStack(spacing: 12) {
+                    Image(systemName: "paintbrush.fill")
+                        .foregroundColor(theme.primaryColor)
+                        .frame(width: 24)
+                    
+                    Text("App Theme")
+                    
+                    Spacer()
+                    
+                    // Current theme preview
+                    HStack(spacing: 4) {
+                        Circle()
+                            .fill(themeManager.currentTheme.primaryColor)
+                            .frame(width: 12, height: 12)
+                        Circle()
+                            .fill(themeManager.currentTheme.secondaryColor)
+                            .frame(width: 12, height: 12)
+                        Circle()
+                            .fill(themeManager.currentTheme.accentColor)
+                            .frame(width: 12, height: 12)
                     }
-                    .padding(.vertical, 4)
+                    
+                    Text(themeManager.currentTheme.name)
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(.secondary)
                 }
             }
-            .listRowInsets(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
+            .accessibilityLabel("Change app theme, currently \(themeManager.currentTheme.name)")
         } header: {
             Label("Appearance", systemImage: "paintbrush.fill")
         }
@@ -409,50 +417,6 @@ struct SettingsView: View {
     }
 }
 
-// MARK: - Theme Preview Card
-
-struct ThemePreviewCard: View {
-    let theme: AppTheme
-    let isSelected: Bool
-    let onSelect: () -> Void
-    
-    var body: some View {
-        Button(action: onSelect) {
-            VStack(spacing: 8) {
-                // Color preview circles
-                HStack(spacing: 4) {
-                    Circle()
-                        .fill(theme.primaryColor)
-                        .frame(width: 20, height: 20)
-                    Circle()
-                        .fill(theme.secondaryColor)
-                        .frame(width: 20, height: 20)
-                    Circle()
-                        .fill(theme.accentColor)
-                        .frame(width: 20, height: 20)
-                }
-                
-                Text(theme.name)
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
-                    .foregroundColor(isSelected ? theme.primaryColor : .secondary)
-                    .lineLimit(1)
-            }
-            .frame(width: 100, height: 80)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(.systemGray6))
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .strokeBorder(
-                        isSelected ? theme.primaryColor : Color.clear,
-                        lineWidth: 2
-                    )
-            )
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
-}
 
 // MARK: - Duration Picker
 
