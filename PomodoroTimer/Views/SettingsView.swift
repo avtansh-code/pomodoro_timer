@@ -15,9 +15,15 @@ struct SettingsView: View {
     @Environment(\.appTheme) var theme
     
     var body: some View {
-        Form {
-            // Theme Selection
-            themeSection
+        ZStack {
+            // Animated background gradient
+            theme.focusGradient
+                .opacity(0.12)
+                .ignoresSafeArea()
+            
+            Form {
+                // Theme Selection
+                themeSection
             
             // Duration Settings
             durationSection
@@ -41,6 +47,8 @@ struct SettingsView: View {
             
             // App Info
             aboutSection
+            }
+            .scrollContentBackground(.hidden)
         }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)

@@ -14,8 +14,14 @@ struct ThemeSelectionView: View {
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 2), spacing: 16) {
+        ZStack {
+            // Animated background gradient
+            theme.focusGradient
+                .opacity(0.12)
+                .ignoresSafeArea()
+            
+            ScrollView {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 2), spacing: 16) {
                 ForEach(AppTheme.allThemes) { themeOption in
                     ThemeCard(
                         theme: themeOption,
@@ -26,13 +32,13 @@ struct ThemeSelectionView: View {
                         }
                     )
                 }
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 20)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 20)
         }
         .navigationTitle("App Theme")
         .navigationBarTitleDisplayMode(.inline)
-        .background(Color(.systemGroupedBackground))
     }
 }
 

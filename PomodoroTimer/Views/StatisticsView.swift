@@ -27,8 +27,14 @@ struct StatisticsView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(spacing: 24) {
+            ZStack {
+                // Animated background gradient
+                theme.focusGradient
+                    .opacity(0.12)
+                    .ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(spacing: 24) {
                     // Time Range Picker
                     Picker("Time Range", selection: $selectedTimeRange) {
                         ForEach(TimeRange.allCases, id: \.self) { range in
@@ -72,8 +78,9 @@ struct StatisticsView: View {
                     
                     // Motivational Quote
                     MotivationalQuoteCard()
+                    }
+                    .padding()
                 }
-                .padding()
             }
             .navigationTitle("Statistics")
             .navigationBarTitleDisplayMode(.inline)
@@ -155,8 +162,9 @@ struct WeeklySessionsChart: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.systemGray6))
+                .fill(theme.cardBackground)
         )
+        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Bar chart showing sessions per day for the past week")
     }
@@ -262,9 +270,9 @@ struct SessionTypeDistributionChart: View {
         let longBreakCount = sessions.filter { $0.type == .longBreak }.count
         
         return [
-            ("Focus", focusCount, .red),
-            ("Short Break", shortBreakCount, .green),
-            ("Long Break", longBreakCount, .blue)
+            ("Focus", focusCount, theme.primaryColor),
+            ("Short Break", shortBreakCount, Color(red: 0.20, green: 0.78, blue: 0.35)),
+            ("Long Break", longBreakCount, Color(red: 0.35, green: 0.34, blue: 0.84))
         ].filter { $0.count > 0 }
     }
     
@@ -408,28 +416,28 @@ struct StatsSection: View {
                         label: "Total Sessions",
                         value: "\(sessions.count)",
                         icon: "checkmark.circle.fill",
-                        color: .green
+                        color: Color(red: 0.20, green: 0.78, blue: 0.35)
                     )
                     
                     StatRow(
                         label: "Focus Sessions",
                         value: "\(focusSessionCount)",
                         icon: "brain.head.profile",
-                        color: .red
+                        color: theme.primaryColor
                     )
                     
                     StatRow(
                         label: "Total Focus Time",
                         value: totalFocusTimeString,
                         icon: "clock.fill",
-                        color: .blue
+                        color: theme.accentColor
                     )
                     
                     StatRow(
                         label: "Break Time",
                         value: totalBreakTimeString,
                         icon: "cup.and.saucer.fill",
-                        color: .green
+                        color: Color(red: 0.20, green: 0.78, blue: 0.35)
                     )
                 }
                 .padding()
