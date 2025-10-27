@@ -26,6 +26,9 @@ struct SettingsView: View {
                 .ignoresSafeArea()
             
             Form {
+                // Learn about Pomodoro - Featured at top
+                learnSection
+                
                 // Theme Selection
                 themeSection
             
@@ -261,6 +264,12 @@ struct SettingsView: View {
             .onChange(of: timerManager.settings.iCloudSyncEnabled) { oldValue, newValue in
                 if newValue {
                     cloudSyncManager.startAutomaticSync()
+                    // Trigger immediate sync when enabled
+                    cloudSyncManager.syncSettings(timerManager.settings)
+                    let sessions = PersistenceManager.shared.getAllSessions()
+                    if !sessions.isEmpty {
+                        cloudSyncManager.syncAllSessions(sessions)
+                    }
                 } else {
                     cloudSyncManager.stopAutomaticSync()
                 }
@@ -356,7 +365,8 @@ struct SettingsView: View {
                     Text("Reset App Completely")
                 }
             }
-            .accessibilityLabel("Reset app to default settings")
+            .accessibilityLabel("Reset App Completely")
+            .accessibilityHint("Reset app to default settings and delete all statistics")
             .confirmationDialog(
                 "Reset App Completely",
                 isPresented: $showingResetAppConfirmation,
@@ -402,6 +412,32 @@ struct SettingsView: View {
         }
     }
     
+    // MARK: - Learn Section
+    
+    private var learnSection: some View {
+        Section {
+            NavigationLink(destination: PomodoroBenefitsView()) {
+                HStack(spacing: 12) {
+                    Image(systemName: "lightbulb.fill")
+                        .foregroundColor(.orange)
+                        .frame(width: 24)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Learn about Pomodoro")
+                            .font(.system(size: 16, weight: .semibold))
+                        Text("Discover the science behind focused work")
+                            .font(.system(size: 13))
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+            .accessibilityLabel("Learn about Pomodoro")
+            .accessibilityHint("Navigate to learn about the Pomodoro Technique")
+        } header: {
+            Label("Get Started", systemImage: "book.fill")
+        }
+    }
+    
     // MARK: - About Section
     
     private var aboutSection: some View {
@@ -425,6 +461,8 @@ struct SettingsView: View {
                 Text("1.1.0")
                     .foregroundColor(.secondary)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Version 1.1.0")
         } header: {
             Label("About", systemImage: "info.circle")
         }

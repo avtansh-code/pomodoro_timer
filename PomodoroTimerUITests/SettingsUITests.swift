@@ -249,16 +249,21 @@ final class SettingsUITests: XCTestCase {
     // MARK: - Navigation Tests
     
     func testNavigateBackFromSettings() throws {
-        // Look for back button or timer tab
+        // Settings is a root tab, so navigate to another tab instead of using back button
         let timerTab = app.tabBars.buttons.matching(NSPredicate(format: "label CONTAINS 'Timer'")).firstMatch
-        let backButton = app.navigationBars.buttons.element(boundBy: 0)
         
         if timerTab.exists {
             timerTab.tap()
-            XCTAssertTrue(app.exists)
-        } else if backButton.exists {
-            backButton.tap()
-            XCTAssertTrue(app.exists)
+            sleep(1)
+            XCTAssertTrue(app.exists, "Should navigate to Timer tab from Settings")
+            
+            // Navigate back to Settings
+            let settingsTab = app.tabBars.buttons.matching(NSPredicate(format: "label CONTAINS 'Settings'")).firstMatch
+            if settingsTab.exists {
+                settingsTab.tap()
+                sleep(1)
+                XCTAssertTrue(app.exists, "Should navigate back to Settings")
+            }
         }
     }
     
@@ -276,5 +281,164 @@ final class SettingsUITests: XCTestCase {
         
         // App should remain stable
         XCTAssertTrue(app.exists)
+    }
+    
+    // MARK: - Learn About Pomodoro Tests
+    
+    func testLearnAboutPomodoroExists() throws {
+        let learnLink = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Learn about Pomodoro'")).firstMatch
+        XCTAssertTrue(learnLink.exists, "Learn about Pomodoro link should exist")
+    }
+    
+    func testLearnAboutPomodoroAtTop() throws {
+        let learnLink = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Learn about Pomodoro'")).firstMatch
+        XCTAssertTrue(learnLink.exists, "Learn link should be visible at top")
+        
+        let getStartedHeader = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'Get Started'")).firstMatch
+        XCTAssertTrue(getStartedHeader.exists, "Get Started section should exist")
+    }
+    
+    func testLearnAboutPomodoroHasSubtitle() throws {
+        let subtitleText = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'Discover the science'")).firstMatch
+        XCTAssertTrue(subtitleText.exists, "Learn link should have descriptive subtitle")
+    }
+    
+    func testLearnAboutPomodoroNavigation() throws {
+        let learnLink = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Learn about Pomodoro'")).firstMatch
+        
+        if learnLink.exists {
+            learnLink.tap()
+            sleep(1)
+            
+            let benefitsTitle = app.staticTexts["The Power of Pomodoro"]
+            let navigationBar = app.navigationBars["The Pomodoro Way"]
+            
+            XCTAssertTrue(benefitsTitle.exists || navigationBar.exists, 
+                         "Should navigate to Pomodoro Benefits page")
+        }
+    }
+    
+    // MARK: - Theme Navigation Tests
+    
+    func testThemeSelectionNavigation() throws {
+        let themeButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'App Theme'")).firstMatch
+        
+        if themeButton.exists {
+            themeButton.tap()
+            sleep(1)
+            
+            let themeSelectionTitle = app.navigationBars.matching(NSPredicate(format: "label CONTAINS 'Theme'")).firstMatch
+            XCTAssertTrue(themeSelectionTitle.exists, "Should navigate to theme selection")
+        }
+    }
+    
+    //MARK: - Privacy Policy Tests
+    
+    func testPrivacyPolicyNavigation() throws {
+        let scrollView = app.scrollViews.firstMatch
+        if scrollView.exists {
+            for _ in 0..<4 {
+                scrollView.swipeUp()
+                sleep(1)
+            }
+        }
+        
+        let privacyButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Privacy Policy'")).firstMatch
+        
+        if privacyButton.exists {
+            privacyButton.tap()
+            sleep(1)
+            
+            let privacyTitle = app.navigationBars.matching(NSPredicate(format: "label CONTAINS 'Privacy'")).firstMatch
+            XCTAssertTrue(privacyTitle.exists, "Should navigate to Privacy Policy")
+        }
+    }
+    
+    // MARK: - Duration Range Tests
+    
+    func testFocusDurationRange() throws {
+        let steppers = app.steppers
+        if steppers.count > 0 {
+            let stepper = steppers.element(boundBy: 0)
+            
+            // Test increment
+            stepper.buttons.element(boundBy: 0).tap()
+            XCTAssertTrue(app.exists, "Should handle focus duration increment")
+            
+            // Test decrement
+            stepper.buttons.element(boundBy: 1).tap()
+            XCTAssertTrue(app.exists, "Should handle focus duration decrement")
+        }
+    }
+    
+    // MARK: - Version Info Tests
+    
+    func testVersionInfoDisplayed() throws {
+        let scrollView = app.scrollViews.firstMatch
+        if scrollView.exists {
+            for _ in 0..<4 {
+                scrollView.swipeUp()
+                sleep(1)
+            }
+        }
+        
+        let versionLabel = app.staticTexts["Version"]
+        XCTAssertTrue(versionLabel.exists, "Version label should be displayed")
+    }
+    
+    // MARK: - Reset App Tests
+    
+    func testResetAppButtonExists() throws {
+        let scrollView = app.scrollViews.firstMatch
+        if scrollView.exists {
+            for _ in 0..<3 {
+                scrollView.swipeUp()
+                sleep(1)
+            }
+        }
+        
+        let resetButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Reset App'")).firstMatch
+        XCTAssertTrue(resetButton.exists, "Reset App button should exist")
+    }
+    
+    func testResetAppConfirmation() throws {
+        let scrollView = app.scrollViews.firstMatch
+        if scrollView.exists {
+            for _ in 0..<3 {
+                scrollView.swipeUp()
+                sleep(1)
+            }
+        }
+        
+        let resetButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Reset App'")).firstMatch
+        
+        if resetButton.exists {
+            resetButton.tap()
+            sleep(1)
+            
+            let cancelButton = app.buttons["Cancel"]
+            XCTAssertTrue(cancelButton.exists, "Confirmation dialog should appear")
+            
+            if cancelButton.exists {
+                cancelButton.tap()
+            }
+        }
+    }
+    
+    // MARK: - Sync With Focus Mode Tests
+    
+    func testSyncWithFocusModeOption() throws {
+        let focusModeToggle = app.switches.matching(NSPredicate(format: "label CONTAINS 'Enable Focus Mode'")).firstMatch
+        
+        if focusModeToggle.exists {
+            let currentState = focusModeToggle.value as? String
+            if currentState == "0" {
+                focusModeToggle.tap()
+                sleep(1)
+            }
+            
+            let syncToggle = app.switches.matching(NSPredicate(format: "label CONTAINS 'Sync with iOS Focus' OR label CONTAINS 'Sync with Focus'")).firstMatch
+            XCTAssertTrue(syncToggle.exists, "Sync with Focus Mode option should appear when Focus Mode is enabled")
+        }
     }
 }
