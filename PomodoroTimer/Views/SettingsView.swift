@@ -49,6 +49,11 @@ struct SettingsView: View {
             // iCloud Sync
             iCloudSection
             
+            // Developer Tools (Debug only)
+            #if DEBUG
+            developerSection
+            #endif
+            
             // Data Management
             dataSection
             
@@ -326,6 +331,34 @@ struct SettingsView: View {
                 Text("Settings and session history sync once daily across all devices signed in with the same iCloud account.")
                     .font(theme.typography.caption)
             }
+        }
+    }
+    
+    // MARK: - Developer Tools Section
+    
+    private var developerSection: some View {
+        Section {
+            NavigationLink(destination: ScreenshotPreparationView().environmentObject(timerManager)) {
+                HStack(spacing: 12) {
+                    Image(systemName: "camera.fill")
+                        .foregroundColor(.purple)
+                        .frame(width: 24)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Screenshot Mode")
+                            .font(.system(size: 16, weight: .semibold))
+                        Text("Prepare app for screenshot capture")
+                            .font(.system(size: 13))
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+            .accessibilityLabel("Screenshot preparation mode")
+        } header: {
+            Label("Developer Tools", systemImage: "wrench.and.screwdriver.fill")
+        } footer: {
+            Text("Tools for preparing the app for App Store screenshots with dummy data.")
+                .font(theme.typography.caption)
         }
     }
     

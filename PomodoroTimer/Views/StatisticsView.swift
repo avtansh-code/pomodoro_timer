@@ -46,12 +46,12 @@ struct StatisticsView: View {
                 
                 // Weekly Sessions Chart
                 if #available(iOS 16.0, *) {
-                    WeeklySessionsChart(sessions: currentSessions)
+                    WeeklySessionsChart(sessions: currentSessions, timeRange: selectedTimeRange)
                 }
                 
                 // Focus Time Trend Chart
                 if #available(iOS 16.0, *) {
-                    FocusTimeTrendChart(sessions: currentSessions)
+                    FocusTimeTrendChart(sessions: currentSessions, timeRange: selectedTimeRange)
                 }
                 
                 // Session Type Distribution
@@ -111,6 +111,7 @@ struct StatisticsView: View {
 @available(iOS 16.0, *)
 struct WeeklySessionsChart: View {
     let sessions: [TimerSession]
+    let timeRange: StatisticsView.TimeRange
     @Environment(\.appTheme) var theme
     
     private var dailyData: [(day: String, count: Int)] {
@@ -118,10 +119,19 @@ struct WeeklySessionsChart: View {
         let today = Date()
         var data: [(String, Int)] = []
         
-        // Get last 7 days
-        for i in 0..<7 {
+        // Determine number of days based on selected time range
+        let daysToShow = timeRange == .week ? 7 : 30
+        
+        for i in 0..<daysToShow {
             guard let date = calendar.date(byAdding: .day, value: -i, to: today) else { continue }
-            let dayName = calendar.shortWeekdaySymbols[calendar.component(.weekday, from: date) - 1]
+            let dayName: String
+            if timeRange == .month {
+                // For monthly view, show date number
+                dayName = "\(calendar.component(.day, from: date))"
+            } else {
+                // For weekly view, show day name
+                dayName = calendar.shortWeekdaySymbols[calendar.component(.weekday, from: date) - 1]
+            }
             let sessionsOnDay = sessions.filter { calendar.isDate($0.completedAt, inSameDayAs: date) }.count
             data.append((dayName, sessionsOnDay))
         }
@@ -168,6 +178,7 @@ struct WeeklySessionsChart: View {
 @available(iOS 16.0, *)
 struct FocusTimeTrendChart: View {
     let sessions: [TimerSession]
+    let timeRange: StatisticsView.TimeRange
     @Environment(\.appTheme) var theme
     
     private var trendData: [(date: Date, minutes: Double)] {
@@ -175,8 +186,10 @@ struct FocusTimeTrendChart: View {
         let today = Date()
         var data: [(Date, Double)] = []
         
-        // Get last 7 days
-        for i in 0..<7 {
+        // Determine number of days based on selected time range
+        let daysToShow = timeRange == .week ? 7 : 30
+        
+        for i in 0..<daysToShow {
             guard let date = calendar.date(byAdding: .day, value: -i, to: today) else { continue }
             let focusTime = sessions
                 .filter { $0.type == .focus && calendar.isDate($0.completedAt, inSameDayAs: date) }
