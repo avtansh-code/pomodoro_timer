@@ -15,10 +15,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pomodoro.timer.domain.model.SessionType
 import com.pomodoro.timer.ui.theme.FocusColor
 import com.pomodoro.timer.ui.theme.LongBreakColor
+import com.pomodoro.timer.ui.theme.PomodoroTheme
 import com.pomodoro.timer.ui.theme.ShortBreakColor
 
 /**
@@ -73,6 +75,39 @@ fun SessionHeader(
             text = "Session $sessionNumber",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SessionHeaderFocusPreview() {
+    PomodoroTheme {
+        SessionHeader(
+            sessionType = SessionType.FOCUS,
+            sessionNumber = 1
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SessionHeaderShortBreakPreview() {
+    PomodoroTheme {
+        SessionHeader(
+            sessionType = SessionType.SHORT_BREAK,
+            sessionNumber = 2
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SessionHeaderLongBreakPreview() {
+    PomodoroTheme {
+        SessionHeader(
+            sessionType = SessionType.LONG_BREAK,
+            sessionNumber = 4
         )
     }
 }

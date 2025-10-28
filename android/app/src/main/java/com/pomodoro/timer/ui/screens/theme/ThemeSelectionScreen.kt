@@ -21,11 +21,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pomodoro.timer.domain.model.AppTheme
 import com.pomodoro.timer.presentation.viewmodel.SettingsViewModel
+import com.pomodoro.timer.ui.theme.PomodoroTheme
 
 /**
  * Theme Selection Screen - Visual theme picker
@@ -223,5 +225,59 @@ private fun ColorCircle(
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ThemeCardPreview() {
+    PomodoroTheme {
+        ThemeCard(
+            theme = AppTheme.allThemes.first(),
+            isSelected = true,
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ThemeCardUnselectedPreview() {
+    PomodoroTheme {
+        ThemeCard(
+            theme = AppTheme.allThemes[1],
+            isSelected = false,
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ColorCirclePreview() {
+    PomodoroTheme {
+        ColorCircle(
+            color = Color(0xFF007AFF),
+            label = "Primary"
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ThemeCardListPreview() {
+    PomodoroTheme {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            AppTheme.allThemes.take(3).forEachIndexed { index, theme ->
+                ThemeCard(
+                    theme = theme,
+                    isSelected = index == 0,
+                    onClick = {}
+                )
+            }
+        }
     }
 }

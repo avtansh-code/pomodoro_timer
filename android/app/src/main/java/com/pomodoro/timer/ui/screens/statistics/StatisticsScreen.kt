@@ -26,10 +26,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.pomodoro.timer.domain.model.SessionType
 import com.pomodoro.timer.domain.model.TimerSession
 import com.pomodoro.timer.presentation.viewmodel.StatisticsViewModel
+import com.pomodoro.timer.ui.theme.PomodoroTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -242,4 +245,56 @@ private fun formatMinutes(minutes: Long): String {
 private fun formatTimestamp(timestamp: Long): String {
     val sdf = SimpleDateFormat("MMM dd, h:mm a", Locale.getDefault())
     return sdf.format(Date(timestamp))
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StatCardPreview() {
+    PomodoroTheme {
+        StatCard(
+            title = "Sessions",
+            value = "12"
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SessionItemPreview() {
+    PomodoroTheme {
+        SessionItem(
+            session = TimerSession(
+                id = "1",
+                type = SessionType.FOCUS,
+                duration = 1500,
+                completedAt = System.currentTimeMillis(),
+                wasCompleted = true
+            )
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StatCardsRowPreview() {
+    PomodoroTheme {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            StatCard(
+                title = "Sessions",
+                value = "8",
+                modifier = Modifier.weight(1f)
+            )
+            
+            StatCard(
+                title = "Time",
+                value = "3h 20m",
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
 }

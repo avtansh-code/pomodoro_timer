@@ -17,9 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pomodoro.timer.domain.model.TimerState
+import com.pomodoro.timer.ui.theme.PomodoroTheme
 
 /**
  * State indicator chip showing timer status (Active/Paused/Ready).
@@ -67,5 +69,29 @@ fun StateIndicator(
             ),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StateIndicatorRunningPreview() {
+    PomodoroTheme {
+        StateIndicator(state = TimerState.RUNNING)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StateIndicatorPausedPreview() {
+    PomodoroTheme {
+        StateIndicator(state = TimerState.PAUSED)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StateIndicatorIdlePreview() {
+    PomodoroTheme {
+        StateIndicator(state = TimerState.IDLE)
     }
 }

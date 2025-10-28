@@ -14,11 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pomodoro.timer.manager.ScreenshotHelper
+import com.pomodoro.timer.ui.theme.PomodoroTheme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -248,6 +250,32 @@ fun ScreenshotPreparationScreen(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ScenarioButtonPreview() {
+    PomodoroTheme {
+        ScenarioButton(
+            title = "Generate Full Statistics",
+            description = "60 days of session data with 3-8 sessions per day",
+            enabled = true,
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ScenarioButtonDisabledPreview() {
+    PomodoroTheme {
+        ScenarioButton(
+            title = "Generate Week View Data",
+            description = "7 days of concentrated session data",
+            enabled = false,
+            onClick = {}
+        )
     }
 }
 

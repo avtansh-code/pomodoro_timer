@@ -28,10 +28,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.pomodoro.timer.domain.model.AppTheme
+import com.pomodoro.timer.domain.model.TimerSettings
 import com.pomodoro.timer.presentation.viewmodel.SettingsViewModel
+import com.pomodoro.timer.ui.theme.PomodoroTheme
 
 /**
  * Settings Screen matching iOS SettingsView functionality.
@@ -425,6 +428,55 @@ private fun ThemeOption(
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
             color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SettingsSectionPreview() {
+    PomodoroTheme {
+        SettingsSection(title = "Timer Durations") {
+            Text("Setting content goes here")
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DurationSettingPreview() {
+    PomodoroTheme {
+        DurationSetting(
+            label = "Focus Duration",
+            value = 25,
+            onValueChange = {},
+            unit = "min",
+            range = 1f..60f
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ToggleSettingPreview() {
+    PomodoroTheme {
+        ToggleSetting(
+            label = "Auto-start Breaks",
+            description = "Automatically start break sessions",
+            checked = true,
+            onCheckedChange = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ThemeOptionPreview() {
+    PomodoroTheme {
+        ThemeOption(
+            theme = AppTheme.allThemes.first(),
+            isSelected = true,
+            onSelected = {}
         )
     }
 }

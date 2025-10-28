@@ -29,14 +29,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FastForward
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import java.util.Locale
 import com.pomodoro.timer.domain.model.SessionType
 import com.pomodoro.timer.domain.model.TimerState
 import com.pomodoro.timer.presentation.viewmodel.TimerViewModel
@@ -45,6 +47,7 @@ import com.pomodoro.timer.ui.components.CircularTimerProgress
 import com.pomodoro.timer.ui.components.SessionHeader
 import com.pomodoro.timer.ui.components.StateIndicator
 import com.pomodoro.timer.ui.theme.LongBreakColor
+import com.pomodoro.timer.ui.theme.PomodoroTheme
 import com.pomodoro.timer.ui.theme.ShortBreakColor
 
 /**
@@ -211,7 +214,7 @@ private fun SkipButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = ImageVector.vectorResource(android.R.drawable.ic_media_ff),
+                imageVector = Icons.Default.FastForward,
                 contentDescription = null,
                 modifier = Modifier.size(14.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
@@ -276,5 +279,27 @@ private fun getNextSessionName(
 private fun formatTime(seconds: Long): String {
     val minutes = seconds / 60
     val secs = seconds % 60
-    return String.format("%02d:%02d", minutes, secs)
+    return String.format(Locale.US, "%02d:%02d", minutes, secs)
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SkipButtonPreview() {
+    PomodoroTheme {
+        SkipButton(
+            nextSessionName = "Short Break",
+            onSkip = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SkipButtonLongBreakPreview() {
+    PomodoroTheme {
+        SkipButton(
+            nextSessionName = "Long Break",
+            onSkip = {}
+        )
+    }
 }

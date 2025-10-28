@@ -30,8 +30,10 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pomodoro.timer.ui.theme.PomodoroTheme
 
 /**
  * Reusable action button component matching iOS ActionButton design.
@@ -141,5 +143,47 @@ private fun getIconVector(iconName: String): ImageVector {
         "arrow.counterclockwise" -> ImageVector.vectorResource(android.R.drawable.ic_menu_rotate)
         "forward.fill" -> ImageVector.vectorResource(android.R.drawable.ic_media_ff)
         else -> ImageVector.vectorResource(android.R.drawable.ic_menu_help)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ActionButtonPreview() {
+    PomodoroTheme {
+        ActionButton(
+            title = "Start",
+            icon = "play.fill",
+            backgroundColor = Color(0xFF007AFF),
+            foregroundColor = Color.White,
+            contentDescription = "Start timer"
+        ) {}
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ActionButtonPausedPreview() {
+    PomodoroTheme {
+        ActionButton(
+            title = "Pause",
+            icon = "pause.fill",
+            backgroundColor = Color(0xFFFF9500),
+            foregroundColor = Color.White,
+            contentDescription = "Pause timer"
+        ) {}
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ActionButtonResetPreview() {
+    PomodoroTheme {
+        ActionButton(
+            title = "Reset",
+            icon = "arrow.counterclockwise",
+            backgroundColor = Color(0xFF007AFF).copy(alpha = 0.15f),
+            foregroundColor = Color(0xFF007AFF),
+            contentDescription = "Reset timer"
+        ) {}
     }
 }

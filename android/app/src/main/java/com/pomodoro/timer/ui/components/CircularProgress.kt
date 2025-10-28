@@ -19,9 +19,11 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pomodoro.timer.ui.theme.PomodoroTheme
 
 /**
  * Circular progress indicator with timer display (iOS style).
@@ -95,5 +97,54 @@ fun CircularTimerProgress(
                 stateIndicator()
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CircularTimerProgressPreview() {
+    PomodoroTheme {
+        CircularTimerProgress(
+            progress = 0.75f,
+            timeText = "18:30",
+            color = Color(0xFF007AFF),
+            size = 280.dp,
+            strokeWidth = 20.dp
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CircularTimerProgressWithIndicatorPreview() {
+    PomodoroTheme {
+        CircularTimerProgress(
+            progress = 0.5f,
+            timeText = "12:30",
+            color = Color(0xFF34C759),
+            size = 280.dp,
+            strokeWidth = 20.dp,
+            stateIndicator = {
+                Text(
+                    text = "Running",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
+            }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CircularTimerProgressFullPreview() {
+    PomodoroTheme {
+        CircularTimerProgress(
+            progress = 1.0f,
+            timeText = "25:00",
+            color = Color(0xFFFF9500),
+            size = 280.dp,
+            strokeWidth = 20.dp
+        )
     }
 }
