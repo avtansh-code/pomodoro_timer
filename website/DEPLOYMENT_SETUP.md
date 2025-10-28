@@ -8,8 +8,21 @@ The workflow `.github/workflows/deploy-website.yml` automatically deploys the we
 
 ## Setup Instructions
 
-### 1. Create a Personal Access Token (PAT)
+### 1. Create a Personal Access Token (Fine-grained or Classic)
 
+**Option A: Fine-grained Personal Access Token (Recommended)**
+1. Go to GitHub Settings → Developer settings → Personal access tokens → Fine-grained tokens
+   - Or visit: https://github.com/settings/tokens?type=beta
+2. Click "Generate new token"
+3. Give it a descriptive name: `Deploy to mr_pomodoro`
+4. Set expiration (recommended: 90 days or 1 year)
+5. Repository access: Select "Only select repositories" → Choose `mr_pomodoro`
+6. Permissions → Repository permissions:
+   - ✅ Contents: Read and write
+7. Click "Generate token"
+8. **IMPORTANT:** Copy the token immediately (you won't be able to see it again)
+
+**Option B: Classic Personal Access Token**
 1. Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
    - Or visit: https://github.com/settings/tokens
 2. Click "Generate new token" → "Generate new token (classic)"

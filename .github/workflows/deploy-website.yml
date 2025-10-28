@@ -26,12 +26,11 @@ jobs:
         env:
           TARGET_REPO: avtansh-code/mr_pomodoro
           TARGET_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         run: |
           cd deploy_temp
           git init
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
           git commit -m "Deploy website from pomodoro_timer - $(date +'%Y-%m-%d %H:%M:%S')"
-          git push --force https://x-access-token:${GITHUB_TOKEN}@github.com/${TARGET_REPO}.git HEAD:${TARGET_BRANCH}
+          git push --force https://x-access-token:${{ secrets.DEPLOY_TOKEN }}@github.com/${TARGET_REPO}.git HEAD:${TARGET_BRANCH}
