@@ -33,6 +33,15 @@ enum class StatsPeriod {
     WEEK, MONTH
 }
 
+/**
+ * Format seconds to mm:ss format
+ */
+private fun formatTimeMMSS(seconds: Long): String {
+    val minutes = seconds / 60
+    val secs = seconds % 60
+    return String.format("%02d:%02d", minutes, secs)
+}
+
 @Composable
 fun StatisticsScreen(
     viewModel: StatisticsViewModel = hiltViewModel()
@@ -98,8 +107,8 @@ fun StatisticsScreen(
                 title = "Today",
                 totalSessions = todayStats.totalSessions,
                 focusSessions = todayStats.focusSessionsCount,
-                focusTime = todayStats.totalMinutes,
-                breakTime = (todayStats.shortBreakSessionsCount * 5) + (todayStats.longBreakSessionsCount * 15),
+                focusTime = formatTimeMMSS(todayStats.focusDurationSeconds),
+                breakTime = formatTimeMMSS(todayStats.shortBreakDurationSeconds + todayStats.longBreakDurationSeconds),
                 modifier = Modifier.weight(1f)
             )
             
@@ -107,8 +116,8 @@ fun StatisticsScreen(
                 title = "Week",
                 totalSessions = weekStats.totalSessions,
                 focusSessions = weekStats.focusSessionsCount,
-                focusTime = weekStats.totalMinutes,
-                breakTime = (weekStats.shortBreakSessionsCount * 5) + (weekStats.longBreakSessionsCount * 15),
+                focusTime = formatTimeMMSS(weekStats.focusDurationSeconds),
+                breakTime = formatTimeMMSS(weekStats.shortBreakDurationSeconds + weekStats.longBreakDurationSeconds),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -290,8 +299,8 @@ private fun SummaryCard(
     title: String,
     totalSessions: Int,
     focusSessions: Int,
-    focusTime: Int,
-    breakTime: Int,
+    focusTime: String,
+    breakTime: String,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -316,8 +325,8 @@ private fun SummaryCard(
             
             StatRow(label = "Total Sessions", value = totalSessions.toString())
             StatRow(label = "Focus Sessions", value = focusSessions.toString())
-            StatRow(label = "Focus Time", value = "${focusTime}m")
-            StatRow(label = "Break Time", value = "${breakTime}m")
+            StatRow(label = "Focus Time", value = focusTime)
+            StatRow(label = "Break Time", value = breakTime)
         }
     }
 }

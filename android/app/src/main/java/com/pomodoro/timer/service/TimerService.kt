@@ -293,15 +293,20 @@ class TimerService : Service() {
      */
     private fun handleSkip() {
         val sessionType = timerManager.currentSessionType.value
+        val wasRunning = timerManager.timerState.value == TimerState.RUNNING || 
+                        timerManager.timerState.value == TimerState.PAUSED
         val elapsedTime = timerManager.skipSession()
         
-        // Save skipped session (matches iOS session saving in skipSession)
+        // Only save skipped session if it was actually started (running or paused)
+        // Don't save if session was never started (still in IDLE state)
         serviceScope.launch {
-            saveSessionUseCase(
-                type = sessionType,
-                duration = elapsedTime,
-                wasCompleted = false
-            )
+            if (wasRunning && elapsedTime > 0) {
+                saveSessionUseCase(
+                    type = sessionType,
+                    duration = elapsedTime,
+                    wasCompleted = false
+                )
+            }
             
             // Check if we should auto-start next session
             val settings = settingsRepository.getSettings().first()
