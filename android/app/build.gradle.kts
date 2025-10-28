@@ -132,6 +132,9 @@ dependencies {
     // Material
     implementation(libs.material)
 
+    // Splash Screen
+    implementation(libs.androidx.core.splashscreen)
+
     // Testing - Unit Tests
     testImplementation(libs.junit)
     testImplementation(libs.mockk)

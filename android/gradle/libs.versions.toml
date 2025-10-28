@@ -39,6 +39,9 @@ vico = "2.0.0-alpha.36"
 # Material
 material = "1.12.0"
 
+# Splash Screen
+splashscreen = "1.0.1"
+
 # Testing
 junit = "4.13.2"
 junitAndroidX = "1.2.1"
@@ -103,6 +106,9 @@ vico-core = { group = "com.patrykandpatrick.vico", name = "core", version.ref = 
 
 # Material
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# Splash Screen
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
