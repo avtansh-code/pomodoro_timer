@@ -14,6 +14,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FastForward
+import androidx.compose.material.icons.filled.Help
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +32,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -135,14 +140,13 @@ fun ActionButton(
  * - arrow.counterclockwise → Refresh
  * - forward.fill → FastForward
  */
-@Composable
 private fun getIconVector(iconName: String): ImageVector {
     return when (iconName) {
-        "play.fill" -> ImageVector.vectorResource(android.R.drawable.ic_media_play)
-        "pause.fill" -> ImageVector.vectorResource(android.R.drawable.ic_media_pause)
-        "arrow.counterclockwise" -> ImageVector.vectorResource(android.R.drawable.ic_menu_rotate)
-        "forward.fill" -> ImageVector.vectorResource(android.R.drawable.ic_media_ff)
-        else -> ImageVector.vectorResource(android.R.drawable.ic_menu_help)
+        "play.fill" -> Icons.Filled.PlayArrow
+        "pause.fill" -> Icons.Filled.Pause
+        "arrow.counterclockwise" -> Icons.Filled.Refresh
+        "forward.fill" -> Icons.Filled.FastForward
+        else -> Icons.Filled.Help
     }
 }
 
