@@ -34,7 +34,7 @@ coroutines = "1.9.0"
 workManager = "2.10.0"
 
 # Vico Charts
-vico = "2.0.0-alpha.36"
+vico = "2.0.0-alpha.28"
 
 # Material
 material = "1.12.0"

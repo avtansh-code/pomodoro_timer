@@ -3,13 +3,15 @@ package com.pomodoro.timer.service
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.lifecycleScope
 import com.pomodoro.timer.domain.model.SessionType
 import com.pomodoro.timer.domain.model.TimerState
 import com.pomodoro.timer.domain.usecase.SaveSessionUseCase
 import com.pomodoro.timer.util.TimerManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -18,11 +20,11 @@ import javax.inject.Inject
 /**
  * Foreground service for running the Pomodoro timer in the background.
  * Ensures timer continues running even when app is backgrounded.
- * 
- * Uses LifecycleService to properly handle coroutines and lifecycle.
  */
 @AndroidEntryPoint
-class TimerService : LifecycleService() {
+class TimerService : Service() {
+    
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     
     @Inject
     lateinit var timerManager: TimerManager
@@ -50,8 +52,8 @@ class TimerService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
         
-        // Initialize timer with service lifecycle scope
-        timerManager.initialize(lifecycleScope)
+        // Initialize timer with service scope
+        timerManager.initialize(serviceScope)
         
         // Observe timer state changes
         observeTimerState()
@@ -84,14 +86,14 @@ class TimerService : LifecycleService() {
         // Observe state changes
         timerManager.state.onEach { state ->
             handleStateChange(state)
-        }.launchIn(lifecycleScope)
+        }.launchIn(serviceScope)
         
         // Observe remaining time for notification updates
         timerManager.remainingSeconds.onEach { remainingSeconds ->
             if (timerManager.state.value != TimerState.IDLE) {
                 updateNotification()
             }
-        }.launchIn(lifecycleScope)
+        }.launchIn(serviceScope)
     }
     
     /**
@@ -127,7 +129,7 @@ class TimerService : LifecycleService() {
         val duration = timerManager.totalSeconds.value
         
         // Save completed session
-        lifecycleScope.launch {
+        serviceScope.launch {
             saveSessionUseCase(
                 type = sessionType,
                 duration = duration,
@@ -190,7 +192,7 @@ class TimerService : LifecycleService() {
             val totalDuration = timerManager.totalSeconds.value
             val elapsedDuration = totalDuration - timerManager.remainingSeconds.value
             
-            lifecycleScope.launch {
+            serviceScope.launch {
                 saveSessionUseCase(
                     type = sessionType,
                     duration = elapsedDuration,
@@ -212,7 +214,7 @@ class TimerService : LifecycleService() {
         val totalDuration = timerManager.totalSeconds.value
         val elapsedDuration = totalDuration - timerManager.remainingSeconds.value
         
-        lifecycleScope.launch {
+        serviceScope.launch {
             saveSessionUseCase(
                 type = sessionType,
                 duration = elapsedDuration,
@@ -262,6 +264,7 @@ class TimerService : LifecycleService() {
     
     override fun onDestroy() {
         super.onDestroy()
+        serviceScope.cancel()
         notificationHelper.cancelTimerNotification()
     }
 }

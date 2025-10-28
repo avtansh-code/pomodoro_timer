@@ -28,30 +28,10 @@ fun PrivacyPolicyScreen(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
                         )
-            }
+                    }
+                }
+            )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun PrivacyPolicyScreenPreview() {
-    PomodoroTheme {
-        PrivacyPolicyScreen(
-            onNavigateBack = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun PrivacyPolicyScreenDarkPreview() {
-    PomodoroTheme {
-        PrivacyPolicyScreen(
-            onNavigateBack = {}
-        )
-    }
-}
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -318,6 +298,26 @@ private fun NegativeBulletPoint(text: String) {
             text = text,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PrivacyPolicyScreenPreview() {
+    PomodoroTheme {
+        PrivacyPolicyScreen(
+            onBackClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun PrivacyPolicyScreenDarkPreview() {
+    PomodoroTheme {
+        PrivacyPolicyScreen(
+            onBackClick = {}
         )
     }
 }
