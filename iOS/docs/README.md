@@ -27,16 +27,16 @@ Welcome to the Mr. Pomodoro documentation! This folder contains comprehensive gu
 **For:** Developers and contributors  
 **Size:** ~29KB  
 **Contents:**
-- Architecture overview (MVVM)
+- Architecture overview (MVVM pattern with SwiftUI)
 - Development setup instructions
-- Project structure
-- Complete testing strategy (unit, performance, UI tests)
+- Complete project structure (Models, Services, Views, AppIntents)
+- Testing strategy (unit, performance, UI tests)
 - iCloud integration (CloudKit setup and implementation)
 - Focus Mode technical integration
-- Background execution
-- Performance optimization
+- Background execution and notifications
+- Performance optimization techniques
 - Debugging and troubleshooting
-- CI/CD configuration
+- CI/CD configuration examples
 
 **Start here if you're:** A developer working on the codebase or contributing to the project.
 

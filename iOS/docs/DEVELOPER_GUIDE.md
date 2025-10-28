@@ -166,64 +166,57 @@ xcodebuild -project PomodoroTimer.xcodeproj \
 
 ## Project Structure
 
+The project follows a clean, modular architecture with clear separation of concerns:
+
 ```
-PomodoroTimer/
-├── PomodoroTimerApp.swift      # App entry point
-├── ContentView.swift            # Root navigation view
+iOS/PomodoroTimer/
+├── PomodoroTimerApp.swift      # App entry point with lifecycle
+├── ContentView.swift            # Root TabView navigation
 ├── Info.plist                   # App configuration
-├── LaunchScreen.storyboard      # Launch screen
-├── PomodoroTimer.entitlements   # Capabilities
+├── LaunchScreen.storyboard      # Launch screen UI
+├── PomodoroTimer.entitlements   # App capabilities (iCloud, etc.)
 │
-├── Models/
+├── Models/                      # Data models (Codable, Identifiable)
 │   ├── TimerSession.swift       # Session data model
-│   ├── TimerSettings.swift      # Settings data model
-│   └── AppTheme.swift           # Theme definitions
+│   ├── TimerSettings.swift      # Settings data model (ObservableObject)
+│   └── AppTheme.swift           # Theme definitions and typography
 │
-├── Views/
+├── Services/                    # Business logic layer (ObservableObject)
+│   ├── TimerManager.swift       # Core timer logic and state management
+│   ├── PersistenceManager.swift # Local storage via UserDefaults
+│   ├── ThemeManager.swift       # Theme selection and persistence
+│   ├── CloudSyncManager.swift   # iCloud sync via CloudKit
+│   ├── FocusModeManager.swift   # iOS Focus Mode integration
+│   └── ScreenshotHelper.swift   # Screenshot preparation utility
+│
+├── Views/                       # SwiftUI views (presentation layer)
 │   ├── MainTimerView.swift      # Main timer interface
-│   ├── StatisticsView.swift     # Stats and analytics
-│   ├── SettingsView.swift       # User settings
-│   └── PrivacyPolicyView.swift  # Privacy policy
+│   ├── StatisticsView.swift     # Stats and analytics display
+│   ├── SettingsView.swift       # User settings and configuration
+│   ├── PrivacyPolicyView.swift  # Privacy policy display
+│   ├── PomodoroBenefitsView.swift # Pomodoro technique guide
+│   ├── ThemeSelectionView.swift   # Theme picker UI
+│   └── ScreenshotPreparationView.swift # Screenshot mode
 │
-├── Services/
-│   ├── TimerManager.swift       # Timer logic
-│   ├── PersistenceManager.swift # Local storage
-│   ├── CloudSyncManager.swift   # iCloud sync
-│   ├── ThemeManager.swift       # Theme management
-│   └── FocusModeManager.swift   # Focus Mode integration
+├── AppIntents/                  # Siri Shortcuts integration
+│   ├── StartPomodoroIntent.swift  # Start timer intent
+│   ├── PauseTimerIntent.swift     # Pause timer intent
+│   ├── ResumeTimerIntent.swift    # Resume timer intent
+│   ├── ResetTimerIntent.swift     # Reset timer intent
+│   ├── ShowStatisticsIntent.swift # Show stats intent
+│   └── PomodoroShortcuts.swift    # Shortcut definitions
 │
-├── AppIntents/
-│   ├── StartPomodoroIntent.swift
-│   ├── PauseTimerIntent.swift
-│   ├── ResumeTimerIntent.swift
-│   ├── ResetTimerIntent.swift
-│   ├── ShowStatisticsIntent.swift
-│   └── PomodoroShortcuts.swift
-│
-└── Assets.xcassets/
-    ├── AppIcon.appiconset/
-    └── AccentColor.colorset/
+└── Assets.xcassets/             # Images and colors
+    ├── AppIcon.appiconset/      # App icons (all sizes)
+    ├── AccentColor.colorset/    # Accent color
+    └── LaunchLogo.imageset/     # Launch screen logo
 
-PomodoroTimerTests/
-├── UnitTests/
-│   ├── TimerSessionTests.swift
-│   ├── TimerSettingsTests.swift
-│   ├── TimerManagerTests.swift
-│   └── PersistenceManagerTests.swift
-│
-└── TestUtilities/
-    ├── MockUserDefaults.swift
-    ├── TestConstants.swift
-    ├── TimerSessionFactory.swift
-    ├── TimerSettingsFactory.swift
-    └── XCTestCase+Extensions.swift
-
-PomodoroTimerPerformanceTests/
-└── TimerPerformanceTests.swift
-
-PomodoroTimerUITests/
-├── MainTimerUITests.swift
-└── SettingsUITests.swift
+iOS/PomodoroTimerUITests/        # UI test suite
+├── MainTimerUITests.swift       # Timer UI tests
+├── SettingsUITests.swift        # Settings UI tests
+├── StatisticsUITests.swift      # Statistics UI tests
+├── PomodoroBenefitsUITests.swift # Benefits view tests
+└── PomodoroTimerUITestsLaunchTests.swift # Launch tests
 ```
 
 ### Key Files
