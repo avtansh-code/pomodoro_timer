@@ -213,7 +213,7 @@ private fun getColorScheme(theme: AppTheme, darkTheme: Boolean): ColorScheme {
  */
 @Composable
 fun PomodoroTheme(
-    theme: AppTheme = AppTheme.classicRed,
+    theme: AppTheme = AppTheme.ClassicRed,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
@@ -244,6 +244,6 @@ fun PomodoroThemePreview(
     darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val theme = AppTheme.allThemes.find { it.id == themeId } ?: AppTheme.classicRed
+    val theme = AppTheme.allThemes.find { it.id == themeId } ?: AppTheme.ClassicRed
     PomodoroTheme(theme = theme, darkTheme = darkTheme, content = content)
 }

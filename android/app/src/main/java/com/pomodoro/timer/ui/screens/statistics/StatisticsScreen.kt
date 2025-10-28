@@ -92,7 +92,7 @@ fun StatisticsScreen(
             
             StatCard(
                 title = "Time",
-                value = formatMinutes(statistics.totalMinutes),
+                value = formatMinutes(statistics.totalMinutes.toLong()),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -105,7 +105,7 @@ fun StatisticsScreen(
         ) {
             StatCard(
                 title = "Avg Session",
-                value = formatMinutes(statistics.averageSessionMinutes),
+                value = formatMinutes(statistics.averageSessionMinutes.toLong()),
                 modifier = Modifier.weight(1f)
             )
             
@@ -202,7 +202,7 @@ private fun SessionItem(session: TimerSession) {
         ) {
             Column {
                 Text(
-                    text = session.sessionType.name.lowercase()
+                    text = session.type.name.lowercase()
                         .replaceFirstChar { it.uppercase() }
                         .replace("_", " "),
                     style = MaterialTheme.typography.bodyLarge,
@@ -212,7 +212,7 @@ private fun SessionItem(session: TimerSession) {
                 Spacer(modifier = Modifier.height(4.dp))
                 
                 Text(
-                    text = formatTimestamp(session.startTime),
+                    text = formatTimestamp(session.completedAt),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

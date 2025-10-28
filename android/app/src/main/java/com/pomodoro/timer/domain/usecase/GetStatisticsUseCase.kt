@@ -1,6 +1,8 @@
 package com.pomodoro.timer.domain.usecase
 
 import com.pomodoro.timer.domain.model.SessionType
+import com.pomodoro.timer.domain.model.Statistics
+import com.pomodoro.timer.domain.model.StatisticsPeriod
 import com.pomodoro.timer.domain.model.TimerSession
 import com.pomodoro.timer.domain.repository.SessionRepository
 import javax.inject.Inject
@@ -16,12 +18,12 @@ class GetStatisticsUseCase @Inject constructor(
     /**
      * Get comprehensive statistics for a time period
      */
-    suspend fun invoke(period: Period): Statistics {
+    suspend operator fun invoke(period: StatisticsPeriod): Statistics {
         val sessions = when (period) {
-            Period.TODAY -> sessionRepository.getTodaySessions()
-            Period.WEEK -> sessionRepository.getWeeklySessions()
-            Period.MONTH -> sessionRepository.getMonthlySessions()
-            Period.ALL_TIME -> sessionRepository.getAllSessions().let { flow ->
+            StatisticsPeriod.TODAY -> sessionRepository.getTodaySessions()
+            StatisticsPeriod.WEEK -> sessionRepository.getWeeklySessions()
+            StatisticsPeriod.MONTH -> sessionRepository.getMonthlySessions()
+            StatisticsPeriod.ALL_TIME -> sessionRepository.getAllSessions().let { flow ->
                 // Convert Flow to List for all-time stats
                 val allSessions = mutableListOf<TimerSession>()
                 flow.collect { allSessions.addAll(it) }
@@ -55,68 +57,24 @@ class GetStatisticsUseCase @Inject constructor(
         val shortBreakSessions = sessions.filter { it.type == SessionType.SHORT_BREAK }
         val longBreakSessions = sessions.filter { it.type == SessionType.LONG_BREAK }
         
-        val totalFocusTime = focusSessions.sumOf { it.duration }
-        val totalBreakTime = (shortBreakSessions + longBreakSessions).sumOf { it.duration }
         val totalTime = sessions.sumOf { it.duration }
+        val totalMinutes = (totalTime / 60).toInt()
         
         val averageSessionDuration = if (sessions.isNotEmpty()) {
-            totalTime / sessions.size
+            totalTime.toDouble() / sessions.size / 60.0 // in minutes
         } else {
-            0L
+            0.0
         }
         
         return Statistics(
             totalSessions = totalSessions,
-            completedSessions = completedSessions,
-            skippedSessions = skippedSessions,
-            focusSessionCount = focusSessions.size,
-            shortBreakCount = shortBreakSessions.size,
-            longBreakCount = longBreakSessions.size,
-            totalFocusTime = totalFocusTime,
-            totalBreakTime = totalBreakTime,
-            totalTime = totalTime,
-            averageSessionDuration = averageSessionDuration,
-            completionRate = if (totalSessions > 0) {
-                (completedSessions.toFloat() / totalSessions.toFloat()) * 100
-            } else {
-                0f
-            }
+            focusSessionsCount = focusSessions.size,
+            shortBreakSessionsCount = shortBreakSessions.size,
+            longBreakSessionsCount = longBreakSessions.size,
+            completedSessionsCount = completedSessions,
+            skippedSessionsCount = skippedSessions,
+            totalMinutes = totalMinutes,
+            averageSessionMinutes = averageSessionDuration
         )
     }
-    
-    enum class Period {
-        TODAY,
-        WEEK,
-        MONTH,
-        ALL_TIME
-    }
-}
-
-/**
- * Calculated statistics data class
- */
-data class Statistics(
-    val totalSessions: Int,
-    val completedSessions: Int,
-    val skippedSessions: Int,
-    val focusSessionCount: Int,
-    val shortBreakCount: Int,
-    val longBreakCount: Int,
-    val totalFocusTime: Long, // seconds
-    val totalBreakTime: Long, // seconds
-    val totalTime: Long, // seconds
-    val averageSessionDuration: Long, // seconds
-    val completionRate: Float // percentage (0-100)
-) {
-    val totalFocusTimeMinutes: Int
-        get() = (totalFocusTime / 60).toInt()
-    
-    val totalFocusTimeHours: Float
-        get() = totalFocusTime / 3600f
-    
-    val totalBreakTimeMinutes: Int
-        get() = (totalBreakTime / 60).toInt()
-    
-    val averageSessionMinutes: Int
-        get() = (averageSessionDuration / 60).toInt()
 }

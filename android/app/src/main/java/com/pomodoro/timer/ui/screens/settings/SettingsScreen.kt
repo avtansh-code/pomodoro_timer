@@ -63,8 +63,8 @@ fun SettingsScreen(
         SettingsSection(title = "Timer Durations") {
             DurationSetting(
                 label = "Focus Duration",
-                value = settings.focusDuration / 60,
-                onValueChange = { viewModel.updateFocusDuration((it * 60).toLong()) },
+                value = (settings.focusDuration.toInt() / 60),
+                onValueChange = { viewModel.updateFocusDuration((it * 60).toInt()) },
                 unit = "min",
                 range = 1f..60f
             )
@@ -73,8 +73,8 @@ fun SettingsScreen(
             
             DurationSetting(
                 label = "Short Break",
-                value = settings.shortBreakDuration / 60,
-                onValueChange = { viewModel.updateShortBreakDuration((it * 60).toLong()) },
+                value = (settings.shortBreakDuration.toInt() / 60),
+                onValueChange = { viewModel.updateShortBreakDuration((it * 60).toInt()) },
                 unit = "min",
                 range = 1f..30f
             )
@@ -83,8 +83,8 @@ fun SettingsScreen(
             
             DurationSetting(
                 label = "Long Break",
-                value = settings.longBreakDuration / 60,
-                onValueChange = { viewModel.updateLongBreakDuration((it * 60).toLong()) },
+                value = (settings.longBreakDuration.toInt() / 60),
+                onValueChange = { viewModel.updateLongBreakDuration((it * 60).toInt()) },
                 unit = "min",
                 range = 5f..60f
             )
@@ -93,7 +93,7 @@ fun SettingsScreen(
             
             DurationSetting(
                 label = "Sessions Until Long Break",
-                value = settings.sessionsUntilLongBreak.toFloat(),
+                value = settings.sessionsUntilLongBreak,
                 onValueChange = { viewModel.updateSessionsUntilLongBreak(it.toInt()) },
                 unit = "sessions",
                 range = 2f..10f
@@ -300,7 +300,7 @@ private fun SettingsSection(
 @Composable
 private fun DurationSetting(
     label: String,
-    value: Long,
+    value: Int,
     onValueChange: (Float) -> Unit,
     unit: String,
     range: ClosedFloatingPointRange<Float>
@@ -317,7 +317,7 @@ private fun DurationSetting(
             )
             
             Text(
-                text = "${value.toInt()} $unit",
+                text = "$value $unit",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.primary

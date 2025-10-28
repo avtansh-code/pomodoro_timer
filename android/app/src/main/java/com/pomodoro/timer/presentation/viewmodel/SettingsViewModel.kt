@@ -201,7 +201,7 @@ class SettingsViewModel @Inject constructor(
      */
     fun getCurrentTheme(): AppTheme {
         val themeId = _settings.value.selectedCustomTheme
-        return AppTheme.getThemeById(themeId) ?: AppTheme.classicRed
+        return AppTheme.getById(themeId)
     }
     
     /**

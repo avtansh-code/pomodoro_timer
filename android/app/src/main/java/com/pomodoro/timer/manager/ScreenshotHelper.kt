@@ -46,7 +46,7 @@ class ScreenshotHelper @Inject constructor(
         
         // Save all sessions to database
         sessions.forEach { session ->
-            sessionRepository.insertSession(session)
+            sessionRepository.saveSession(session)
         }
     }
     
@@ -87,11 +87,11 @@ class ScreenshotHelper @Inject constructor(
                 .toEpochMilli()
             
             val session = TimerSession(
-                id = 0, // Auto-generated
-                sessionType = sessionType,
-                startTime = startTime,
+                id = java.util.UUID.randomUUID().toString(),
+                type = sessionType,
+                completedAt = startTime,
                 duration = duration,
-                completed = isCompleted
+                wasCompleted = isCompleted
             )
             
             sessions.add(session)
@@ -130,7 +130,7 @@ class ScreenshotHelper @Inject constructor(
         }
         
         sessions.forEach { session ->
-            sessionRepository.insertSession(session)
+            sessionRepository.saveSession(session)
         }
     }
     
@@ -154,7 +154,7 @@ class ScreenshotHelper @Inject constructor(
         }
         
         sessions.forEach { session ->
-            sessionRepository.insertSession(session)
+            sessionRepository.saveSession(session)
         }
     }
     
@@ -163,9 +163,8 @@ class ScreenshotHelper @Inject constructor(
      * Creates a focus session that appears to be in progress
      * 
      * @param progressPercentage How far along the session should appear (0.0 to 1.0)
-     * @return The session ID of the created session
      */
-    suspend fun generateInProgressSession(progressPercentage: Float = 0.5f): Long = withContext(Dispatchers.IO) {
+    suspend fun generateInProgressSession(progressPercentage: Float = 0.5f) = withContext(Dispatchers.IO) {
         val duration = 25 * 60L // 25 minutes
         val elapsed = (duration * progressPercentage).toLong()
         
@@ -174,21 +173,21 @@ class ScreenshotHelper @Inject constructor(
             .toEpochMilli()
         
         val session = TimerSession(
-            id = 0,
-            sessionType = SessionType.FOCUS,
-            startTime = startTime,
+            id = java.util.UUID.randomUUID().toString(),
+            type = SessionType.FOCUS,
+            completedAt = startTime,
             duration = duration,
-            completed = false
+            wasCompleted = false
         )
         
-        sessionRepository.insertSession(session)
+        sessionRepository.saveSession(session)
     }
     
     /**
      * Generate sessions for break mode screenshot
      * Creates a short break session in progress
      */
-    suspend fun generateBreakSession(): Long = withContext(Dispatchers.IO) {
+    suspend fun generateBreakSession() = withContext(Dispatchers.IO) {
         val duration = 5 * 60L // 5 minutes
         val elapsed = duration / 2 // 50% complete
         
@@ -197,14 +196,14 @@ class ScreenshotHelper @Inject constructor(
             .toEpochMilli()
         
         val session = TimerSession(
-            id = 0,
-            sessionType = SessionType.SHORT_BREAK,
-            startTime = startTime,
+            id = java.util.UUID.randomUUID().toString(),
+            type = SessionType.SHORT_BREAK,
+            completedAt = startTime,
             duration = duration,
-            completed = false
+            wasCompleted = false
         )
         
-        sessionRepository.insertSession(session)
+        sessionRepository.saveSession(session)
     }
     
     /**

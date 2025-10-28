@@ -40,6 +40,11 @@ class TimerViewModel @Inject constructor(
     val totalSeconds: StateFlow<Long> = timerManager.totalSeconds
     val completedSessions: StateFlow<Int> = timerManager.completedSessions
     
+    // Convenience aliases for UI compatibility
+    val currentSessionType: StateFlow<SessionType> = sessionType
+    val timeRemaining: StateFlow<Long> = remainingSeconds
+    val completedFocusSessions: StateFlow<Int> = completedSessions
+    
     // Settings from repository
     private val _settings = MutableStateFlow(TimerSettings.DEFAULT)
     val settings: StateFlow<TimerSettings> = _settings.asStateFlow()
@@ -154,6 +159,13 @@ class TimerViewModel @Inject constructor(
         }
         context.startService(intent)
         _isServiceRunning.value = false
+    }
+    
+    /**
+     * Skip session (alias for compatibility)
+     */
+    fun skipSession() {
+        skipTimer()
     }
     
     /**

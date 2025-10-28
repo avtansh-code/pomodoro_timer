@@ -61,17 +61,29 @@ data class TimerSettings(
         val DEFAULT = TimerSettings()
 
         /**
+         * Duration constraints
+         */
+        const val MIN_DURATION_MINUTES = 1
+        const val MAX_DURATION_MINUTES = 120
+
+        /**
+         * Sessions count constraints
+         */
+        const val MIN_SESSIONS = 2
+        const val MAX_SESSIONS = 10
+
+        /**
          * Validates duration is within acceptable range (1-120 minutes)
          */
         fun isValidDuration(minutes: Int): Boolean {
-            return minutes in 1..120
+            return minutes in MIN_DURATION_MINUTES..MAX_DURATION_MINUTES
         }
 
         /**
          * Validates sessions until long break is within acceptable range (2-10)
          */
         fun isValidSessionsCount(count: Int): Boolean {
-            return count in 2..10
+            return count in MIN_SESSIONS..MAX_SESSIONS
         }
     }
 }

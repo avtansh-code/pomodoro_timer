@@ -43,7 +43,7 @@ fun ScreenshotPreparationScreen(
     onBackClick: () -> Unit,
     viewModel: ScreenshotViewModel = viewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsState()
     
     Scaffold(
         topBar = {

@@ -72,6 +72,20 @@ interface SessionRepository {
     suspend fun deleteSession(sessionId: String)
     
     /**
+     * Delete a specific session (convenience method)
+     */
+    suspend fun deleteSession(session: TimerSession) {
+        deleteSession(session.id)
+    }
+    
+    /**
+     * Delete all sessions
+     */
+    suspend fun deleteAllSessions() {
+        clearAllSessions()
+    }
+    
+    /**
      * Get sessions grouped by date (for charts/statistics)
      */
     suspend fun getSessionsGroupedByDate(days: Int): Map<String, List<TimerSession>>

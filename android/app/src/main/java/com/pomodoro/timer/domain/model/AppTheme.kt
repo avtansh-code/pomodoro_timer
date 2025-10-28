@@ -23,6 +23,22 @@ data class AppTheme(
     val longBreakGradientEnd: Color
 ) {
     /**
+     * Display name (alias for name)
+     */
+    val displayName: String get() = name
+    
+    /**
+     * Primary color as hex string
+     */
+    val primaryColorHex: String
+        get() = String.format(
+            "#%02X%02X%02X",
+            (primaryColor.red * 255).toInt(),
+            (primaryColor.green * 255).toInt(),
+            (primaryColor.blue * 255).toInt()
+        )
+    
+    /**
      * Returns the appropriate gradient colors for a session type
      */
     fun getGradientColors(sessionType: SessionType): Pair<Color, Color> {

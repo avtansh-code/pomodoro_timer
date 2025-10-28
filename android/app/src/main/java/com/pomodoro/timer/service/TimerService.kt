@@ -75,7 +75,6 @@ class TimerService : Service() {
     }
     
     override fun onBind(intent: Intent): IBinder? {
-        super.onBind(intent)
         return null
     }
     

@@ -3,13 +3,13 @@ package com.pomodoro.timer.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pomodoro.timer.domain.model.SessionType
+import com.pomodoro.timer.domain.model.Statistics
+import com.pomodoro.timer.domain.model.StatisticsPeriod
+import com.pomodoro.timer.domain.model.StreakStatistics
 import com.pomodoro.timer.domain.model.TimerSession
 import com.pomodoro.timer.domain.repository.SessionRepository
 import com.pomodoro.timer.domain.usecase.GetStatisticsUseCase
 import com.pomodoro.timer.domain.usecase.GetStreakUseCase
-import com.pomodoro.timer.domain.usecase.Statistics
-import com.pomodoro.timer.domain.usecase.StatisticsPeriod
-import com.pomodoro.timer.domain.usecase.StreakStatistics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,13 +34,35 @@ class StatisticsViewModel @Inject constructor(
     private val _selectedPeriod = MutableStateFlow(StatisticsPeriod.TODAY)
     val selectedPeriod: StateFlow<StatisticsPeriod> = _selectedPeriod.asStateFlow()
     
-    // Statistics data
-    private val _statistics = MutableStateFlow<Statistics?>(null)
-    val statistics: StateFlow<Statistics?> = _statistics.asStateFlow()
+    // Statistics data for each period
+    private val _todayStatistics = MutableStateFlow(Statistics())
+    val todayStatistics: StateFlow<Statistics> = _todayStatistics.asStateFlow()
+    
+    private val _weekStatistics = MutableStateFlow(Statistics())
+    val weekStatistics: StateFlow<Statistics> = _weekStatistics.asStateFlow()
+    
+    private val _monthStatistics = MutableStateFlow(Statistics())
+    val monthStatistics: StateFlow<Statistics> = _monthStatistics.asStateFlow()
+    
+    private val _allTimeStatistics = MutableStateFlow(Statistics())
+    val allTimeStatistics: StateFlow<Statistics> = _allTimeStatistics.asStateFlow()
     
     // Streak data
     private val _streakStatistics = MutableStateFlow<StreakStatistics?>(null)
     val streakStatistics: StateFlow<StreakStatistics?> = _streakStatistics.asStateFlow()
+    
+    // Current streak (convenience property)
+    val currentStreak: StateFlow<Int> = _streakStatistics
+        .asStateFlow()
+        .let { flow ->
+            MutableStateFlow(0).apply {
+                viewModelScope.launch {
+                    flow.collect { streak ->
+                        value = streak?.currentStreak ?: 0
+                    }
+                }
+            }
+        }
     
     // Recent sessions
     private val _recentSessions = MutableStateFlow<List<TimerSession>>(emptyList())
@@ -61,22 +83,25 @@ class StatisticsViewModel @Inject constructor(
      * Load all statistics data
      */
     private fun loadData() {
-        loadStatistics()
+        loadAllStatistics()
         loadStreakStatistics()
         loadRecentSessions()
     }
     
     /**
-     * Load statistics for selected period
+     * Load statistics for all periods
      */
-    private fun loadStatistics() {
+    private fun loadAllStatistics() {
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
             
             try {
-                val stats = getStatisticsUseCase(_selectedPeriod.value)
-                _statistics.value = stats
+                // Load statistics for each period
+                _todayStatistics.value = getStatisticsUseCase(StatisticsPeriod.TODAY)
+                _weekStatistics.value = getStatisticsUseCase(StatisticsPeriod.WEEK)
+                _monthStatistics.value = getStatisticsUseCase(StatisticsPeriod.MONTH)
+                _allTimeStatistics.value = getStatisticsUseCase(StatisticsPeriod.ALL_TIME)
             } catch (e: Exception) {
                 _error.value = "Failed to load statistics: ${e.message}"
             } finally {
@@ -116,7 +141,6 @@ class StatisticsViewModel @Inject constructor(
     fun selectPeriod(period: StatisticsPeriod) {
         if (_selectedPeriod.value != period) {
             _selectedPeriod.value = period
-            loadStatistics()
         }
     }
     
@@ -135,7 +159,7 @@ class StatisticsViewModel @Inject constructor(
             try {
                 sessionRepository.deleteSession(session)
                 // Data will auto-refresh via Flow
-                loadStatistics()
+                loadAllStatistics()
                 loadStreakStatistics()
             } catch (e: Exception) {
                 _error.value = "Failed to delete session: ${e.message}"
@@ -213,7 +237,12 @@ class StatisticsViewModel @Inject constructor(
      * Get chart data for session types
      */
     fun getSessionTypeChartData(): List<Pair<SessionType, Int>> {
-        val stats = _statistics.value ?: return emptyList()
+        val stats = when (_selectedPeriod.value) {
+            StatisticsPeriod.TODAY -> _todayStatistics.value
+            StatisticsPeriod.WEEK -> _weekStatistics.value
+            StatisticsPeriod.MONTH -> _monthStatistics.value
+            StatisticsPeriod.ALL_TIME -> _allTimeStatistics.value
+        }
         
         return listOf(
             SessionType.FOCUS to stats.focusSessionsCount,
@@ -226,7 +255,12 @@ class StatisticsViewModel @Inject constructor(
      * Get chart data for completed vs skipped
      */
     fun getCompletionChartData(): List<Pair<String, Int>> {
-        val stats = _statistics.value ?: return emptyList()
+        val stats = when (_selectedPeriod.value) {
+            StatisticsPeriod.TODAY -> _todayStatistics.value
+            StatisticsPeriod.WEEK -> _weekStatistics.value
+            StatisticsPeriod.MONTH -> _monthStatistics.value
+            StatisticsPeriod.ALL_TIME -> _allTimeStatistics.value
+        }
         
         return listOf(
             "Completed" to stats.completedSessionsCount,
@@ -250,8 +284,13 @@ class StatisticsViewModel @Inject constructor(
      * Check if there is any data
      */
     fun hasData(): Boolean {
-        val stats = _statistics.value
-        return stats != null && stats.totalSessions > 0
+        val stats = when (_selectedPeriod.value) {
+            StatisticsPeriod.TODAY -> _todayStatistics.value
+            StatisticsPeriod.WEEK -> _weekStatistics.value
+            StatisticsPeriod.MONTH -> _monthStatistics.value
+            StatisticsPeriod.ALL_TIME -> _allTimeStatistics.value
+        }
+        return stats.totalSessions > 0
     }
     
     /**
