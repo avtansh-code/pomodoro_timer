@@ -20,11 +20,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,7 +46,7 @@ import java.util.Locale
 fun StatisticsScreen(
     viewModel: StatisticsViewModel = hiltViewModel()
 ) {
-    var selectedPeriod by remember { mutableStateOf(0) }
+    var selectedPeriod by remember { mutableIntStateOf(0) }
     val periods = listOf("Today", "Week", "Month", "All Time")
     
     val statistics by when (selectedPeriod) {
@@ -60,27 +62,40 @@ fun StatisticsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 24.dp)
     ) {
+        // Screen Title with proper semantics
         Text(
             text = "Statistics",
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(vertical = 16.dp)
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier
+                .padding(bottom = 24.dp)
+                .semantics { heading() }
         )
         
-        // Period Selector
-        TabRow(selectedTabIndex = selectedPeriod) {
+        // Period Selector with Material 3 styling
+        TabRow(
+            selectedTabIndex = selectedPeriod,
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.primary
+        ) {
             periods.forEachIndexed { index, title ->
                 Tab(
                     selected = selectedPeriod == index,
                     onClick = { selectedPeriod = index },
-                    text = { Text(title) }
+                    text = {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
                 )
             }
         }
         
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(32.dp))
         
         // Statistics Cards
         Row(
@@ -119,14 +134,17 @@ fun StatisticsScreen(
             )
         }
         
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(32.dp))
         
-        // Recent Sessions
+        // Recent Sessions header with semantics
         Text(
             text = "Recent Sessions",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(bottom = 12.dp)
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier
+                .padding(bottom = 12.dp)
+                .semantics { heading() }
         )
         
         LazyColumn(
@@ -157,16 +175,17 @@ private fun StatCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.semantics(mergeDescendants = true) {},
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -176,12 +195,12 @@ private fun StatCard(
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
             
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
             )
         }
     }
@@ -190,11 +209,14 @@ private fun StatCard(
 @Composable
 private fun SessionItem(session: TimerSession) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) {},
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         ),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Row(
             modifier = Modifier
@@ -203,20 +225,21 @@ private fun SessionItem(session: TimerSession) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = session.type.name.lowercase()
                         .replaceFirstChar { it.uppercase() }
                         .replace("_", " "),
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 
                 Spacer(modifier = Modifier.height(4.dp))
                 
                 Text(
                     text = formatTimestamp(session.completedAt),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
