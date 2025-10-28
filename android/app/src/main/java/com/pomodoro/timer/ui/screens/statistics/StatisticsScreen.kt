@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -56,17 +57,14 @@ fun StatisticsScreen(
     // Get actual data based on selected period
     val periodStats = if (selectedPeriod == StatsPeriod.WEEK) weekStats else monthStats
     
-    // Calculate sessions per day data
-    val sessionsPerDay = remember(periodStats) {
-        // For now, use dummy data since we need daily breakdown
-        // This would need to be implemented in the ViewModel with actual daily data
-        List(if (selectedPeriod == StatsPeriod.WEEK) 7 else 30) { 0f }
-    }
+    // Load chart data from ViewModel
+    var sessionsPerDay by remember { mutableStateOf<List<Float>>(emptyList()) }
+    var focusTimeTrend by remember { mutableStateOf<List<Float>>(emptyList()) }
     
-    val focusTimeTrend = remember(periodStats) {
-        // For now, use dummy data since we need daily breakdown
-        // This would need to be implemented in the ViewModel with actual daily data
-        List(if (selectedPeriod == StatsPeriod.WEEK) 7 else 30) { 0f }
+    LaunchedEffect(selectedPeriod) {
+        val days = if (selectedPeriod == StatsPeriod.WEEK) 7 else 30
+        sessionsPerDay = viewModel.getDailySessionsCount(days)
+        focusTimeTrend = viewModel.getDailyFocusTime(days)
     }
     
     // Calculate pie chart data from period stats (use actual elapsed time in seconds)
@@ -389,8 +387,9 @@ private fun BarChart(
     
     Canvas(modifier = modifier.padding(top = 8.dp, bottom = 16.dp)) {
         val maxValue = data.maxOrNull() ?: 1f
-        val barWidth = size.width / (data.size * 2f)
-        val spacing = barWidth * 0.5f
+        val spacing = 8.dp.toPx()
+        val totalSpacing = spacing * (data.size - 1)
+        val barWidth = (size.width - totalSpacing) / data.size
         
         data.forEachIndexed { index, value ->
             val barHeight = (value / maxValue) * (size.height - 40f)
