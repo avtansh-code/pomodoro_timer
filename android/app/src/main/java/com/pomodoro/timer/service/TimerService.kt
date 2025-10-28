@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.IBinder
 import com.pomodoro.timer.domain.model.SessionType
 import com.pomodoro.timer.domain.model.TimerState
+import com.pomodoro.timer.domain.repository.SettingsRepository
 import com.pomodoro.timer.domain.usecase.SaveSessionUseCase
 import com.pomodoro.timer.util.TimerManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -12,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -34,6 +36,9 @@ class TimerService : Service() {
     
     @Inject
     lateinit var saveSessionUseCase: SaveSessionUseCase
+    
+    @Inject
+    lateinit var settingsRepository: SettingsRepository
     
     private var previousState: TimerState = TimerState.IDLE
     
@@ -221,8 +226,38 @@ class TimerService : Service() {
             )
         }
         
-        timerManager.skip()
-        stopForegroundService()
+        // Increment completed sessions if it was a focus session
+        if (sessionType == SessionType.FOCUS) {
+            timerManager.incrementCompletedSessions()
+        }
+        
+        val completedSessions = timerManager.completedSessions.value
+        
+        // Determine next session type
+        serviceScope.launch {
+            val settings = settingsRepository.getSettings().first()
+            
+            val nextSessionType = when (sessionType) {
+                SessionType.FOCUS -> {
+                    // After focus, go to break
+                    if (completedSessions % settings.sessionsUntilLongBreak == 0) {
+                        SessionType.LONG_BREAK
+                    } else {
+                        SessionType.SHORT_BREAK
+                    }
+                }
+                SessionType.SHORT_BREAK, SessionType.LONG_BREAK -> {
+                    // After break, go to focus
+                    SessionType.FOCUS
+                }
+            }
+            
+            timerManager.skip()
+            
+            val nextDuration = settings.getDuration(nextSessionType)
+            timerManager.start(nextSessionType, nextDuration)
+            updateNotification()
+        }
     }
     
     /**

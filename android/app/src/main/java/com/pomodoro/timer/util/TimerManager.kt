@@ -27,10 +27,10 @@ class TimerManager @Inject constructor() {
     private val _sessionType = MutableStateFlow(SessionType.FOCUS)
     val sessionType: StateFlow<SessionType> = _sessionType.asStateFlow()
     
-    private val _remainingSeconds = MutableStateFlow(0L)
+    private val _remainingSeconds = MutableStateFlow(25 * 60L)
     val remainingSeconds: StateFlow<Long> = _remainingSeconds.asStateFlow()
     
-    private val _totalSeconds = MutableStateFlow(0L)
+    private val _totalSeconds = MutableStateFlow(25 * 60L)
     val totalSeconds: StateFlow<Long> = _totalSeconds.asStateFlow()
     
     private val _completedSessions = MutableStateFlow(0)
@@ -89,8 +89,7 @@ class TimerManager @Inject constructor() {
         timerJob = null
         
         _state.value = TimerState.IDLE
-        _remainingSeconds.value = 0
-        _totalSeconds.value = 0
+        _remainingSeconds.value = _totalSeconds.value
     }
     
     /**
