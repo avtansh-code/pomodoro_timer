@@ -69,10 +69,10 @@ fun StatisticsScreen(
         List(if (selectedPeriod == StatsPeriod.WEEK) 7 else 30) { 0f }
     }
     
-    // Calculate pie chart data from period stats
-    val focusMinutes = periodStats.focusSessionsCount * 25f // Assuming 25 min per focus session
-    val shortBreakMinutes = periodStats.shortBreakSessionsCount * 5f
-    val longBreakMinutes = periodStats.longBreakSessionsCount * 15f
+    // Calculate pie chart data from period stats (use actual elapsed time in seconds)
+    val focusSeconds = periodStats.focusDurationSeconds.toFloat()
+    val shortBreakSeconds = periodStats.shortBreakDurationSeconds.toFloat()
+    val longBreakSeconds = periodStats.longBreakDurationSeconds.toFloat()
     
     Column(
         modifier = Modifier
@@ -174,11 +174,11 @@ fun StatisticsScreen(
         
         // Session Distribution Pie Chart
         ChartCard(title = "Session Distribution") {
-            if (focusMinutes + shortBreakMinutes + longBreakMinutes > 0) {
+            if (focusSeconds + shortBreakSeconds + longBreakSeconds > 0) {
                 PieChart(
-                    focusMinutes = focusMinutes,
-                    shortBreakMinutes = shortBreakMinutes,
-                    longBreakMinutes = longBreakMinutes,
+                    focusSeconds = focusSeconds,
+                    shortBreakSeconds = shortBreakSeconds,
+                    longBreakSeconds = longBreakSeconds,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(250.dp)
@@ -465,12 +465,12 @@ private fun LineChart(
 
 @Composable
 private fun PieChart(
-    focusMinutes: Float,
-    shortBreakMinutes: Float,
-    longBreakMinutes: Float,
+    focusSeconds: Float,
+    shortBreakSeconds: Float,
+    longBreakSeconds: Float,
     modifier: Modifier = Modifier
 ) {
-    val total = focusMinutes + shortBreakMinutes + longBreakMinutes
+    val total = focusSeconds + shortBreakSeconds + longBreakSeconds
     if (total == 0f) return
     
     val focusColor = MaterialTheme.colorScheme.primary
@@ -493,7 +493,7 @@ private fun PieChart(
             var startAngle = -90f
             
             // Focus
-            val focusSweep = (focusMinutes / total) * 360f
+            val focusSweep = (focusSeconds / total) * 360f
             drawArc(
                 color = focusColor,
                 startAngle = startAngle,
@@ -505,7 +505,7 @@ private fun PieChart(
             startAngle += focusSweep
             
             // Short Break
-            val shortBreakSweep = (shortBreakMinutes / total) * 360f
+            val shortBreakSweep = (shortBreakSeconds / total) * 360f
             drawArc(
                 color = shortBreakColor,
                 startAngle = startAngle,
@@ -517,7 +517,7 @@ private fun PieChart(
             startAngle += shortBreakSweep
             
             // Long Break
-            val longBreakSweep = (longBreakMinutes / total) * 360f
+            val longBreakSweep = (longBreakSeconds / total) * 360f
             drawArc(
                 color = longBreakColor,
                 startAngle = startAngle,
@@ -528,13 +528,13 @@ private fun PieChart(
             )
         }
         
-        // Legend
+        // Legend (display in mm:ss format)
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            LegendItem(color = focusColor, label = "Focus", value = "${focusMinutes.toInt()}m")
-            LegendItem(color = shortBreakColor, label = "Short Break", value = "${shortBreakMinutes.toInt()}m")
-            LegendItem(color = longBreakColor, label = "Long Break", value = "${longBreakMinutes.toInt()}m")
+            LegendItem(color = focusColor, label = "Focus", value = formatTimeMMSS(focusSeconds.toLong()))
+            LegendItem(color = shortBreakColor, label = "Short Break", value = formatTimeMMSS(shortBreakSeconds.toLong()))
+            LegendItem(color = longBreakColor, label = "Long Break", value = formatTimeMMSS(longBreakSeconds.toLong()))
         }
     }
 }
