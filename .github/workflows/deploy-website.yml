@@ -1,0 +1,37 @@
+name: Deploy Website to mr_pomodoro Repository
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'website/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare website files
+        run: |
+          mkdir -p deploy_temp
+          cp -r website/www/* deploy_temp/
+          cp -r website/css deploy_temp/
+          
+      - name: Deploy to mr_pomodoro repository
+        env:
+          TARGET_REPO: avtansh-code/mr_pomodoro
+          TARGET_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: |
+          cd deploy_temp
+          git init
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Deploy website from pomodoro_timer - $(date +'%Y-%m-%d %H:%M:%S')"
+          git push --force https://x-access-token:${GITHUB_TOKEN}@github.com/${TARGET_REPO}.git HEAD:${TARGET_BRANCH}
