@@ -244,11 +244,7 @@ class TimerService : Service() {
         val totalDuration = timerManager.totalSeconds.value
         val elapsedDuration = totalDuration - timerManager.remainingSeconds.value
         
-        // Increment completed sessions if it was a focus session (before saving)
-        if (sessionType == SessionType.FOCUS) {
-            timerManager.incrementCompletedSessions()
-        }
-        
+        // Get current completed sessions count (before any increment)
         val completedSessions = timerManager.completedSessions.value
         
         // Save session with elapsed time (not total time)
@@ -256,16 +252,25 @@ class TimerService : Service() {
             saveSessionUseCase(
                 type = sessionType,
                 duration = elapsedDuration, // Use elapsed time, not total
-                wasCompleted = true // Mark as completed since user manually skipped
+                wasCompleted = false // Mark as incomplete for skipped sessions (matches iOS)
             )
             
             // Determine next session type and check auto-start settings
             val settings = settingsRepository.getSettings().first()
             
+            // Increment completed sessions AFTER saving but BEFORE calculating next type
+            // This matches iOS behavior where switchToNextSession() increments the counter
+            val updatedCompletedSessions = if (sessionType == SessionType.FOCUS) {
+                timerManager.incrementCompletedSessions()
+                timerManager.completedSessions.value
+            } else {
+                completedSessions
+            }
+            
             val nextSessionType = when (sessionType) {
                 SessionType.FOCUS -> {
                     // After focus, go to break
-                    if (completedSessions % settings.sessionsUntilLongBreak == 0) {
+                    if (updatedCompletedSessions % settings.sessionsUntilLongBreak == 0) {
                         SessionType.LONG_BREAK
                     } else {
                         SessionType.SHORT_BREAK

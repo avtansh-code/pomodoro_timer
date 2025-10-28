@@ -14,13 +14,15 @@ import javax.inject.Singleton
 
 /**
  * Core timer manager handling countdown logic.
- * Maps to iOS TimerManager.swift functionality.
- * 
- * Uses Kotlin coroutines for precise timing and cancellation.
+ * Complete rewrite with proper state management for:
+ * - Start/Pause/Resume/Reset/Skip operations
+ * - Focus/Short Break/Long Break transitions
+ * - Completed sessions tracking
  */
 @Singleton
 class TimerManager @Inject constructor() {
     
+    // Timer state flows
     private val _state = MutableStateFlow(TimerState.IDLE)
     val state: StateFlow<TimerState> = _state.asStateFlow()
     
@@ -36,43 +38,50 @@ class TimerManager @Inject constructor() {
     private val _completedSessions = MutableStateFlow(0)
     val completedSessions: StateFlow<Int> = _completedSessions.asStateFlow()
     
+    // Coroutine management
     private var timerJob: Job? = null
     private var timerScope: CoroutineScope? = null
     
     /**
-     * Initialize timer with scope for coroutines
+     * Initialize timer with coroutine scope
      */
     fun initialize(scope: CoroutineScope) {
         timerScope = scope
     }
     
     /**
-     * Start timer with specified duration
+     * Start a new timer session
+     * Can be called from any state (IDLE, PAUSED, or even RUNNING to restart)
      */
     fun start(sessionType: SessionType, durationSeconds: Long) {
-        if (_state.value != TimerState.IDLE) return
+        // Cancel any running timer
+        cancelTimer()
         
+        // Set up new session
         _sessionType.value = sessionType
         _totalSeconds.value = durationSeconds
         _remainingSeconds.value = durationSeconds
         _state.value = TimerState.RUNNING
         
+        // Start countdown
         startCountdown()
     }
     
     /**
      * Pause the running timer
+     * Only works if timer is RUNNING
      */
     fun pause() {
         if (_state.value != TimerState.RUNNING) return
         
+        // Cancel countdown but keep time
+        cancelTimer()
         _state.value = TimerState.PAUSED
-        timerJob?.cancel()
-        timerJob = null
     }
     
     /**
-     * Resume paused timer
+     * Resume a paused timer
+     * Only works if timer is PAUSED
      */
     fun resume() {
         if (_state.value != TimerState.PAUSED) return
@@ -82,11 +91,11 @@ class TimerManager @Inject constructor() {
     }
     
     /**
-     * Reset timer to idle state
+     * Reset timer to initial state of current session
+     * Keeps session type and total duration, resets remaining time
      */
     fun reset() {
-        timerJob?.cancel()
-        timerJob = null
+        cancelTimer()
         
         _state.value = TimerState.IDLE
         _remainingSeconds.value = _totalSeconds.value
@@ -94,28 +103,22 @@ class TimerManager @Inject constructor() {
     
     /**
      * Skip current session
-     * Counts as completed if it was a focus session
+     * Sets remaining time to 0 and moves to IDLE state
+     * Note: Session transition logic handled by TimerService
      */
     fun skip() {
-        timerJob?.cancel()
-        timerJob = null
+        cancelTimer()
         
-        // Increment completed sessions if it was a focus session being skipped
-        if (_sessionType.value == SessionType.FOCUS) {
-            incrementCompletedSessions()
-        }
-        
-        _state.value = TimerState.IDLE
         _remainingSeconds.value = 0
+        _state.value = TimerState.IDLE
     }
     
     /**
-     * Prepare next session without starting it
-     * Sets session type and duration, but keeps state as IDLE
+     * Prepare next session without starting
+     * Used after skip when auto-start is disabled
      */
     fun prepareSession(sessionType: SessionType, durationSeconds: Long) {
-        timerJob?.cancel()
-        timerJob = null
+        cancelTimer()
         
         _sessionType.value = sessionType
         _totalSeconds.value = durationSeconds
@@ -124,19 +127,8 @@ class TimerManager @Inject constructor() {
     }
     
     /**
-     * Get progress as percentage (0.0 to 1.0)
-     */
-    fun getProgress(): Float {
-        val total = _totalSeconds.value
-        val remaining = _remainingSeconds.value
-        
-        if (total <= 0) return 0f
-        
-        return ((total - remaining).toFloat() / total.toFloat()).coerceIn(0f, 1f)
-    }
-    
-    /**
-     * Increment completed sessions counter
+     * Increment completed focus sessions counter
+     * Called when a focus session completes or is skipped
      */
     fun incrementCompletedSessions() {
         _completedSessions.value += 1
@@ -144,46 +136,27 @@ class TimerManager @Inject constructor() {
     
     /**
      * Reset completed sessions counter
+     * Can be called manually or when cycle resets
      */
     fun resetCompletedSessions() {
         _completedSessions.value = 0
     }
     
     /**
-     * Start the countdown coroutine
+     * Get current progress as percentage (0.0 to 1.0)
      */
-    private fun startCountdown() {
-        timerJob = timerScope?.launch {
-            while (_remainingSeconds.value > 0 && _state.value == TimerState.RUNNING) {
-                delay(1000) // 1 second tick
-                
-                if (_state.value == TimerState.RUNNING) {
-                    _remainingSeconds.value -= 1
-                    
-                    // Timer completed
-                    if (_remainingSeconds.value <= 0) {
-                        onTimerComplete()
-                    }
-                }
-            }
-        }
-    }
-    
-    /**
-     * Handle timer completion
-     */
-    private fun onTimerComplete() {
-        _state.value = TimerState.IDLE
-        _remainingSeconds.value = 0
+    fun getProgress(): Float {
+        val total = _totalSeconds.value
+        val remaining = _remainingSeconds.value
         
-        // Increment completed sessions if it was a focus session
-        if (_sessionType.value == SessionType.FOCUS) {
-            incrementCompletedSessions()
-        }
+        if (total <= 0) return 0f
+        
+        val elapsed = total - remaining
+        return (elapsed.toFloat() / total.toFloat()).coerceIn(0f, 1f)
     }
     
     /**
-     * Format remaining time as MM:SS
+     * Format time in seconds to MM:SS format
      */
     fun formatTime(seconds: Long): String {
         val minutes = seconds / 60
@@ -199,7 +172,7 @@ class TimerManager @Inject constructor() {
     }
     
     /**
-     * Check if timer is running
+     * Check if timer is currently running
      */
     fun isRunning(): Boolean = _state.value == TimerState.RUNNING
     
@@ -212,4 +185,50 @@ class TimerManager @Inject constructor() {
      * Check if timer is idle
      */
     fun isIdle(): Boolean = _state.value == TimerState.IDLE
+    
+    /**
+     * Start the countdown coroutine
+     * Ticks every second until timer completes or is cancelled
+     */
+    private fun startCountdown() {
+        timerJob = timerScope?.launch {
+            while (_remainingSeconds.value > 0 && _state.value == TimerState.RUNNING) {
+                delay(1000L) // Wait 1 second
+                
+                // Double-check state after delay
+                if (_state.value == TimerState.RUNNING) {
+                    _remainingSeconds.value -= 1
+                    
+                    // Check if timer completed
+                    if (_remainingSeconds.value <= 0) {
+                        handleTimerCompletion()
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     * Handle timer completion
+     * Increments counter for focus sessions
+     * Transitions to IDLE for service to handle next steps
+     */
+    private fun handleTimerCompletion() {
+        _state.value = TimerState.IDLE
+        _remainingSeconds.value = 0
+        
+        // Auto-increment completed sessions for focus sessions
+        if (_sessionType.value == SessionType.FOCUS) {
+            incrementCompletedSessions()
+        }
+    }
+    
+    /**
+     * Cancel the timer coroutine job
+     * Helper method to ensure clean cancellation
+     */
+    private fun cancelTimer() {
+        timerJob?.cancel()
+        timerJob = null
+    }
 }
