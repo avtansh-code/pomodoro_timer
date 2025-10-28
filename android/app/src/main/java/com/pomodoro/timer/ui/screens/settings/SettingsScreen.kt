@@ -32,10 +32,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,10 +51,12 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import android.widget.Toast
 import com.pomodoro.timer.domain.model.AppTheme
 import com.pomodoro.timer.presentation.viewmodel.SettingsViewModel
 import com.pomodoro.timer.ui.theme.PomodoroTheme
@@ -66,7 +72,10 @@ fun SettingsScreen(
     onThemeClick: () -> Unit = {},
     onScreenshotToolsClick: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     val settings by viewModel.settings.collectAsState()
+    var showResetStatsDialog by remember { mutableStateOf(false) }
+    var showResetAppDialog by remember { mutableStateOf(false) }
     
     Box(
         modifier = Modifier
@@ -269,10 +278,18 @@ fun SettingsScreen(
                     .semantics { heading() }
             )
             SimpleMenuItem(
+                label = "Reset Statistics",
+                description = "Clear all session history and stats",
+                icon = Icons.Default.DeleteSweep,
+                onClick = { showResetStatsDialog = true },
+                textColor = MaterialTheme.colorScheme.error
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            SimpleMenuItem(
                 label = "Reset App Completely",
                 description = "Restore all default settings",
                 icon = Icons.Default.RestartAlt,
-                onClick = { viewModel.resetToDefaults() },
+                onClick = { showResetAppDialog = true },
                 textColor = MaterialTheme.colorScheme.error
             )
             
@@ -328,6 +345,106 @@ fun SettingsScreen(
                 )
             }
         }
+    }
+    
+    // Reset Statistics Confirmation Dialog
+    if (showResetStatsDialog) {
+        AlertDialog(
+            onDismissRequest = { showResetStatsDialog = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.DeleteSweep,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error
+                )
+            },
+            title = {
+                Text(
+                    text = "Reset Statistics?",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "This will permanently delete all your session history, statistics, and streak data. This action cannot be undone.\n\nYour settings will be preserved.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.resetStatistics()
+                        showResetStatsDialog = false
+                        Toast.makeText(
+                            context,
+                            "Statistics reset successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    colors = androidx.compose.material3.ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text("Reset Statistics", fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showResetStatsDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+    
+    // Reset App Confirmation Dialog
+    if (showResetAppDialog) {
+        AlertDialog(
+            onDismissRequest = { showResetAppDialog = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.RestartAlt,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error
+                )
+            },
+            title = {
+                Text(
+                    text = "Reset App Completely?",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "This will reset all settings to defaults AND delete all your session history and statistics. This action cannot be undone.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.resetToDefaults()
+                        showResetAppDialog = false
+                        Toast.makeText(
+                            context,
+                            "App reset to defaults successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    colors = androidx.compose.material3.ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text("Reset Everything", fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showResetAppDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }
 

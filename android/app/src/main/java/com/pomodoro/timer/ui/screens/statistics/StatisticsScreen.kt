@@ -1,323 +1,563 @@
 package com.pomodoro.timer.ui.screens.statistics
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.pomodoro.timer.domain.model.SessionType
-import com.pomodoro.timer.domain.model.TimerSession
 import com.pomodoro.timer.presentation.viewmodel.StatisticsViewModel
 import com.pomodoro.timer.ui.theme.PomodoroTheme
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import kotlin.math.cos
+import kotlin.math.min
+import kotlin.math.sin
 
-/**
- * Statistics Screen matching iOS StatisticsView functionality.
- */
+enum class StatsPeriod {
+    WEEK, MONTH
+}
+
 @Composable
 fun StatisticsScreen(
     viewModel: StatisticsViewModel = hiltViewModel()
 ) {
-    var selectedPeriod by remember { mutableIntStateOf(0) }
-    val periods = listOf("Today", "Week", "Month", "All Time")
+    var selectedPeriod by remember { mutableStateOf(StatsPeriod.WEEK) }
     
-    val statistics by when (selectedPeriod) {
-        0 -> viewModel.todayStatistics
-        1 -> viewModel.weekStatistics
-        2 -> viewModel.monthStatistics
-        else -> viewModel.allTimeStatistics
-    }.collectAsState()
-    
+    val todayStats by viewModel.todayStatistics.collectAsState()
+    val weekStats by viewModel.weekStatistics.collectAsState()
+    val monthStats by viewModel.monthStatistics.collectAsState()
     val streak by viewModel.currentStreak.collectAsState()
-    val recentSessions by viewModel.recentSessions.collectAsState()
+    
+    // Get actual data based on selected period
+    val periodStats = if (selectedPeriod == StatsPeriod.WEEK) weekStats else monthStats
+    
+    // Calculate sessions per day data
+    val sessionsPerDay = remember(periodStats) {
+        // For now, use dummy data since we need daily breakdown
+        // This would need to be implemented in the ViewModel with actual daily data
+        List(if (selectedPeriod == StatsPeriod.WEEK) 7 else 30) { 0f }
+    }
+    
+    val focusTimeTrend = remember(periodStats) {
+        // For now, use dummy data since we need daily breakdown
+        // This would need to be implemented in the ViewModel with actual daily data
+        List(if (selectedPeriod == StatsPeriod.WEEK) 7 else 30) { 0f }
+    }
+    
+    // Calculate pie chart data from period stats
+    val focusMinutes = periodStats.focusSessionsCount * 25f // Assuming 25 min per focus session
+    val shortBreakMinutes = periodStats.shortBreakSessionsCount * 5f
+    val longBreakMinutes = periodStats.longBreakSessionsCount * 15f
     
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 24.dp)
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Screen Title with proper semantics
+        // Title
         Text(
             text = "Statistics",
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier
-                .padding(bottom = 24.dp)
-                .semantics { heading() }
+            modifier = Modifier.padding(vertical = 8.dp)
         )
         
-        // Period Selector with Material 3 styling
-        TabRow(
-            selectedTabIndex = selectedPeriod,
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.primary
+        // Period Selector
+        PeriodSelector(
+            selectedPeriod = selectedPeriod,
+            onPeriodSelected = { selectedPeriod = it }
+        )
+        
+        // Streak Card
+        StreakCard(streak = streak)
+        
+        // Today and Week Summary
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            periods.forEachIndexed { index, title ->
-                Tab(
-                    selected = selectedPeriod == index,
-                    onClick = { selectedPeriod = index },
-                    text = {
-                        Text(
-                            text = title,
-                            style = MaterialTheme.typography.labelLarge
-                        )
+            SummaryCard(
+                title = "Today",
+                totalSessions = todayStats.totalSessions,
+                focusSessions = todayStats.focusSessionsCount,
+                focusTime = todayStats.totalMinutes,
+                breakTime = (todayStats.shortBreakSessionsCount * 5) + (todayStats.longBreakSessionsCount * 15),
+                modifier = Modifier.weight(1f)
+            )
+            
+            SummaryCard(
+                title = "Week",
+                totalSessions = weekStats.totalSessions,
+                focusSessions = weekStats.focusSessionsCount,
+                focusTime = weekStats.totalMinutes,
+                breakTime = (weekStats.shortBreakSessionsCount * 5) + (weekStats.longBreakSessionsCount * 15),
+                modifier = Modifier.weight(1f)
+            )
+        }
+        
+        // Sessions Per Day Bar Chart
+        ChartCard(title = "Sessions Per Day") {
+            if (sessionsPerDay.any { it > 0f }) {
+                BarChart(
+                    data = sessionsPerDay,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No session data yet",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+        
+        // Focus Time Trend Line Chart
+        ChartCard(title = "Focus Time Trend") {
+            if (focusTimeTrend.any { it > 0f }) {
+                LineChart(
+                    data = focusTimeTrend,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No session data yet",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+        
+        // Session Distribution Pie Chart
+        ChartCard(title = "Session Distribution") {
+            if (focusMinutes + shortBreakMinutes + longBreakMinutes > 0) {
+                PieChart(
+                    focusMinutes = focusMinutes,
+                    shortBreakMinutes = shortBreakMinutes,
+                    longBreakMinutes = longBreakMinutes,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No session data yet",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+private fun PeriodSelector(
+    selectedPeriod: StatsPeriod,
+    onPeriodSelected: (StatsPeriod) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        PeriodButton(
+            text = "Last Week",
+            selected = selectedPeriod == StatsPeriod.WEEK,
+            onClick = { onPeriodSelected(StatsPeriod.WEEK) },
+            modifier = Modifier.weight(1f)
+        )
+        
+        PeriodButton(
+            text = "Last Month",
+            selected = selectedPeriod == StatsPeriod.MONTH,
+            onClick = { onPeriodSelected(StatsPeriod.MONTH) },
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+private fun PeriodButton(
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier.height(48.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (selected) MaterialTheme.colorScheme.primary 
+                           else MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = if (selected) MaterialTheme.colorScheme.onPrimary
+                          else MaterialTheme.colorScheme.onSurfaceVariant
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
+        )
+    }
+}
+
+@Composable
+private fun StreakCard(streak: Int) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.LocalFireDepartment,
+                contentDescription = null,
+                modifier = Modifier.size(48.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            
+            Column {
+                Text(
+                    text = "$streak Days",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+                Text(
+                    text = "Current Streak",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SummaryCard(
+    title: String,
+    totalSessions: Int,
+    focusSessions: Int,
+    focusTime: Int,
+    breakTime: Int,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        ),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+            
+            HorizontalDivider(color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.2f))
+            
+            StatRow(label = "Total Sessions", value = totalSessions.toString())
+            StatRow(label = "Focus Sessions", value = focusSessions.toString())
+            StatRow(label = "Focus Time", value = "${focusTime}m")
+            StatRow(label = "Break Time", value = "${breakTime}m")
+        }
+    }
+}
+
+@Composable
+private fun StatRow(label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+    }
+}
+
+@Composable
+private fun ChartCard(
+    title: String,
+    content: @Composable () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            
+            content()
+        }
+    }
+}
+
+@Composable
+private fun BarChart(
+    data: List<Float>,
+    modifier: Modifier = Modifier
+) {
+    val primary = MaterialTheme.colorScheme.primary
+    val onSurfaceVariant = MaterialTheme.colorScheme.onSurfaceVariant
+    
+    Canvas(modifier = modifier.padding(top = 8.dp, bottom = 16.dp)) {
+        val maxValue = data.maxOrNull() ?: 1f
+        val barWidth = size.width / (data.size * 2f)
+        val spacing = barWidth * 0.5f
+        
+        data.forEachIndexed { index, value ->
+            val barHeight = (value / maxValue) * (size.height - 40f)
+            val left = index * (barWidth + spacing)
+            
+            drawRoundRect(
+                color = primary,
+                topLeft = Offset(left, size.height - barHeight - 20f),
+                size = Size(barWidth, barHeight),
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(4.dp.toPx())
+            )
+            
+            // Draw value on top
+            drawContext.canvas.nativeCanvas.apply {
+                drawText(
+                    value.toInt().toString(),
+                    left + barWidth / 2f,
+                    size.height - barHeight - 25f,
+                    android.graphics.Paint().apply {
+                        color = onSurfaceVariant.hashCode()
+                        textSize = 24f
+                        textAlign = android.graphics.Paint.Align.CENTER
                     }
                 )
             }
         }
-        
-        Spacer(modifier = Modifier.height(32.dp))
-        
-        // Statistics Cards
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            StatCard(
-                title = "Sessions",
-                value = statistics.totalSessions.toString(),
-                modifier = Modifier.weight(1f)
-            )
-            
-            StatCard(
-                title = "Time",
-                value = formatMinutes(statistics.totalMinutes.toLong()),
-                modifier = Modifier.weight(1f)
-            )
-        }
-        
-        Spacer(modifier = Modifier.height(12.dp))
-        
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            StatCard(
-                title = "Avg Session",
-                value = formatMinutes(statistics.averageSessionMinutes.toLong()),
-                modifier = Modifier.weight(1f)
-            )
-            
-            StatCard(
-                title = "Streak",
-                value = "$streak days",
-                modifier = Modifier.weight(1f)
-            )
-        }
-        
-        Spacer(modifier = Modifier.height(32.dp))
-        
-        // Recent Sessions header with semantics
-        Text(
-            text = "Recent Sessions",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier
-                .padding(bottom = 12.dp)
-                .semantics { heading() }
-        )
-        
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            if (recentSessions.isEmpty()) {
-                item {
-                    Text(
-                        text = "No sessions yet. Start your first Pomodoro!",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(vertical = 32.dp)
-                    )
-                }
-            } else {
-                items(recentSessions) { session ->
-                    SessionItem(session = session)
-                }
-            }
-        }
     }
 }
 
 @Composable
-private fun StatCard(
-    title: String,
-    value: String,
+private fun LineChart(
+    data: List<Float>,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = modifier.semantics(mergeDescendants = true) {},
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = value,
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-            )
+    val primary = MaterialTheme.colorScheme.primary
+    
+    Canvas(modifier = modifier.padding(vertical = 16.dp)) {
+        if (data.size < 2) return@Canvas
+        
+        val maxValue = data.maxOrNull() ?: 1f
+        val minValue = data.minOrNull() ?: 0f
+        val range = maxValue - minValue
+        
+        val stepX = size.width / (data.size - 1)
+        val path = Path()
+        
+        data.forEachIndexed { index, value ->
+            val x = index * stepX
+            val y = size.height - ((value - minValue) / range) * size.height
             
-            Spacer(modifier = Modifier.height(8.dp))
-            
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
-            )
-        }
-    }
-}
-
-@Composable
-private fun SessionItem(session: TimerSession) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .semantics(mergeDescendants = true) {},
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        ),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = session.type.name.lowercase()
-                        .replaceFirstChar { it.uppercase() }
-                        .replace("_", " "),
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                
-                Spacer(modifier = Modifier.height(4.dp))
-                
-                Text(
-                    text = formatTimestamp(session.completedAt),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            if (index == 0) {
+                path.moveTo(x, y)
+            } else {
+                path.lineTo(x, y)
             }
             
-            Text(
-                text = "${session.duration / 60} min",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.primary
+            // Draw point
+            drawCircle(
+                color = primary,
+                radius = 6.dp.toPx(),
+                center = Offset(x, y)
             )
         }
-    }
-}
-
-private fun formatMinutes(minutes: Long): String {
-    return when {
-        minutes < 60 -> "${minutes}m"
-        else -> {
-            val hours = minutes / 60
-            val remainingMinutes = minutes % 60
-            if (remainingMinutes == 0L) "${hours}h" else "${hours}h ${remainingMinutes}m"
-        }
-    }
-}
-
-private fun formatTimestamp(timestamp: Long): String {
-    val sdf = SimpleDateFormat("MMM dd, h:mm a", Locale.getDefault())
-    return sdf.format(Date(timestamp))
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun StatCardPreview() {
-    PomodoroTheme {
-        StatCard(
-            title = "Sessions",
-            value = "12"
+        
+        drawPath(
+            path = path,
+            color = primary,
+            style = Stroke(width = 4.dp.toPx())
         )
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun SessionItemPreview() {
-    PomodoroTheme {
-        SessionItem(
-            session = TimerSession(
-                id = "1",
-                type = SessionType.FOCUS,
-                duration = 1500,
-                completedAt = System.currentTimeMillis(),
-                wasCompleted = true
-            )
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun StatCardsRowPreview() {
-    PomodoroTheme {
-        Row(
+private fun PieChart(
+    focusMinutes: Float,
+    shortBreakMinutes: Float,
+    longBreakMinutes: Float,
+    modifier: Modifier = Modifier
+) {
+    val total = focusMinutes + shortBreakMinutes + longBreakMinutes
+    if (total == 0f) return
+    
+    val focusColor = MaterialTheme.colorScheme.primary
+    val shortBreakColor = MaterialTheme.colorScheme.secondary
+    val longBreakColor = MaterialTheme.colorScheme.tertiary
+    
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Canvas(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                .size(180.dp)
+                .padding(16.dp)
         ) {
-            StatCard(
-                title = "Sessions",
-                value = "8",
-                modifier = Modifier.weight(1f)
-            )
+            val radius = min(size.width, size.height) / 2f
+            val centerX = size.width / 2f
+            val centerY = size.height / 2f
             
-            StatCard(
-                title = "Time",
-                value = "3h 20m",
-                modifier = Modifier.weight(1f)
+            var startAngle = -90f
+            
+            // Focus
+            val focusSweep = (focusMinutes / total) * 360f
+            drawArc(
+                color = focusColor,
+                startAngle = startAngle,
+                sweepAngle = focusSweep,
+                useCenter = true,
+                topLeft = Offset(centerX - radius, centerY - radius),
+                size = Size(radius * 2, radius * 2)
+            )
+            startAngle += focusSweep
+            
+            // Short Break
+            val shortBreakSweep = (shortBreakMinutes / total) * 360f
+            drawArc(
+                color = shortBreakColor,
+                startAngle = startAngle,
+                sweepAngle = shortBreakSweep,
+                useCenter = true,
+                topLeft = Offset(centerX - radius, centerY - radius),
+                size = Size(radius * 2, radius * 2)
+            )
+            startAngle += shortBreakSweep
+            
+            // Long Break
+            val longBreakSweep = (longBreakMinutes / total) * 360f
+            drawArc(
+                color = longBreakColor,
+                startAngle = startAngle,
+                sweepAngle = longBreakSweep,
+                useCenter = true,
+                topLeft = Offset(centerX - radius, centerY - radius),
+                size = Size(radius * 2, radius * 2)
             )
         }
+        
+        // Legend
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            LegendItem(color = focusColor, label = "Focus", value = "${focusMinutes.toInt()}m")
+            LegendItem(color = shortBreakColor, label = "Short Break", value = "${shortBreakMinutes.toInt()}m")
+            LegendItem(color = longBreakColor, label = "Long Break", value = "${longBreakMinutes.toInt()}m")
+        }
+    }
+}
+
+@Composable
+private fun LegendItem(color: Color, label: String, value: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(16.dp)
+                .background(color, RoundedCornerShape(4.dp))
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StatisticsScreenPreview() {
+    PomodoroTheme {
+        StatisticsScreen()
     }
 }

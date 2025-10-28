@@ -6,6 +6,7 @@ import com.pomodoro.timer.domain.model.AppTheme
 import com.pomodoro.timer.domain.model.AppThemeType
 import com.pomodoro.timer.domain.model.SessionType
 import com.pomodoro.timer.domain.model.TimerSettings
+import com.pomodoro.timer.domain.repository.SessionRepository
 import com.pomodoro.timer.domain.repository.SettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val sessionRepository: SessionRepository
 ) : ViewModel() {
     
     // Settings state
@@ -205,12 +207,24 @@ class SettingsViewModel @Inject constructor(
     }
     
     /**
+     * Reset statistics only (clear all session history)
+     */
+    fun resetStatistics() {
+        viewModelScope.launch {
+            _isSaving.value = true
+            sessionRepository.deleteAllSessions()
+            _isSaving.value = false
+        }
+    }
+    
+    /**
      * Reset all settings to defaults
      */
     fun resetToDefaults() {
         viewModelScope.launch {
             _isSaving.value = true
             settingsRepository.resetToDefaults()
+            sessionRepository.deleteAllSessions()
             _isSaving.value = false
         }
     }

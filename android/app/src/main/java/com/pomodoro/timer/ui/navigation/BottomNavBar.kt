@@ -1,7 +1,7 @@
 package com.pomodoro.timer.ui.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.automirrored.filled.ShowChart
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Icon
@@ -35,7 +35,7 @@ fun BottomNavBar(
         ),
         BottomNavItem(
             route = Screen.Statistics.route,
-            icon = Icons.Default.BarChart,
+            icon = Icons.AutoMirrored.Filled.ShowChart,
             label = "Stats"
         ),
         BottomNavItem(

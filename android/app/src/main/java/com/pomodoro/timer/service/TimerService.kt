@@ -139,13 +139,40 @@ class TimerService : Service() {
                 duration = duration,
                 wasCompleted = true
             )
+            
+            // Check if we should auto-start next session
+            val settings = settingsRepository.getSettings().first()
+            val shouldAutoStart = when (sessionType) {
+                SessionType.FOCUS -> settings.autoStartBreaks
+                SessionType.SHORT_BREAK, SessionType.LONG_BREAK -> settings.autoStartFocus
+            }
+            
+            if (shouldAutoStart) {
+                // Determine next session type
+                val completedSessions = timerManager.completedSessions.value
+                val nextSessionType = when (sessionType) {
+                    SessionType.FOCUS -> {
+                        if (completedSessions % settings.sessionsUntilLongBreak == 0) {
+                            SessionType.LONG_BREAK
+                        } else {
+                            SessionType.SHORT_BREAK
+                        }
+                    }
+                    SessionType.SHORT_BREAK, SessionType.LONG_BREAK -> {
+                        SessionType.FOCUS
+                    }
+                }
+                
+                val nextDuration = settings.getDuration(nextSessionType)
+                timerManager.start(nextSessionType, nextDuration)
+                updateNotification()
+            } else {
+                // Show completion notification
+                notificationHelper.showCompletionNotification(sessionType)
+                // Stop foreground service
+                stopForegroundService()
+            }
         }
-        
-        // Show completion notification
-        notificationHelper.showCompletionNotification(sessionType)
-        
-        // Stop foreground service
-        stopForegroundService()
     }
     
     /**
@@ -213,28 +240,26 @@ class TimerService : Service() {
      * Handle skip action
      */
     private fun handleSkip() {
-        // Save as skipped session
         val sessionType = timerManager.sessionType.value
         val totalDuration = timerManager.totalSeconds.value
         val elapsedDuration = totalDuration - timerManager.remainingSeconds.value
         
-        serviceScope.launch {
-            saveSessionUseCase(
-                type = sessionType,
-                duration = elapsedDuration,
-                wasCompleted = false
-            )
-        }
-        
-        // Increment completed sessions if it was a focus session
+        // Increment completed sessions if it was a focus session (before saving)
         if (sessionType == SessionType.FOCUS) {
             timerManager.incrementCompletedSessions()
         }
         
         val completedSessions = timerManager.completedSessions.value
         
-        // Determine next session type
+        // Save session with elapsed time (not total time)
         serviceScope.launch {
+            saveSessionUseCase(
+                type = sessionType,
+                duration = elapsedDuration, // Use elapsed time, not total
+                wasCompleted = true // Mark as completed since user manually skipped
+            )
+            
+            // Determine next session type and check auto-start settings
             val settings = settingsRepository.getSettings().first()
             
             val nextSessionType = when (sessionType) {
@@ -252,11 +277,25 @@ class TimerService : Service() {
                 }
             }
             
-            timerManager.skip()
+            // Check if we should auto-start the next session
+            val shouldAutoStart = when (sessionType) {
+                SessionType.FOCUS -> settings.autoStartBreaks
+                SessionType.SHORT_BREAK, SessionType.LONG_BREAK -> settings.autoStartFocus
+            }
             
             val nextDuration = settings.getDuration(nextSessionType)
-            timerManager.start(nextSessionType, nextDuration)
-            updateNotification()
+            
+            if (shouldAutoStart) {
+                // Skip current and auto-start the next session
+                timerManager.skip()
+                timerManager.start(nextSessionType, nextDuration)
+                updateNotification()
+            } else {
+                // Skip current and prepare the next session (show duration but don't start)
+                timerManager.skip()
+                timerManager.prepareSession(nextSessionType, nextDuration)
+                stopForegroundService()
+            }
         }
     }
     

@@ -60,6 +60,11 @@ class GetStatisticsUseCase @Inject constructor(
         val totalTime = sessions.sumOf { it.duration }
         val totalMinutes = (totalTime / 60).toInt()
         
+        // Calculate total duration for each session type (using actual elapsed time)
+        val focusDuration = focusSessions.sumOf { it.duration }
+        val shortBreakDuration = shortBreakSessions.sumOf { it.duration }
+        val longBreakDuration = longBreakSessions.sumOf { it.duration }
+        
         val averageSessionDuration = if (sessions.isNotEmpty()) {
             totalTime.toDouble() / sessions.size / 60.0 // in minutes
         } else {
@@ -74,7 +79,10 @@ class GetStatisticsUseCase @Inject constructor(
             completedSessionsCount = completedSessions,
             skippedSessionsCount = skippedSessions,
             totalMinutes = totalMinutes,
-            averageSessionMinutes = averageSessionDuration
+            averageSessionMinutes = averageSessionDuration,
+            focusDurationSeconds = focusDuration,
+            shortBreakDurationSeconds = shortBreakDuration,
+            longBreakDurationSeconds = longBreakDuration
         )
     }
 }

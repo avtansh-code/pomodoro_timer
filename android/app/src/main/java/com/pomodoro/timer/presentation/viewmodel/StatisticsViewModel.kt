@@ -77,6 +77,15 @@ class StatisticsViewModel @Inject constructor(
     
     init {
         loadData()
+        
+        // Observe session changes and reload statistics
+        viewModelScope.launch {
+            sessionRepository.getAllSessions().collect {
+                // Reload statistics whenever sessions change
+                loadAllStatistics()
+                loadStreakStatistics()
+            }
+        }
     }
     
     /**
@@ -234,7 +243,7 @@ class StatisticsViewModel @Inject constructor(
     }
     
     /**
-     * Get chart data for session types
+     * Get chart data for session types based on time spent (duration in minutes)
      */
     fun getSessionTypeChartData(): List<Pair<SessionType, Int>> {
         val stats = when (_selectedPeriod.value) {
@@ -244,10 +253,11 @@ class StatisticsViewModel @Inject constructor(
             StatisticsPeriod.ALL_TIME -> _allTimeStatistics.value
         }
         
+        // Return durations in minutes (converted from seconds)
         return listOf(
-            SessionType.FOCUS to stats.focusSessionsCount,
-            SessionType.SHORT_BREAK to stats.shortBreakSessionsCount,
-            SessionType.LONG_BREAK to stats.longBreakSessionsCount
+            SessionType.FOCUS to (stats.focusDurationSeconds / 60).toInt(),
+            SessionType.SHORT_BREAK to (stats.shortBreakDurationSeconds / 60).toInt(),
+            SessionType.LONG_BREAK to (stats.longBreakDurationSeconds / 60).toInt()
         ).filter { it.second > 0 }
     }
     

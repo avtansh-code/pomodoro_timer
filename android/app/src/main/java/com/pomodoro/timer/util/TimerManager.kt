@@ -94,13 +94,33 @@ class TimerManager @Inject constructor() {
     
     /**
      * Skip current session
+     * Counts as completed if it was a focus session
      */
     fun skip() {
         timerJob?.cancel()
         timerJob = null
         
+        // Increment completed sessions if it was a focus session being skipped
+        if (_sessionType.value == SessionType.FOCUS) {
+            incrementCompletedSessions()
+        }
+        
         _state.value = TimerState.IDLE
         _remainingSeconds.value = 0
+    }
+    
+    /**
+     * Prepare next session without starting it
+     * Sets session type and duration, but keeps state as IDLE
+     */
+    fun prepareSession(sessionType: SessionType, durationSeconds: Long) {
+        timerJob?.cancel()
+        timerJob = null
+        
+        _sessionType.value = sessionType
+        _totalSeconds.value = durationSeconds
+        _remainingSeconds.value = durationSeconds
+        _state.value = TimerState.IDLE
     }
     
     /**
