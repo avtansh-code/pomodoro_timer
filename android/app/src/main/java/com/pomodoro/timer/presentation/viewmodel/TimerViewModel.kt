@@ -34,11 +34,10 @@ class TimerViewModel @Inject constructor(
     private val shortcutManager = DynamicShortcutManager(context)
     
     // Timer state from TimerManager
-    val timerState: StateFlow<TimerState> = timerManager.state
-    val sessionType: StateFlow<SessionType> = timerManager.sessionType
-    val remainingSeconds: StateFlow<Long> = timerManager.remainingSeconds
-    val totalSeconds: StateFlow<Long> = timerManager.totalSeconds
-    val completedSessions: StateFlow<Int> = timerManager.completedSessions
+    val timerState: StateFlow<TimerState> = timerManager.timerState
+    val sessionType: StateFlow<SessionType> = timerManager.currentSessionType
+    val remainingSeconds: StateFlow<Long> = timerManager.timeRemaining
+    val completedSessions: StateFlow<Int> = timerManager.completedFocusSessions
     
     // Convenience aliases for UI compatibility
     val currentSessionType: StateFlow<SessionType> = sessionType
@@ -73,14 +72,8 @@ class TimerViewModel @Inject constructor(
         
         // Update computed values
         viewModelScope.launch {
-            combine(remainingSeconds, totalSeconds) { remaining, total ->
-                if (total > 0) {
-                    ((total - remaining).toFloat() / total.toFloat()).coerceIn(0f, 1f)
-                } else {
-                    0f
-                }
-            }.collect { newProgress ->
-                _progress.value = newProgress
+            remainingSeconds.collect { _ ->
+                _progress.value = timerManager.getProgress()
             }
         }
         
@@ -111,8 +104,6 @@ class TimerViewModel @Inject constructor(
             // Start service
             val intent = Intent(context, TimerService::class.java).apply {
                 action = TimerService.ACTION_START
-                putExtra(TimerService.EXTRA_SESSION_TYPE, sessionType.name)
-                putExtra(TimerService.EXTRA_DURATION, duration)
             }
             context.startService(intent)
             _isServiceRunning.value = true
@@ -236,7 +227,9 @@ class TimerViewModel @Inject constructor(
      * Get current session duration in minutes
      */
     fun getCurrentDurationMinutes(): Int {
-        return (totalSeconds.value / 60).toInt()
+        val currentSettings = settings.value
+        val duration = currentSettings.getDuration(sessionType.value)
+        return (duration / 60).toInt()
     }
     
     override fun onCleared() {

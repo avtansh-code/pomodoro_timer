@@ -1,6 +1,7 @@
 package com.pomodoro.timer.util
 
 import com.pomodoro.timer.domain.model.SessionType
+import com.pomodoro.timer.domain.model.TimerSettings
 import com.pomodoro.timer.domain.model.TimerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -13,146 +14,218 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Core timer manager handling countdown logic.
- * Complete rewrite with proper state management for:
- * - Start/Pause/Resume/Reset/Skip operations
- * - Focus/Short Break/Long Break transitions
- * - Completed sessions tracking
+ * Core timer manager based on iOS TimerManager.swift logic.
+ * Handles timer countdown, session management, and state transitions.
+ * 
+ * This is a complete rewrite matching the iOS implementation for consistency.
  */
 @Singleton
 class TimerManager @Inject constructor() {
     
-    // Timer state flows
-    private val _state = MutableStateFlow(TimerState.IDLE)
-    val state: StateFlow<TimerState> = _state.asStateFlow()
+    // Published state flows (equivalent to @Published in iOS)
+    private val _currentSessionType = MutableStateFlow(SessionType.FOCUS)
+    val currentSessionType: StateFlow<SessionType> = _currentSessionType.asStateFlow()
     
-    private val _sessionType = MutableStateFlow(SessionType.FOCUS)
-    val sessionType: StateFlow<SessionType> = _sessionType.asStateFlow()
+    private val _timerState = MutableStateFlow(TimerState.IDLE)
+    val timerState: StateFlow<TimerState> = _timerState.asStateFlow()
     
-    private val _remainingSeconds = MutableStateFlow(25 * 60L)
-    val remainingSeconds: StateFlow<Long> = _remainingSeconds.asStateFlow()
+    private val _timeRemaining = MutableStateFlow(25 * 60L) // 25 minutes in seconds
+    val timeRemaining: StateFlow<Long> = _timeRemaining.asStateFlow()
     
-    private val _totalSeconds = MutableStateFlow(25 * 60L)
-    val totalSeconds: StateFlow<Long> = _totalSeconds.asStateFlow()
+    private val _completedFocusSessions = MutableStateFlow(0)
+    val completedFocusSessions: StateFlow<Int> = _completedFocusSessions.asStateFlow()
     
-    private val _completedSessions = MutableStateFlow(0)
-    val completedSessions: StateFlow<Int> = _completedSessions.asStateFlow()
+    private val _settings = MutableStateFlow(TimerSettings.DEFAULT)
+    val settings: StateFlow<TimerSettings> = _settings.asStateFlow()
     
-    // Coroutine management
+    // Private properties
     private var timerJob: Job? = null
     private var timerScope: CoroutineScope? = null
+    private var backgroundTime: Long? = null
     
     /**
-     * Initialize timer with coroutine scope
+     * Initialize timer with coroutine scope (called from TimerService)
      */
     fun initialize(scope: CoroutineScope) {
         timerScope = scope
     }
     
     /**
-     * Start a new timer session
-     * Can be called from any state (IDLE, PAUSED, or even RUNNING to restart)
+     * Update settings
      */
-    fun start(sessionType: SessionType, durationSeconds: Long) {
-        // Cancel any running timer
-        cancelTimer()
+    fun updateSettings(newSettings: TimerSettings) {
+        _settings.value = newSettings
+        // If idle, update time remaining to match new duration
+        if (_timerState.value == TimerState.IDLE) {
+            _timeRemaining.value = getDuration(_currentSessionType.value)
+        }
+    }
+    
+    // MARK: - Timer Controls
+    
+    /**
+     * Start the timer (matches iOS startTimer())
+     */
+    fun startTimer() {
+        if (_timerState.value == TimerState.RUNNING) return
         
-        // Set up new session
-        _sessionType.value = sessionType
-        _totalSeconds.value = durationSeconds
-        _remainingSeconds.value = durationSeconds
-        _state.value = TimerState.RUNNING
-        
-        // Start countdown
+        // Important: Start countdown BEFORE changing state to ensure coroutine is ready
         startCountdown()
+        _timerState.value = TimerState.RUNNING
     }
     
     /**
-     * Pause the running timer
-     * Only works if timer is RUNNING
+     * Pause the timer (matches iOS pauseTimer())
      */
-    fun pause() {
-        if (_state.value != TimerState.RUNNING) return
+    fun pauseTimer() {
+        if (_timerState.value != TimerState.RUNNING) return
         
-        // Cancel countdown but keep time
-        cancelTimer()
-        _state.value = TimerState.PAUSED
+        _timerState.value = TimerState.PAUSED
+        timerJob?.cancel()
+        timerJob = null
     }
     
     /**
-     * Resume a paused timer
-     * Only works if timer is PAUSED
+     * Reset timer (matches iOS resetTimer())
      */
-    fun resume() {
-        if (_state.value != TimerState.PAUSED) return
+    fun resetTimer() {
+        timerJob?.cancel()
+        timerJob = null
+        _timerState.value = TimerState.IDLE
+        _timeRemaining.value = getDuration(_currentSessionType.value)
+    }
+    
+    /**
+     * Skip current session (matches iOS skipSession())
+     * Returns elapsed time for session saving
+     */
+    fun skipSession(): Long {
+        val elapsedTime = getDuration(_currentSessionType.value) - _timeRemaining.value
         
-        _state.value = TimerState.RUNNING
-        startCountdown()
-    }
-    
-    /**
-     * Reset timer to initial state of current session
-     * Keeps session type and total duration, resets remaining time
-     */
-    fun reset() {
-        cancelTimer()
+        resetTimer()
+        switchToNextSession()
         
-        _state.value = TimerState.IDLE
-        _remainingSeconds.value = _totalSeconds.value
+        return elapsedTime
+    }
+    
+    // MARK: - Timer Logic
+    
+    /**
+     * Countdown tick (matches iOS tick())
+     */
+    private fun tick() {
+        if (_timeRemaining.value > 0) {
+            _timeRemaining.value -= 1
+        } else {
+            completeSession()
+        }
     }
     
     /**
-     * Skip current session
-     * Sets remaining time to 0 and moves to IDLE state
-     * Note: Session transition logic handled by TimerService
+     * Complete current session (matches iOS completeSession())
+     * Returns true if session completed, false otherwise
      */
-    fun skip() {
-        cancelTimer()
+    private fun completeSession(): Boolean {
+        timerJob?.cancel()
+        timerJob = null
+        _timerState.value = TimerState.IDLE
         
-        _remainingSeconds.value = 0
-        _state.value = TimerState.IDLE
+        // Session completed successfully
+        return true
     }
     
     /**
-     * Prepare next session without starting
-     * Used after skip when auto-start is disabled
+     * Switch to next session type (matches iOS switchToNextSession())
      */
-    fun prepareSession(sessionType: SessionType, durationSeconds: Long) {
-        cancelTimer()
+    fun switchToNextSession() {
+        when (_currentSessionType.value) {
+            SessionType.FOCUS -> {
+                _completedFocusSessions.value += 1
+                
+                if (_completedFocusSessions.value % _settings.value.sessionsUntilLongBreak == 0) {
+                    _currentSessionType.value = SessionType.LONG_BREAK
+                    _timeRemaining.value = _settings.value.longBreakDuration
+                } else {
+                    _currentSessionType.value = SessionType.SHORT_BREAK
+                    _timeRemaining.value = _settings.value.shortBreakDuration
+                }
+            }
+            SessionType.SHORT_BREAK, SessionType.LONG_BREAK -> {
+                _currentSessionType.value = SessionType.FOCUS
+                _timeRemaining.value = _settings.value.focusDuration
+            }
+        }
+    }
+    
+    /**
+     * Check if should auto-start next session (matches iOS shouldAutoStart())
+     */
+    fun shouldAutoStart(): Boolean {
+        return when (_currentSessionType.value) {
+            SessionType.FOCUS -> _settings.value.autoStartFocus
+            SessionType.SHORT_BREAK, SessionType.LONG_BREAK -> _settings.value.autoStartBreaks
+        }
+    }
+    
+    /**
+     * Get duration for session type (matches iOS getDuration())
+     */
+    private fun getDuration(type: SessionType): Long {
+        return when (type) {
+            SessionType.FOCUS -> _settings.value.focusDuration
+            SessionType.SHORT_BREAK -> _settings.value.shortBreakDuration
+            SessionType.LONG_BREAK -> _settings.value.longBreakDuration
+        }
+    }
+    
+    // MARK: - Background Handling
+    
+    /**
+     * Handle app entering background (matches iOS appDidEnterBackground())
+     */
+    fun appDidEnterBackground() {
+        backgroundTime = System.currentTimeMillis()
+    }
+    
+    /**
+     * Handle app entering foreground (matches iOS appWillEnterForeground())
+     * Returns true if session completed while in background
+     */
+    fun appWillEnterForeground(): Boolean {
+        val bgTime = backgroundTime ?: return false
         
-        _sessionType.value = sessionType
-        _totalSeconds.value = durationSeconds
-        _remainingSeconds.value = durationSeconds
-        _state.value = TimerState.IDLE
-    }
-    
-    /**
-     * Increment completed focus sessions counter
-     * Called when a focus session completes or is skipped
-     */
-    fun incrementCompletedSessions() {
-        _completedSessions.value += 1
-    }
-    
-    /**
-     * Reset completed sessions counter
-     * Can be called manually or when cycle resets
-     */
-    fun resetCompletedSessions() {
-        _completedSessions.value = 0
-    }
-    
-    /**
-     * Get current progress as percentage (0.0 to 1.0)
-     */
-    fun getProgress(): Float {
-        val total = _totalSeconds.value
-        val remaining = _remainingSeconds.value
+        val elapsedSeconds = (System.currentTimeMillis() - bgTime) / 1000
         
-        if (total <= 0) return 0f
+        if (_timerState.value == TimerState.RUNNING) {
+            _timeRemaining.value = maxOf(0, _timeRemaining.value - elapsedSeconds)
+            
+            if (_timeRemaining.value <= 0) {
+                completeSession()
+                backgroundTime = null
+                return true
+            }
+        }
         
-        val elapsed = total - remaining
-        return (elapsed.toFloat() / total.toFloat()).coerceIn(0f, 1f)
+        backgroundTime = null
+        return false
+    }
+    
+    // MARK: - Helper Methods
+    
+    /**
+     * Start the countdown coroutine
+     */
+    private fun startCountdown() {
+        timerJob = timerScope?.launch {
+            while (_timeRemaining.value > 0 && _timerState.value == TimerState.RUNNING) {
+                delay(1000L) // Wait 1 second
+                
+                // Double-check state after delay
+                if (_timerState.value == TimerState.RUNNING) {
+                    tick()
+                }
+            }
+        }
     }
     
     /**
@@ -168,67 +241,60 @@ class TimerManager @Inject constructor() {
      * Get formatted remaining time
      */
     fun getFormattedRemainingTime(): String {
-        return formatTime(_remainingSeconds.value)
+        return formatTime(_timeRemaining.value)
+    }
+    
+    /**
+     * Get current progress as percentage (0.0 to 1.0)
+     */
+    fun getProgress(): Float {
+        val total = getDuration(_currentSessionType.value)
+        val remaining = _timeRemaining.value
+        
+        if (total <= 0) return 0f
+        
+        val elapsed = total - remaining
+        return (elapsed.toFloat() / total.toFloat()).coerceIn(0f, 1f)
     }
     
     /**
      * Check if timer is currently running
      */
-    fun isRunning(): Boolean = _state.value == TimerState.RUNNING
+    fun isRunning(): Boolean = _timerState.value == TimerState.RUNNING
     
     /**
      * Check if timer is paused
      */
-    fun isPaused(): Boolean = _state.value == TimerState.PAUSED
+    fun isPaused(): Boolean = _timerState.value == TimerState.PAUSED
     
     /**
      * Check if timer is idle
      */
-    fun isIdle(): Boolean = _state.value == TimerState.IDLE
+    fun isIdle(): Boolean = _timerState.value == TimerState.IDLE
     
     /**
-     * Start the countdown coroutine
-     * Ticks every second until timer completes or is cancelled
+     * Reset completed sessions counter
      */
-    private fun startCountdown() {
-        timerJob = timerScope?.launch {
-            while (_remainingSeconds.value > 0 && _state.value == TimerState.RUNNING) {
-                delay(1000L) // Wait 1 second
-                
-                // Double-check state after delay
-                if (_state.value == TimerState.RUNNING) {
-                    _remainingSeconds.value -= 1
-                    
-                    // Check if timer completed
-                    if (_remainingSeconds.value <= 0) {
-                        handleTimerCompletion()
-                    }
-                }
-            }
-        }
+    fun resetCompletedSessions() {
+        _completedFocusSessions.value = 0
     }
     
     /**
-     * Handle timer completion
-     * Increments counter for focus sessions
-     * Transitions to IDLE for service to handle next steps
+     * Prepare a new session without starting it
      */
-    private fun handleTimerCompletion() {
-        _state.value = TimerState.IDLE
-        _remainingSeconds.value = 0
-        
-        // Auto-increment completed sessions for focus sessions
-        if (_sessionType.value == SessionType.FOCUS) {
-            incrementCompletedSessions()
-        }
-    }
-    
-    /**
-     * Cancel the timer coroutine job
-     * Helper method to ensure clean cancellation
-     */
-    private fun cancelTimer() {
+    fun prepareSession(sessionType: SessionType) {
         timerJob?.cancel()
         timerJob = null
+        
+        _currentSessionType.value = sessionType
+        _timeRemaining.value = getDuration(sessionType)
+        _timerState.value = TimerState.IDLE
+    }
+    
+    /**
+     * Check if session just completed (for TimerService to detect completion)
+     */
+    fun isSessionComplete(): Boolean {
+        return _timerState.value == TimerState.IDLE && _timeRemaining.value == 0L
     }
 }

@@ -20,8 +20,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * Foreground service for running the Pomodoro timer in the background.
- * Ensures timer continues running even when app is backgrounded.
+ * Foreground service for running the Pomodoro timer.
+ * Based on iOS TimerManager logic for session management and transitions.
+ * 
+ * This service acts as a bridge between Android's service lifecycle
+ * and the core timer logic in TimerManager.
  */
 @AndroidEntryPoint
 class TimerService : Service() {
@@ -41,11 +44,9 @@ class TimerService : Service() {
     lateinit var settingsRepository: SettingsRepository
     
     private var previousState: TimerState = TimerState.IDLE
+    private var previousTimeRemaining: Long = 0L
     
     companion object {
-        const val EXTRA_SESSION_TYPE = "session_type"
-        const val EXTRA_DURATION = "duration"
-        
         const val ACTION_START = "com.pomodoro.timer.START"
         const val ACTION_PAUSE = NotificationHelper.ACTION_PAUSE
         const val ACTION_RESUME = NotificationHelper.ACTION_RESUME
@@ -60,15 +61,19 @@ class TimerService : Service() {
         // Initialize timer with service scope
         timerManager.initialize(serviceScope)
         
-        // Observe timer state changes
+        // Load and apply settings
+        serviceScope.launch {
+            val settings = settingsRepository.getSettings().first()
+            timerManager.updateSettings(settings)
+        }
+        
+        // Observe timer state and time changes
         observeTimerState()
     }
     
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        super.onStartCommand(intent, flags, startId)
-        
         when (intent?.action) {
-            ACTION_START -> handleStart(intent)
+            ACTION_START -> handleStart()
             ACTION_PAUSE -> handlePause()
             ACTION_RESUME -> handleResume()
             ACTION_RESET -> handleReset()
@@ -79,46 +84,56 @@ class TimerService : Service() {
         return START_STICKY
     }
     
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent): IBinder? = null
     
     /**
-     * Observe timer state and update notification
+     * Observe timer state and handle transitions (matches iOS timer observation)
      */
     private fun observeTimerState() {
         // Observe state changes
-        timerManager.state.onEach { state ->
+        timerManager.timerState.onEach { state ->
             handleStateChange(state)
         }.launchIn(serviceScope)
         
-        // Observe remaining time for notification updates
-        timerManager.remainingSeconds.onEach { remainingSeconds ->
-            if (timerManager.state.value != TimerState.IDLE) {
+        // Observe time changes for completion detection
+        timerManager.timeRemaining.onEach { timeRemaining ->
+            // Detect session completion (when timer reaches 0)
+            if (previousTimeRemaining > 0 && timeRemaining == 0L && 
+                timerManager.timerState.value == TimerState.IDLE) {
+                handleTimerCompletion()
+            }
+            
+            // Update notification while running
+            if (timerManager.timerState.value != TimerState.IDLE) {
                 updateNotification()
             }
+            
+            previousTimeRemaining = timeRemaining
         }.launchIn(serviceScope)
     }
     
     /**
-     * Handle state changes
+     * Handle state changes (matches iOS state observation)
      */
     private fun handleStateChange(newState: TimerState) {
-        when {
-            // Timer just completed
-            previousState == TimerState.RUNNING && newState == TimerState.IDLE -> {
-                handleTimerCompletion()
-            }
-            // Timer started or resumed
-            newState == TimerState.RUNNING -> {
+        when (newState) {
+            TimerState.RUNNING -> {
+                // Start foreground service with notification
                 startForeground(
                     NotificationHelper.NOTIFICATION_ID_TIMER,
                     createNotification()
                 )
             }
-            // Timer reset or stopped
-            newState == TimerState.IDLE && previousState != TimerState.RUNNING -> {
-                stopForegroundService()
+            TimerState.PAUSED -> {
+                // Update notification to show resume button
+                updateNotification()
+            }
+            TimerState.IDLE -> {
+                // If not completing a session, stop foreground
+                if (previousState != TimerState.RUNNING || 
+                    timerManager.timeRemaining.value > 0) {
+                    stopForegroundService()
+                }
             }
         }
         
@@ -126,50 +141,37 @@ class TimerService : Service() {
     }
     
     /**
-     * Handle timer completion
+     * Handle timer completion (matches iOS completeSession())
      */
     private fun handleTimerCompletion() {
-        val sessionType = timerManager.sessionType.value
-        val duration = timerManager.totalSeconds.value
+        val sessionType = timerManager.currentSessionType.value
+        val settings = timerManager.settings.value
         
-        // Save completed session
+        // Save completed session (matches iOS session saving)
         serviceScope.launch {
+            val duration = settings.getDuration(sessionType)
             saveSessionUseCase(
                 type = sessionType,
                 duration = duration,
                 wasCompleted = true
             )
             
-            // Check if we should auto-start next session
-            val settings = settingsRepository.getSettings().first()
-            val shouldAutoStart = when (sessionType) {
-                SessionType.FOCUS -> settings.autoStartBreaks
-                SessionType.SHORT_BREAK, SessionType.LONG_BREAK -> settings.autoStartFocus
+            // Show completion notification if enabled
+            if (settings.notificationsEnabled) {
+                notificationHelper.showCompletionNotification(sessionType)
             }
             
-            if (shouldAutoStart) {
-                // Determine next session type
-                val completedSessions = timerManager.completedSessions.value
-                val nextSessionType = when (sessionType) {
-                    SessionType.FOCUS -> {
-                        if (completedSessions % settings.sessionsUntilLongBreak == 0) {
-                            SessionType.LONG_BREAK
-                        } else {
-                            SessionType.SHORT_BREAK
-                        }
-                    }
-                    SessionType.SHORT_BREAK, SessionType.LONG_BREAK -> {
-                        SessionType.FOCUS
-                    }
-                }
-                
-                val nextDuration = settings.getDuration(nextSessionType)
-                timerManager.start(nextSessionType, nextDuration)
+            // Switch to next session (matches iOS switchToNextSession())
+            timerManager.switchToNextSession()
+            
+            // Auto-start if enabled (matches iOS shouldAutoStart())
+            if (timerManager.shouldAutoStart()) {
+                // Small delay before auto-starting (matches iOS 1 second delay)
+                kotlinx.coroutines.delay(1000L)
+                timerManager.startTimer()
                 updateNotification()
             } else {
-                // Show completion notification
-                notificationHelper.showCompletionNotification(sessionType)
-                // Stop foreground service
+                // Stop foreground service if not auto-starting
                 stopForegroundService()
             }
         }
@@ -178,17 +180,15 @@ class TimerService : Service() {
     /**
      * Handle start action
      */
-    private fun handleStart(intent: Intent) {
-        val sessionTypeString = intent.getStringExtra(EXTRA_SESSION_TYPE) ?: SessionType.FOCUS.name
-        val duration = intent.getLongExtra(EXTRA_DURATION, 25 * 60L)
-        
-        val sessionType = try {
-            SessionType.valueOf(sessionTypeString)
-        } catch (e: IllegalArgumentException) {
-            SessionType.FOCUS
+    private fun handleStart() {
+        // If already running, just update notification
+        if (timerManager.timerState.value == TimerState.RUNNING) {
+            updateNotification()
+            return
         }
         
-        timerManager.start(sessionType, duration)
+        // Start timer
+        timerManager.startTimer()
         
         // Start as foreground service
         startForeground(
@@ -198,10 +198,10 @@ class TimerService : Service() {
     }
     
     /**
-     * Handle pause action
+     * Handle pause action (matches iOS pauseTimer())
      */
     private fun handlePause() {
-        timerManager.pause()
+        timerManager.pauseTimer()
         updateNotification()
     }
     
@@ -209,19 +209,22 @@ class TimerService : Service() {
      * Handle resume action
      */
     private fun handleResume() {
-        timerManager.resume()
-        updateNotification()
+        if (timerManager.timerState.value == TimerState.PAUSED) {
+            timerManager.startTimer()
+            updateNotification()
+        }
     }
     
     /**
-     * Handle reset action
+     * Handle reset action (matches iOS resetTimer())
      */
     private fun handleReset() {
         // Save as skipped session if timer was running
-        if (timerManager.state.value != TimerState.IDLE) {
-            val sessionType = timerManager.sessionType.value
-            val totalDuration = timerManager.totalSeconds.value
-            val elapsedDuration = totalDuration - timerManager.remainingSeconds.value
+        if (timerManager.timerState.value != TimerState.IDLE) {
+            val sessionType = timerManager.currentSessionType.value
+            val settings = timerManager.settings.value
+            val totalDuration = settings.getDuration(sessionType)
+            val elapsedDuration = totalDuration - timerManager.timeRemaining.value
             
             serviceScope.launch {
                 saveSessionUseCase(
@@ -232,73 +235,38 @@ class TimerService : Service() {
             }
         }
         
-        timerManager.reset()
+        timerManager.resetTimer()
         stopForegroundService()
     }
     
     /**
-     * Handle skip action
+     * Handle skip action (matches iOS skipSession())
      */
     private fun handleSkip() {
-        val sessionType = timerManager.sessionType.value
-        val totalDuration = timerManager.totalSeconds.value
-        val elapsedDuration = totalDuration - timerManager.remainingSeconds.value
+        val sessionType = timerManager.currentSessionType.value
+        val elapsedTime = timerManager.skipSession()
         
-        // Get current completed sessions count (before any increment)
-        val completedSessions = timerManager.completedSessions.value
-        
-        // Save session with elapsed time (not total time)
+        // Save skipped session (matches iOS session saving in skipSession)
         serviceScope.launch {
             saveSessionUseCase(
                 type = sessionType,
-                duration = elapsedDuration, // Use elapsed time, not total
-                wasCompleted = false // Mark as incomplete for skipped sessions (matches iOS)
+                duration = elapsedTime,
+                wasCompleted = false
             )
             
-            // Determine next session type and check auto-start settings
+            // Check if we should auto-start next session
             val settings = settingsRepository.getSettings().first()
-            
-            // Increment completed sessions AFTER saving but BEFORE calculating next type
-            // This matches iOS behavior where switchToNextSession() increments the counter
-            val updatedCompletedSessions = if (sessionType == SessionType.FOCUS) {
-                timerManager.incrementCompletedSessions()
-                timerManager.completedSessions.value
-            } else {
-                completedSessions
-            }
-            
-            val nextSessionType = when (sessionType) {
-                SessionType.FOCUS -> {
-                    // After focus, go to break
-                    if (updatedCompletedSessions % settings.sessionsUntilLongBreak == 0) {
-                        SessionType.LONG_BREAK
-                    } else {
-                        SessionType.SHORT_BREAK
-                    }
-                }
-                SessionType.SHORT_BREAK, SessionType.LONG_BREAK -> {
-                    // After break, go to focus
-                    SessionType.FOCUS
-                }
-            }
-            
-            // Check if we should auto-start the next session
             val shouldAutoStart = when (sessionType) {
                 SessionType.FOCUS -> settings.autoStartBreaks
                 SessionType.SHORT_BREAK, SessionType.LONG_BREAK -> settings.autoStartFocus
             }
             
-            val nextDuration = settings.getDuration(nextSessionType)
-            
             if (shouldAutoStart) {
-                // Skip current and auto-start the next session
-                timerManager.skip()
-                timerManager.start(nextSessionType, nextDuration)
+                // Auto-start the next session
+                timerManager.startTimer()
                 updateNotification()
             } else {
-                // Skip current and prepare the next session (show duration but don't start)
-                timerManager.skip()
-                timerManager.prepareSession(nextSessionType, nextDuration)
+                // Stop foreground service
                 stopForegroundService()
             }
         }
@@ -315,7 +283,7 @@ class TimerService : Service() {
      * Create notification for current timer state
      */
     private fun createNotification() = notificationHelper.createTimerNotification(
-        sessionType = timerManager.sessionType.value,
+        sessionType = timerManager.currentSessionType.value,
         remainingTime = timerManager.getFormattedRemainingTime(),
         isRunning = timerManager.isRunning()
     )
@@ -325,7 +293,7 @@ class TimerService : Service() {
      */
     private fun updateNotification() {
         notificationHelper.updateTimerNotification(
-            sessionType = timerManager.sessionType.value,
+            sessionType = timerManager.currentSessionType.value,
             remainingTime = timerManager.getFormattedRemainingTime(),
             isRunning = timerManager.isRunning()
         )
