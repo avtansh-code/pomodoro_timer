@@ -27,10 +27,18 @@ jobs:
           TARGET_REPO: avtansh-code/mr_pomodoro
           TARGET_BRANCH: main
         run: |
-          cd deploy_temp
-          git init
+          # Clone the target repository to preserve existing files
+          git clone https://x-access-token:${{ secrets.DEPLOY_TOKEN }}@github.com/${TARGET_REPO}.git target_repo
+          cd target_repo
+          
+          # Configure git
           git config user.name "GitHub Actions Bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Copy website files (this will overwrite existing website files but preserve others)
+          cp -r ../deploy_temp/* .
+          
+          # Commit and push changes
           git add .
-          git commit -m "Deploy website from pomodoro_timer - $(date +'%Y-%m-%d %H:%M:%S')"
-          git push --force https://x-access-token:${{ secrets.DEPLOY_TOKEN }}@github.com/${TARGET_REPO}.git HEAD:${TARGET_BRANCH}
+          git commit -m "Deploy website from pomodoro_timer - $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git push origin ${TARGET_BRANCH}
