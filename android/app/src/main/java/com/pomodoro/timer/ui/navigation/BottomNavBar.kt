@@ -1,9 +1,9 @@
 package com.pomodoro.timer.ui.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -30,12 +30,12 @@ fun BottomNavBar(
     val items = listOf(
         BottomNavItem(
             route = Screen.Timer.route,
-            icon = Icons.Default.Home,
+            icon = Icons.Default.Timer,
             label = "Timer"
         ),
         BottomNavItem(
             route = Screen.Statistics.route,
-            icon = Icons.Default.Star,
+            icon = Icons.Default.BarChart,
             label = "Stats"
         ),
         BottomNavItem(

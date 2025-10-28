@@ -5,13 +5,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
+import com.pomodoro.timer.domain.model.AppTheme
+import com.pomodoro.timer.presentation.viewmodel.SettingsViewModel
 import com.pomodoro.timer.ui.navigation.BottomNavBar
 import com.pomodoro.timer.ui.navigation.PomodoroNavGraph
 import com.pomodoro.timer.ui.navigation.Screen
@@ -25,6 +30,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     
+    private val settingsViewModel: SettingsViewModel by viewModels()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         // Install splash screen before calling super.onCreate()
         installSplashScreen()
@@ -33,7 +40,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         
         setContent {
-            PomodoroTheme {
+            val settings by settingsViewModel.settings.collectAsStateWithLifecycle()
+            val selectedTheme = AppTheme.allThemes.find { it.id == settings.selectedCustomTheme }
+                ?: AppTheme.ClassicRed
+            
+            PomodoroTheme(theme = selectedTheme) {
                 val navController = rememberNavController()
                 
                 // Handle deep links from app shortcuts

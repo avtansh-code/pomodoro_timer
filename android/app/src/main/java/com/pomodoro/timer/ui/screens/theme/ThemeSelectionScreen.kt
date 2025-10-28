@@ -170,7 +170,7 @@ private fun ThemeCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -180,7 +180,7 @@ private fun ThemeCard(
             ) {
                 Text(
                     text = theme.name,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = if (isSelected) {
                         MaterialTheme.colorScheme.onPrimaryContainer
@@ -189,7 +189,7 @@ private fun ThemeCard(
                     }
                 )
                 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
                 
                 // Color preview circles
                 Row(
@@ -241,11 +241,11 @@ private fun ColorCircle(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Box(
             modifier = Modifier
-                .size(44.dp)
+                .size(36.dp)
                 .clip(CircleShape)
                 .background(color)
                 .semantics {
