@@ -5,18 +5,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.pomodoro.timer.ui.navigation.BottomNavBar
+import com.pomodoro.timer.ui.navigation.PomodoroNavGraph
 import com.pomodoro.timer.ui.theme.PomodoroTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Main activity for Pomodoro Timer app.
- * Entry point for the Compose UI.
+ * Entry point for the Compose UI with navigation.
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -27,29 +27,20 @@ class MainActivity : ComponentActivity() {
         
         setContent {
             PomodoroTheme {
-                Surface(
+                val navController = rememberNavController()
+                
+                Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    // TODO: Replace with actual navigation and screens in Milestone 6
-                    PlaceholderScreen()
+                    bottomBar = {
+                        BottomNavBar(navController = navController)
+                    }
+                ) { innerPadding ->
+                    PomodoroNavGraph(
+                        navController = navController,
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun PlaceholderScreen() {
-    Text(
-        text = "Pomodoro Timer\n\nData layer implemented!\n\nNext: Timer Service & UI"
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PlaceholderScreenPreview() {
-    PomodoroTheme {
-        PlaceholderScreen()
     }
 }
