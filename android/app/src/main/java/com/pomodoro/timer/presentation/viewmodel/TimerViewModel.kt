@@ -2,6 +2,7 @@ package com.pomodoro.timer.presentation.viewmodel
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pomodoro.timer.domain.model.SessionType
@@ -97,16 +98,24 @@ class TimerViewModel @Inject constructor(
      * Start a new timer session
      */
     fun startTimer(sessionType: SessionType = SessionType.FOCUS) {
+        Log.d("TimerViewModel", ">>> startTimer() called with sessionType: $sessionType")
+        Log.d("TimerViewModel", "Current timerState: ${timerState.value}")
+        Log.d("TimerViewModel", "Current isServiceRunning: ${_isServiceRunning.value}")
+        
         viewModelScope.launch {
             val currentSettings = settings.value
             val duration = currentSettings.getDuration(sessionType)
+            
+            Log.d("TimerViewModel", "Duration for $sessionType: $duration seconds")
             
             // Start service
             val intent = Intent(context, TimerService::class.java).apply {
                 action = TimerService.ACTION_START
             }
+            Log.d("TimerViewModel", "Starting TimerService with ACTION_START")
             context.startService(intent)
             _isServiceRunning.value = true
+            Log.d("TimerViewModel", "Service started, isServiceRunning set to true")
         }
     }
     
@@ -114,9 +123,13 @@ class TimerViewModel @Inject constructor(
      * Pause the running timer
      */
     fun pauseTimer() {
+        Log.d("TimerViewModel", ">>> pauseTimer() called")
+        Log.d("TimerViewModel", "Current timerState: ${timerState.value}")
+        
         val intent = Intent(context, TimerService::class.java).apply {
             action = TimerService.ACTION_PAUSE
         }
+        Log.d("TimerViewModel", "Sending ACTION_PAUSE to TimerService")
         context.startService(intent)
     }
     
@@ -124,9 +137,13 @@ class TimerViewModel @Inject constructor(
      * Resume the paused timer
      */
     fun resumeTimer() {
+        Log.d("TimerViewModel", ">>> resumeTimer() called")
+        Log.d("TimerViewModel", "Current timerState: ${timerState.value}")
+        
         val intent = Intent(context, TimerService::class.java).apply {
             action = TimerService.ACTION_RESUME
         }
+        Log.d("TimerViewModel", "Sending ACTION_RESUME to TimerService")
         context.startService(intent)
     }
     
@@ -134,22 +151,32 @@ class TimerViewModel @Inject constructor(
      * Reset the timer
      */
     fun resetTimer() {
+        Log.d("TimerViewModel", ">>> resetTimer() called")
+        Log.d("TimerViewModel", "Current timerState: ${timerState.value}")
+        
         val intent = Intent(context, TimerService::class.java).apply {
             action = TimerService.ACTION_RESET
         }
+        Log.d("TimerViewModel", "Sending ACTION_RESET to TimerService")
         context.startService(intent)
         _isServiceRunning.value = false
+        Log.d("TimerViewModel", "isServiceRunning set to false")
     }
     
     /**
      * Skip current session
      */
     fun skipTimer() {
+        Log.d("TimerViewModel", ">>> skipTimer() called")
+        Log.d("TimerViewModel", "Current sessionType: ${sessionType.value}")
+        
         val intent = Intent(context, TimerService::class.java).apply {
             action = TimerService.ACTION_SKIP
         }
+        Log.d("TimerViewModel", "Sending ACTION_SKIP to TimerService")
         context.startService(intent)
         _isServiceRunning.value = false
+        Log.d("TimerViewModel", "isServiceRunning set to false")
     }
     
     /**

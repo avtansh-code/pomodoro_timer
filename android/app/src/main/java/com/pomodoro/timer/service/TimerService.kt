@@ -3,6 +3,7 @@ package com.pomodoro.timer.service
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 import com.pomodoro.timer.domain.model.SessionType
 import com.pomodoro.timer.domain.model.TimerState
 import com.pomodoro.timer.domain.repository.SettingsRepository
@@ -43,7 +44,7 @@ class TimerService : Service() {
     @Inject
     lateinit var settingsRepository: SettingsRepository
     
-    private var previousState: TimerState = TimerState.IDLE
+    private var previousState: TimerState? = null  // null initially to detect first observation
     private var previousTimeRemaining: Long = 0L
     
     companion object {
@@ -58,20 +59,29 @@ class TimerService : Service() {
     override fun onCreate() {
         super.onCreate()
         
+        Log.d("TimerService", "=== onCreate() called ===")
+        
         // Initialize timer with service scope
         timerManager.initialize(serviceScope)
+        Log.d("TimerService", "TimerManager initialized with serviceScope")
         
         // Load and apply settings
         serviceScope.launch {
             val settings = settingsRepository.getSettings().first()
+            Log.d("TimerService", "Settings loaded: focusDuration=${settings.focusDuration}, autoStartBreaks=${settings.autoStartBreaks}, autoStartFocus=${settings.autoStartFocus}")
             timerManager.updateSettings(settings)
         }
         
         // Observe timer state and time changes
         observeTimerState()
+        Log.d("TimerService", "Started observing timer state")
     }
     
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d("TimerService", "=== onStartCommand() called ===")
+        Log.d("TimerService", "Action: ${intent?.action}")
+        Log.d("TimerService", "Current timer state: ${timerManager.timerState.value}")
+        
         when (intent?.action) {
             ACTION_START -> handleStart()
             ACTION_PAUSE -> handlePause()
@@ -116,8 +126,19 @@ class TimerService : Service() {
      * Handle state changes (matches iOS state observation)
      */
     private fun handleStateChange(newState: TimerState) {
+        Log.d("TimerService", ">>> State changed: $previousState -> $newState")
+        Log.d("TimerService", "timeRemaining: ${timerManager.timeRemaining.value}")
+        
+        // Skip initial state observation to prevent premature service stop
+        if (previousState == null) {
+            Log.d("TimerService", "First state observation, skipping action")
+            previousState = newState
+            return
+        }
+        
         when (newState) {
             TimerState.RUNNING -> {
+                Log.d("TimerService", "Starting foreground service")
                 // Start foreground service with notification
                 startForeground(
                     NotificationHelper.NOTIFICATION_ID_TIMER,
@@ -125,13 +146,16 @@ class TimerService : Service() {
                 )
             }
             TimerState.PAUSED -> {
+                Log.d("TimerService", "Timer paused, updating notification")
                 // Update notification to show resume button
                 updateNotification()
             }
             TimerState.IDLE -> {
+                Log.d("TimerService", "Timer idle, checking if should stop foreground")
                 // If not completing a session, stop foreground
                 if (previousState != TimerState.RUNNING || 
                     timerManager.timeRemaining.value > 0) {
+                    Log.d("TimerService", "Stopping foreground service")
                     stopForegroundService()
                 }
             }
@@ -181,16 +205,23 @@ class TimerService : Service() {
      * Handle start action
      */
     private fun handleStart() {
+        Log.d("TimerService", ">>> handleStart() called")
+        Log.d("TimerService", "Current state before start: ${timerManager.timerState.value}")
+        
         // If already running, just update notification
         if (timerManager.timerState.value == TimerState.RUNNING) {
+            Log.d("TimerService", "Timer already running, just updating notification")
             updateNotification()
             return
         }
         
         // Start timer
+        Log.d("TimerService", "Calling timerManager.startTimer()")
         timerManager.startTimer()
+        Log.d("TimerService", "After startTimer(), state is: ${timerManager.timerState.value}")
         
         // Start as foreground service
+        Log.d("TimerService", "Starting as foreground service")
         startForeground(
             NotificationHelper.NOTIFICATION_ID_TIMER,
             createNotification()
@@ -201,7 +232,12 @@ class TimerService : Service() {
      * Handle pause action (matches iOS pauseTimer())
      */
     private fun handlePause() {
+        Log.d("TimerService", ">>> handlePause() called")
+        Log.d("TimerService", "State before pause: ${timerManager.timerState.value}")
+        
         timerManager.pauseTimer()
+        
+        Log.d("TimerService", "State after pause: ${timerManager.timerState.value}")
         updateNotification()
     }
     
@@ -209,9 +245,16 @@ class TimerService : Service() {
      * Handle resume action
      */
     private fun handleResume() {
+        Log.d("TimerService", ">>> handleResume() called")
+        Log.d("TimerService", "State before resume: ${timerManager.timerState.value}")
+        
         if (timerManager.timerState.value == TimerState.PAUSED) {
+            Log.d("TimerService", "Timer is paused, calling startTimer()")
             timerManager.startTimer()
+            Log.d("TimerService", "State after resume: ${timerManager.timerState.value}")
             updateNotification()
+        } else {
+            Log.d("TimerService", "Timer is not paused, ignoring resume")
         }
     }
     
@@ -219,12 +262,17 @@ class TimerService : Service() {
      * Handle reset action (matches iOS resetTimer())
      */
     private fun handleReset() {
+        Log.d("TimerService", ">>> handleReset() called")
+        Log.d("TimerService", "State before reset: ${timerManager.timerState.value}")
+        
         // Save as skipped session if timer was running
         if (timerManager.timerState.value != TimerState.IDLE) {
             val sessionType = timerManager.currentSessionType.value
             val settings = timerManager.settings.value
             val totalDuration = settings.getDuration(sessionType)
             val elapsedDuration = totalDuration - timerManager.timeRemaining.value
+            
+            Log.d("TimerService", "Saving skipped session: type=$sessionType, elapsed=$elapsedDuration")
             
             serviceScope.launch {
                 saveSessionUseCase(
@@ -236,6 +284,7 @@ class TimerService : Service() {
         }
         
         timerManager.resetTimer()
+        Log.d("TimerService", "State after reset: ${timerManager.timerState.value}")
         stopForegroundService()
     }
     
