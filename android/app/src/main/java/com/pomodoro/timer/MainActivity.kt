@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.pomodoro.timer.ui.theme.PomodoroTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -25,8 +26,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         
         setContent {
-            // TODO: Replace with actual theme implementation in Milestone 5
-            MaterialTheme {
+            PomodoroTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -49,7 +49,7 @@ fun PlaceholderScreen() {
 @Preview(showBackground = true)
 @Composable
 fun PlaceholderScreenPreview() {
-    MaterialTheme {
+    PomodoroTheme {
         PlaceholderScreen()
     }
 }

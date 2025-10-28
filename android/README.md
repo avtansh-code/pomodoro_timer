@@ -40,7 +40,7 @@ adb shell am start -n com.pomodoro.timer/.MainActivity
 
 ## 📋 Current Implementation Status
 
-### ✅ Complete (Milestones 1-4) - 60% Done!
+### ✅ Complete (Milestones 1-5) - 65% Done!
 
 #### Domain Layer (100%)
 - **Models**: `SessionType`, `TimerState`, `TimerSession`, `TimerSettings`, `AppTheme`
@@ -62,12 +62,19 @@ adb shell am start -n com.pomodoro.timer/.MainActivity
 - **Auto-Save**: Sessions automatically saved on completion
 - **Testing**: 16 unit tests for TimerManager (85% coverage)
 
-#### Presentation Layer (100%) ✅
+#### Presentation Layer (100%)
 - **TimerViewModel**: Main timer screen controller with service integration
 - **SettingsViewModel**: Settings management with validation
 - **StatisticsViewModel**: Statistics display with period selection
 - **MVVM Architecture**: Complete ViewModel layer with reactive state
 - **StateFlow**: Reactive state management for UI binding
+
+#### Theme System (100%) ✅
+- **Color.kt**: Complete color palette with 5 iOS themes
+- **Type.kt**: Material3 typography system
+- **Theme.kt**: PomodoroTheme composable with light/dark modes
+- **iOS Parity**: Exact hex color matching
+- **Material3**: Modern design system integration
 
 #### Infrastructure (100%)
 - **Application Setup**: Hilt-enabled application class
@@ -76,15 +83,9 @@ adb shell am start -n com.pomodoro.timer/.MainActivity
 - **Gradle**: Modern build configuration with version catalog
 - **DI Modules**: DataModule and ServiceModule configured
 
-### 🚧 Remaining Work (Milestones 5-10)
+### 🚧 Remaining Work (Milestones 6-10)
 
-#### Milestone 5: Theme System (4-6 hours) - NEXT
-- [ ] Material3 theme implementation
-- [ ] Color system from iOS themes
-- [ ] Typography and shapes
-- [ ] Dark mode support
-
-#### Milestone 6: UI Screens (12-16 hours)
+#### Milestone 6: UI Screens (12-16 hours) - NEXT
 - [ ] Timer screen with circular progress
 - [ ] Settings screen with pickers
 - [ ] Statistics screen with Vico charts
@@ -173,11 +174,14 @@ com.pomodoro.timer/
 │       ├── SettingsViewModel.kt
 │       └── StatisticsViewModel.kt
 │
-├── ui/                              🚧 TODO
-│   ├── screens/
-│   ├── navigation/
-│   ├── theme/
-│   └── components/
+├── ui/                              ⏳ In Progress
+│   ├── theme/                       ✅ Complete
+│   │   ├── Color.kt
+│   │   ├── Type.kt
+│   │   └── Theme.kt
+│   ├── screens/                     🚧 TODO
+│   ├── navigation/                  🚧 TODO
+│   └── components/                  🚧 TODO
 │
 ├── PomodoroApplication.kt           ✅ Complete
 └── MainActivity.kt                  ✅ Complete (placeholder)
@@ -208,6 +212,7 @@ com.pomodoro.timer/
 | Notifications | ✅ Complete | `NotificationHelper.kt` |
 | Background Service | ✅ Complete | `TimerService.kt` |
 | ViewModels | ✅ Complete | `presentation/viewmodel/*` |
+| Theme System | ✅ Complete | `ui/theme/*` |
 | UI Screens | 🚧 Milestones 5-6 | Compose UI |
 | App Shortcuts | 🚧 Milestone 7 | Static + Dynamic |
 
@@ -331,8 +336,7 @@ Workflow file: `.github/workflows/android-ci.yml`
 ## 🐛 Known Issues
 
 - [ ] Database migration strategy needs production-ready implementation (currently uses fallbackToDestructiveMigration)
-- [ ] No UI implemented yet (Milestones 5-6)
-- [ ] No theme system yet (Milestone 5)
+- [ ] No UI screens yet (Milestone 6)
 - [ ] Limited test coverage (24 tests, need ViewModel and UI tests in Milestone 9)
 
 ## 🤝 Contributing
@@ -357,6 +361,6 @@ Same license as the main repository.
 
 ---
 
-**Current Version**: 0.4.0 (Presentation Layer Complete)  
+**Current Version**: 0.5.0 (Theme System Complete)  
 **Target Version**: 1.0.0 (Full Feature Parity with iOS)  
-**Completion**: ~60% (Domain + Data + Service + Presentation layers)
+**Completion**: ~65% (Domain + Data + Service + Presentation + Theme layers)
