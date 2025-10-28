@@ -27,7 +27,7 @@ struct ThemeSelectionView: View {
                             theme: themeOption,
                             isSelected: themeManager.currentTheme.id == themeOption.id,
                             onSelect: {
-                                HapticManager.selection()
+                                HapticManager.shared.selection()
                                 themeManager.applyTheme(themeOption)
                             }
                         )

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Start Focus Session Shortcut -->
+    <shortcut
+        android:shortcutId="start_focus"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/shortcut_start_focus"
+        android:shortcutLongLabel="@string/shortcut_start_focus_long"
+        android:shortcutDisabledMessage="@string/shortcut_disabled">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.pomodoro.timer"
+            android:targetClass="com.pomodoro.timer.MainActivity"
+            android:data="pomodoro://start/focus" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <!-- Start Short Break Shortcut -->
+    <shortcut
+        android:shortcutId="start_short_break"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/shortcut_short_break"
+        android:shortcutLongLabel="@string/shortcut_short_break_long"
+        android:shortcutDisabledMessage="@string/shortcut_disabled">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.pomodoro.timer"
+            android:targetClass="com.pomodoro.timer.MainActivity"
+            android:data="pomodoro://start/short_break" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <!-- View Statistics Shortcut -->
+    <shortcut
+        android:shortcutId="view_statistics"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/shortcut_statistics"
+        android:shortcutLongLabel="@string/shortcut_statistics_long"
+        android:shortcutDisabledMessage="@string/shortcut_disabled">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.pomodoro.timer"
+            android:targetClass="com.pomodoro.timer.MainActivity"
+            android:data="pomodoro://view/statistics" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>

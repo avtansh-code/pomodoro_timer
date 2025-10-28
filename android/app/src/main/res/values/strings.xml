@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pomodoro Timer</string>
+    
+    <!-- Session Types -->
+    <string name="session_focus">Focus</string>
+    <string name="session_short_break">Short Break</string>
+    <string name="session_long_break">Long Break</string>
+    
+    <!-- Timer Actions -->
+    <string name="action_start">Start</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_resume">Resume</string>
+    <string name="action_reset">Reset</string>
+    <string name="action_skip">Skip</string>
+    
+    <!-- Navigation -->
+    <string name="nav_timer">Timer</string>
+    <string name="nav_statistics">Statistics</string>
+    <string name="nav_settings">Settings</string>
+    
+    <!-- Settings -->
+    <string name="settings_durations">Durations</string>
+    <string name="settings_focus_duration">Focus Duration</string>
+    <string name="settings_short_break_duration">Short Break Duration</string>
+    <string name="settings_long_break_duration">Long Break Duration</string>
+    <string name="settings_sessions_until_long_break">Sessions Until Long Break</string>
+    <string name="settings_auto_start">Auto Start</string>
+    <string name="settings_auto_start_breaks">Auto Start Breaks</string>
+    <string name="settings_auto_start_focus">Auto Start Focus</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_sound_enabled">Sound</string>
+    <string name="settings_haptic_enabled">Haptic Feedback</string>
+    <string name="settings_notifications_enabled">Notifications</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_focus_mode">Focus Mode</string>
+    <string name="settings_reset_defaults">Reset to Defaults</string>
+    
+    <!-- Statistics -->
+    <string name="stats_today">Today</string>
+    <string name="stats_week">Week</string>
+    <string name="stats_month">Month</string>
+    <string name="stats_all_time">All Time</string>
+    <string name="stats_total_sessions">Total Sessions</string>
+    <string name="stats_completed_sessions">Completed</string>
+    <string name="stats_focus_time">Focus Time</string>
+    <string name="stats_current_streak">Current Streak</string>
+    <string name="stats_completion_rate">Completion Rate</string>
+    
+    <!-- Notifications -->
+    <string name="notification_channel_timer">Timer</string>
+    <string name="notification_channel_timer_desc">Pomodoro timer progress and completion</string>
+    <string name="notification_timer_running">Timer Running</string>
+    <string name="notification_session_complete">Session Complete!</string>
+    
+    <!-- Common -->
+    <string name="minutes_short">min</string>
+    <string name="seconds_short">sec</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="save">Save</string>
+    
+    <!-- App Shortcuts -->
+    <string name="shortcut_start_focus">Start Focus</string>
+    <string name="shortcut_start_focus_long">Start a 25-minute focus session</string>
+    <string name="shortcut_short_break">Short Break</string>
+    <string name="shortcut_short_break_long">Start a 5-minute short break</string>
+    <string name="shortcut_statistics">Statistics</string>
+    <string name="shortcut_statistics_long">View your productivity statistics</string>
+    <string name="shortcut_disabled">Shortcut is currently disabled</string>
+</resources>
