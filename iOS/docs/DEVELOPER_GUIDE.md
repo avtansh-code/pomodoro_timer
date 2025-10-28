@@ -49,7 +49,7 @@ The app follows the **MVVM (Model-View-ViewModel)** architectural pattern with S
                     ↕️
 ┌─────────────────────────────────────────┐
 │             Services                     │
-│  PersistenceManager, CloudSyncManager    │
+│  PersistenceManager                      │
 └─────────────────────────────────────────┘
 ```
 
@@ -64,7 +64,6 @@ The app follows the **MVVM (Model-View-ViewModel)** architectural pattern with S
 **Services**
 - `TimerManager` - Core timer logic and state management
 - `PersistenceManager` - Local data storage (UserDefaults)
-- `CloudSyncManager` - iCloud sync via CloudKit
 - `ThemeManager` - Theme selection and persistence
 - `FocusModeManager` - Focus Mode integration
 
@@ -185,7 +184,6 @@ iOS/PomodoroTimer/
 │   ├── TimerManager.swift       # Core timer logic and state management
 │   ├── PersistenceManager.swift # Local storage via UserDefaults
 │   ├── ThemeManager.swift       # Theme selection and persistence
-│   ├── CloudSyncManager.swift   # iCloud sync via CloudKit
 │   ├── FocusModeManager.swift   # iOS Focus Mode integration
 │   └── ScreenshotHelper.swift   # Screenshot preparation utility
 │
@@ -231,12 +229,6 @@ iOS/PomodoroTimerUITests/        # UI test suite
 - Session type transitions
 - Background/foreground handling
 - Notification scheduling
-
-**CloudSyncManager.swift**
-- CloudKit integration
-- Settings and session synchronization
-- Conflict resolution
-- Error handling
 
 **ThemeManager.swift**
 - Theme selection logic
@@ -629,149 +621,6 @@ Fields:
   - duration: Double
   - completedAt: Date
 ```
-
-### CloudSyncManager Implementation
-
-#### Key Methods
-
-**Check Cloud Availability**
-```swift
-func checkCloudAvailability() async -> Bool {
-    do {
-        let status = try await CKContainer.default().accountStatus()
-        return status == .available
-    } catch {
-        print("Cloud availability check failed: \(error)")
-        return false
-    }
-}
-```
-
-**Sync Settings**
-```swift
-func syncSettings(_ settings: TimerSettings) async throws {
-    let record = CKRecord(recordType: "Settings")
-    record["focusDuration"] = settings.focusDuration as CKRecordValue
-    record["shortBreakDuration"] = settings.shortBreakDuration as CKRecordValue
-    // ... other fields
-    
-    let database = CKContainer.default().privateCloudDatabase
-    try await database.save(record)
-}
-```
-
-**Fetch Settings**
-```swift
-func fetchSettings() async throws -> TimerSettings? {
-    let database = CKContainer.default().privateCloudDatabase
-    let query = CKQuery(recordType: "Settings", predicate: NSPredicate(value: true))
-    
-    let results = try await database.records(matching: query)
-    guard let record = results.matchResults.first?.1 else {
-        return nil
-    }
-    
-    // Parse record into TimerSettings
-    return parseSettings(from: try record.get())
-}
-```
-
-**Sync Sessions**
-```swift
-func syncAllSessions(_ sessions: [TimerSession]) async throws {
-    let records = sessions.map { session -> CKRecord in
-        let record = CKRecord(recordType: "Session")
-        record["sessionId"] = session.id.uuidString as CKRecordValue
-        record["type"] = session.type.rawValue as CKRecordValue
-        record["duration"] = session.duration as CKRecordValue
-        record["completedAt"] = session.completedAt as CKRecordValue
-        return record
-    }
-    
-    let database = CKContainer.default().privateCloudDatabase
-    try await database.modifyRecords(saving: records, deleting: [])
-}
-```
-
-### Conflict Resolution
-
-Current implementation: **Last-Write-Wins**
-
-```swift
-func resolveConflict(local: TimerSettings, remote: TimerSettings) -> TimerSettings {
-    // Compare timestamps
-    if local.lastModified > remote.lastModified {
-        return local
-    } else {
-        return remote
-    }
-}
-```
-
-### Error Handling
-
-```swift
-enum CloudSyncError: Error {
-    case notAvailable
-    case networkUnavailable
-    case accountNotSignedIn
-    case quotaExceeded
-    case unknownError(Error)
-}
-
-func handleSyncError(_ error: Error) {
-    if let ckError = error as? CKError {
-        switch ckError.code {
-        case .networkUnavailable:
-            print("Network unavailable")
-        case .notAuthenticated:
-            print("Not signed in to iCloud")
-        case .quotaExceeded:
-            print("iCloud storage full")
-        default:
-            print("CloudKit error: \(ckError)")
-        }
-    }
-}
-```
-
-### Testing iCloud
-
-**On Simulator**
-```bash
-1. Sign in to iCloud in Simulator Settings
-2. Enable iCloud Drive
-3. Run app and enable sync
-4. Tap "Sync Now" to test
-```
-
-**On Device**
-```bash
-1. Sign in to iCloud in iOS Settings
-2. Install app via Xcode or TestFlight
-3. Enable sync in app Settings
-4. Verify Last Sync timestamp updates
-```
-
-**Multi-Device Testing**
-```bash
-1. Same Apple ID on both devices
-2. Enable sync on both devices
-3. Complete session on Device A
-4. Tap "Sync Now" on Device A
-5. Open app on Device B (triggers auto-sync)
-6. Verify session appears in stats
-```
-
-### CloudKit Dashboard
-
-Access at: https://icloud.developer.apple.com
-
-**Useful Features:**
-- Schema Editor: View/edit record types
-- Data Browser: Inspect records (development only)
-- Logs: Debug sync issues
-- Analytics: Usage metrics
 
 ---
 

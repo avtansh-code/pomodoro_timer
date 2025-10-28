@@ -55,7 +55,6 @@ This comprehensive guide contains everything needed for successful App Store sub
 - [x] Signing certificates valid
 - [x] Provisioning profiles configured
 - [x] Export compliance documentation (if applicable)
-- [x] iCloud capability properly configured
 - [x] Background modes justified
 
 #### Final Checks
@@ -300,7 +299,7 @@ Happy focusing! 🎯
 - **Use:** App Functionality
 - **Linked to User:** NO
 - **Used for Tracking:** NO
-- **Details:** Session data is stored locally on the device to show statistics and track productivity. If iCloud sync is enabled, data is stored in the user's private iCloud account.
+- **Details:** Session data is stored locally on the device to show statistics and track productivity.
 
 **2. App Settings**
 - **Type:** Other User Content
@@ -342,16 +341,12 @@ Happy focusing! 🎯
 ```
 Mr. Pomodoro is designed with privacy as a core principle. All your timer settings and session history are stored locally on your device. No data is collected, tracked, or shared with third parties.
 
-Optional iCloud Sync:
-If you choose to enable iCloud sync, your data is synced to your private iCloud account using Apple's CloudKit framework. We do not have access to your iCloud data, and it remains encrypted and secure within your personal Apple ecosystem.
-
 Key Privacy Features:
 • No analytics or tracking
 • No third-party services
 • No advertising or ad tracking
 • No account creation required
 • All data stays on your device
-• Optional iCloud sync (your private account only)
 • You control all data - view, modify, or delete anytime
 ```
 
@@ -360,7 +355,6 @@ Key Privacy Features:
 **Question:** Does this app use third-party SDKs?  
 **Answer:** NO
 
-(CloudKit is Apple's framework, not a third-party SDK)
 
 ### Privacy Highlights for App Store
 
@@ -368,7 +362,7 @@ Include in description:
 
 ```
 🔒 PRIVACY-FIRST DESIGN
-Your productivity data stays yours. No tracking, no analytics, no ads. All data stored locally on your device with optional iCloud sync to your private account. We believe privacy is a fundamental right, not a feature.
+Your productivity data stays yours. No tracking, no analytics, no ads. All data stored locally on your device. We believe privacy is a fundamental right, not a feature.
 
 ✓ No data collection
 ✓ No third-party services
@@ -465,7 +459,6 @@ Your productivity data stays yours. No tracking, no analytics, no ads. All data 
 3. ⏳ Complete App Store Connect metadata
 4. ⏳ Prepare screenshots and description
 5. ✅ Test on physical device and TestFlight
-6. ✅ Verify iCloud sync works correctly
 
 ### App Store Connect Configuration
 
@@ -537,10 +530,10 @@ Your productivity data stays yours. No tracking, no analytics, no ads. All data 
 - **Subtitle:** "Integrates with iOS Focus Mode for deep work"
 - **Show:** Settings with Focus Mode toggle and explanation
 
-**Screenshot 5: iCloud Sync**
-- **Title:** "Sync Across Devices"
-- **Subtitle:** "Your settings and history, everywhere you work"
-- **Show:** Settings with iCloud sync status
+**Screenshot 5: Siri Shortcuts**
+- **Title:** "Voice Control"
+- **Subtitle:** "Control your timer hands-free with Siri"
+- **Show:** Siri Shortcuts examples or Settings with Siri integration
 
 ### App Icon
 
@@ -607,12 +600,6 @@ Quick Start:
 OPTIONAL FEATURES TO TEST
 ═══════════════════════════════════════════════
 
-iCloud Sync (Optional):
-• Enable in Settings → iCloud Sync section
-• Requires iCloud account signed in
-• Tap "Sync Now" to test immediate synchronization
-• View sync status and timestamp
-
 Siri Shortcuts:
 • Try "Hey Siri, start a Pomodoro timer"
 • Works for: start, pause, resume, reset, show stats
@@ -629,8 +616,7 @@ PRIVACY NOTES
 ═══════════════════════════════════════════════
 
 • No analytics or tracking implemented
-• All data stored locally by default
-• iCloud sync is OPTIONAL and uses user's private account
+• All data stored locally on device
 • No third-party SDKs or services
 • No personal information collected
 • Users can delete all data from Settings
@@ -644,7 +630,6 @@ TECHNICAL DETAILS
 • iOS 18.0+ required
 • Universal app (iPhone and iPad)
 • SwiftUI interface
-• CloudKit for optional sync
 • Background timer continues when app closed
 • Local notifications for session completion
 
@@ -826,7 +811,6 @@ Thank you!
 - [ ] TestFlight testing completed
 - [ ] No crashes in past 30 days
 - [ ] All features tested on device
-- [ ] iCloud sync tested
 - [ ] Notifications tested
 - [ ] Siri Shortcuts tested
 - [ ] Focus Mode tested (iOS 16.1+)

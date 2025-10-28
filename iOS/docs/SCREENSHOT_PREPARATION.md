@@ -205,8 +205,7 @@ The dummy statistics generator creates:
 
 ## Safety
 
-- Screenshot Mode only affects local data
-- iCloud sync is temporarily disabled during screenshot preparation
+- All data is stored locally during screenshot mode
 - All changes are reversible with "Clean Up & Reset"
 - Original user data is backed up automatically
 

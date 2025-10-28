@@ -11,15 +11,10 @@ import UIKit
 struct SettingsView: View {
     @ObservedObject var timerManager: TimerManager
     @ObservedObject var themeManager: ThemeManager
-    @ObservedObject private var cloudSyncManager = CloudSyncManager.shared
     @Environment(\.appTheme) var theme
     
     @State private var showingClearStatsConfirmation = false
     @State private var showingResetAppConfirmation = false
-    @State private var showingDeleteCloudConfirmation = false
-    @State private var isDeletingCloudData = false
-    @State private var showingCloudDeleteResult = false
-    @State private var cloudDeleteSuccess = false
     
     var body: some View {
         ZStack {
@@ -48,9 +43,6 @@ struct SettingsView: View {
             
             // Notifications & Feedback
             notificationSection
-            
-            // iCloud Sync - Hidden for now
-            // iCloudSection
             
             // Developer Tools (Debug only)
             #if DEBUG
@@ -256,89 +248,6 @@ struct SettingsView: View {
         }
     }
     
-    // MARK: - iCloud Section
-    
-    private var iCloudSection: some View {
-        Section {
-            Toggle(isOn: $timerManager.settings.iCloudSyncEnabled) {
-                HStack(spacing: 12) {
-                    Image(systemName: "icloud.fill")
-                        .foregroundColor(.blue)
-                        .frame(width: 24)
-                    Text("Enable iCloud Sync")
-                }
-            }
-            .accessibilityLabel("Enable iCloud sync")
-            .onChange(of: timerManager.settings.iCloudSyncEnabled) { oldValue, newValue in
-                if newValue {
-                    cloudSyncManager.startAutomaticSync()
-                    // Trigger immediate sync when enabled
-                    cloudSyncManager.syncSettings(timerManager.settings)
-                    let sessions = PersistenceManager.shared.getAllSessions()
-                    if !sessions.isEmpty {
-                        cloudSyncManager.syncAllSessions(sessions)
-                    }
-                } else {
-                    cloudSyncManager.stopAutomaticSync()
-                    // Delete iCloud data when sync is disabled
-                    deleteCloudDataSilently()
-                }
-            }
-            
-            if timerManager.settings.iCloudSyncEnabled {
-                HStack {
-                    Image(systemName: "clock.fill")
-                        .foregroundColor(.orange)
-                        .frame(width: 24)
-                    Text("Last Sync")
-                    Spacer()
-                    if let lastSync = cloudSyncManager.lastSyncDate {
-                        Text(formatTimeSinceSync(lastSync))
-                            .font(theme.typography.caption)
-                            .foregroundColor(.secondary)
-                    } else {
-                        Text("Never")
-                            .font(theme.typography.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                
-                HStack {
-                    Image(systemName: "clock.arrow.circlepath")
-                        .foregroundColor(.blue)
-                        .frame(width: 24)
-                    Text("Next Sync")
-                    Spacer()
-                    if cloudSyncManager.isSyncing {
-                        HStack(spacing: 4) {
-                            ProgressView()
-                                .progressViewStyle(.circular)
-                                .scaleEffect(0.7)
-                            Text("Syncing...")
-                                .font(theme.typography.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    } else if let nextSync = cloudSyncManager.nextSyncDate {
-                        Text(formatTimeUntilSync(nextSync))
-                            .font(theme.typography.caption)
-                            .foregroundColor(.secondary)
-                    } else {
-                        Text("Not scheduled")
-                            .font(theme.typography.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-            }
-        } header: {
-            Label("iCloud Sync", systemImage: "icloud")
-        } footer: {
-            if timerManager.settings.iCloudSyncEnabled {
-                Text("Settings and session history sync once daily across all devices signed in with the same iCloud account.")
-                    .font(theme.typography.caption)
-            }
-        }
-    }
-    
     // MARK: - Developer Tools Section
     
     private var developerSection: some View {
@@ -417,49 +326,6 @@ struct SettingsView: View {
             } message: {
                 Text("This will reset all settings to defaults and delete all statistics. The app will return to its initial state. This action cannot be undone.")
             }
-            
-            if timerManager.settings.iCloudSyncEnabled {
-                Button(role: .destructive) {
-                    showingDeleteCloudConfirmation = true
-                } label: {
-                    HStack(spacing: 12) {
-                        if isDeletingCloudData {
-                            ProgressView()
-                                .progressViewStyle(.circular)
-                                .scaleEffect(0.8)
-                                .frame(width: 24)
-                        } else {
-                            Image(systemName: "icloud.slash.fill")
-                                .frame(width: 24)
-                        }
-                        Text(isDeletingCloudData ? "Deleting..." : "Delete iCloud Data")
-                    }
-                }
-                .disabled(isDeletingCloudData)
-                .accessibilityLabel("Delete all iCloud data")
-                .confirmationDialog(
-                    "Delete iCloud Data",
-                    isPresented: $showingDeleteCloudConfirmation,
-                    titleVisibility: .visible
-                ) {
-                    Button("Delete iCloud Data", role: .destructive) {
-                        deleteCloudData()
-                    }
-                    Button("Cancel", role: .cancel) {}
-                } message: {
-                    Text("This will permanently delete all your data stored in iCloud, including settings and session history. This action cannot be undone.")
-                }
-                .alert(
-                    cloudDeleteSuccess ? "iCloud Data Deleted" : "Deletion Failed",
-                    isPresented: $showingCloudDeleteResult
-                ) {
-                    Button("OK", role: .cancel) {}
-                } message: {
-                    Text(cloudDeleteSuccess 
-                        ? "All data has been permanently deleted from iCloud. Local data remains on this device."
-                        : "Unable to delete iCloud data. Please check your internet connection and iCloud status, then try again.")
-                }
-            }
         } header: {
             Label("Data Management", systemImage: "externaldrive.fill")
         } footer: {
@@ -524,71 +390,6 @@ struct SettingsView: View {
         }
     }
     
-    // MARK: - Helper Methods
-    
-    private func deleteCloudData() {
-        isDeletingCloudData = true
-        CloudSyncManager.shared.deleteAllCloudData { success in
-            DispatchQueue.main.async {
-                isDeletingCloudData = false
-                cloudDeleteSuccess = success
-                showingCloudDeleteResult = true
-                
-                // Disable iCloud sync after successful deletion
-                if success {
-                    timerManager.settings.iCloudSyncEnabled = false
-                    cloudSyncManager.stopAutomaticSync()
-                }
-            }
-        }
-    }
-    
-    private func deleteCloudDataSilently() {
-        // Delete iCloud data without showing UI feedback
-        CloudSyncManager.shared.deleteAllCloudData { success in
-            if success {
-                print("✅ iCloud data deleted successfully when sync was disabled")
-            } else {
-                print("⚠️ Failed to delete iCloud data when sync was disabled")
-            }
-        }
-    }
-    
-    private func formatTimeSinceSync(_ date: Date) -> String {
-        let now = Date()
-        let timeInterval = now.timeIntervalSince(date)
-        let totalMinutes = Int(timeInterval / 60)
-        
-        if totalMinutes < 1 {
-            return "Just now"
-        } else if totalMinutes < 60 {
-            return "\(totalMinutes) min ago"
-        } else if totalMinutes < 1440 {
-            let hours = totalMinutes / 60
-            return "\(hours) hour\(hours == 1 ? "" : "s") ago"
-        } else {
-            let days = totalMinutes / 1440
-            return "\(days) day\(days == 1 ? "" : "s") ago"
-        }
-    }
-    
-    private func formatTimeUntilSync(_ date: Date) -> String {
-        let now = Date()
-        let timeInterval = date.timeIntervalSince(now)
-        let totalMinutes = Int(timeInterval / 60)
-        
-        if totalMinutes < 1 {
-            return "In < 1 min"
-        } else if totalMinutes < 60 {
-            return "In \(totalMinutes) min"
-        } else if totalMinutes < 1440 {
-            let hours = totalMinutes / 60
-            return "In \(hours) hour\(hours == 1 ? "" : "s")"
-        } else {
-            let days = totalMinutes / 1440
-            return "In \(days) day\(days == 1 ? "" : "s")"
-        }
-    }
 }
 
 

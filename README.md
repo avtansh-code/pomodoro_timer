@@ -30,8 +30,8 @@ PomodoroTimer/
 ### iOS App
 - **[iOS App Documentation →](iOS/README.md)**
 - **Platform:** iOS 18.6+
-- **Technologies:** SwiftUI, CloudKit, App Intents
-- **Features:** Timer, Statistics, iCloud Sync, Focus Mode, Siri Shortcuts
+- **Technologies:** SwiftUI, App Intents
+- **Features:** Timer, Statistics, Focus Mode, Siri Shortcuts
 
 ### Marketing Website
 - **[Website Documentation →](website/README.md)**
@@ -48,7 +48,6 @@ Mr. Pomodoro is a clean, customizable Pomodoro timer that helps boost productivi
 - 🎨 **5 Beautiful Themes** - Personalize your experience
 - 🌙 **Focus Mode Integration** - Minimize distractions
 - 🗣️ **Siri Shortcuts** - Control timer hands-free
-- ☁️ **iCloud Sync** - Sync across devices
 - 🔒 **Privacy First** - All data stays on your device
 
 ## 🛠️ Technologies
@@ -57,7 +56,6 @@ Mr. Pomodoro is a clean, customizable Pomodoro timer that helps boost productivi
 - **Language:** Swift 5.0+
 - **Framework:** SwiftUI
 - **Architecture:** MVVM
-- **Backend:** CloudKit (optional)
 - **Minimum iOS:** 18.6
 - **Xcode:** 26.0.1+
 

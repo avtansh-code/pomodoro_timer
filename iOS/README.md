@@ -83,7 +83,6 @@ iOS/PomodoroTimer/
 │   ├── TimerManager.swift      # Core timer logic and state management
 │   ├── PersistenceManager.swift # Data persistence (UserDefaults)
 │   ├── ThemeManager.swift      # Theme management and persistence
-│   ├── CloudSyncManager.swift  # iCloud sync functionality
 │   ├── FocusModeManager.swift  # iOS Focus Mode integration
 │   └── ScreenshotHelper.swift  # Screenshot preparation utility
 │
@@ -176,7 +175,6 @@ View app screenshots in the **[screenshots](../screenshots/)** folder:
 This app is **fully optimized for iOS 18** and the **iPhone 17** lineup:
 
 ### iOS 18.6 Features
-- ✅ **CloudKit API Updates** - Uses iOS 18's new Result-based fetch APIs
 - ✅ **Swift 6 Ready** - Modern concurrency patterns with strict sendability
 - ✅ **Latest SDK** - Built with iOS SDK 26.0 (Xcode 26.0.1)
 - ✅ **Modern SwiftUI** - Leverages iOS 18 SwiftUI enhancements

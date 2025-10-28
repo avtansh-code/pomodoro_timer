@@ -15,7 +15,6 @@ Welcome to Mr. Pomodoro! This comprehensive guide will help you master the app a
 3. [Statistics & Analytics](#statistics--analytics)
 4. [Customization & Themes](#customization--themes)
 5. [Advanced Features](#advanced-features)
-   - [iCloud Sync](#icloud-sync)
    - [Focus Mode Integration](#focus-mode-integration)
    - [Siri Shortcuts](#siri-shortcuts)
 6. [Notifications & Feedback](#notifications--feedback)
@@ -258,106 +257,6 @@ Customize all session lengths to match your work style:
 
 ## Advanced Features
 
-### iCloud Sync
-
-Seamlessly sync your settings and session history across all your Apple devices.
-
-#### What Gets Synced
-
-**Settings**
-- Timer durations (focus, short break, long break)
-- Sessions until long break count
-- Auto-start preferences
-- Sound, haptic, and notification settings
-- Theme selection
-- Focus Mode preferences
-
-**Session History**
-- All completed sessions
-- Timestamps and durations
-- Session types
-- Complete statistics data
-
-#### Enabling iCloud Sync
-
-**Prerequisites:**
-- iOS 18.6 or later
-- iCloud account signed in on device
-- iCloud Drive enabled
-- Internet connection
-
-**Steps:**
-1. Open **Settings** in the app
-2. Scroll to **iCloud Sync** section
-3. Toggle **"Enable iCloud Sync"** ON
-4. Tap **"Sync Now"** for immediate sync
-5. Repeat on all your devices
-
-#### Sync Options
-
-**Manual Sync**
-- Tap "Sync Now" button anytime
-- Forces immediate synchronization
-- Useful after major changes
-
-**Automatic Sync**
-- Syncs every 24 hours in background
-- Occurs on app launch
-- Happens when settings change
-
-**Sync Status**
-- View last sync timestamp
-- See next scheduled sync time
-- Check sync availability
-
-#### Managing Cloud Data
-
-**View Sync Status**
-- Last sync time displayed
-- Connection status indicator
-- Sync enabled/disabled state
-
-**Delete Cloud Data**
-1. Open Settings → iCloud Sync
-2. Tap "Delete Cloud Data"
-3. Confirm deletion
-4. Local data remains untouched
-
-**Disable Sync**
-- Toggle "Enable iCloud Sync" OFF
-- Cloud data is preserved
-- Can re-enable anytime
-
-#### Privacy & Security
-
-- 🔐 Data stored in **your private iCloud account**
-- 🔐 End-to-end encryption by Apple
-- 🔐 We never have access to your data
-- 🔐 Only you can access your iCloud data
-- 🔐 Data never leaves Apple's ecosystem
-
-#### Troubleshooting iCloud
-
-**"iCloud not available"**
-- Check iCloud sign-in status in Settings
-- Enable iCloud Drive
-- Verify network connection
-- Check iCloud storage space
-
-**"Sync not working"**
-- Ensure sync enabled on all devices
-- Tap "Sync Now" to force sync
-- Check internet connection
-- Wait a few minutes and retry
-
-**"Data not appearing"**
-- Open app on second device to trigger sync
-- Tap "Sync Now" on both devices
-- Check that same iCloud account is used
-- Verify sync timestamp updates
-
----
-
 ### Focus Mode Integration
 
 Minimize distractions during focus sessions with iOS Focus Mode integration.
@@ -558,15 +457,10 @@ Your privacy is our highest priority:
 
 ### Data Storage
 
-**Local First**
+**Local Storage**
 - All data stored on your device
 - Protected by iOS sandboxing
 - Only you can access it
-
-**Optional iCloud**
-- Uses **your private** iCloud account
-- End-to-end encrypted by Apple
-- We never have access to it
 
 ### Your Control
 
@@ -582,7 +476,6 @@ Your privacy is our highest priority:
 
 **Delete Data**
 - Clear all statistics
-- Delete iCloud data
 - Reset to factory defaults
 
 ### Compliance
@@ -632,25 +525,6 @@ View our complete privacy policy:
 - Background app refresh enabled helps
 - Notifications may be bundled
 
-### iCloud Sync Issues
-
-**Sync not working**
-- Check iCloud sign-in
-- Enable iCloud Drive
-- Verify internet connection
-- Tap "Sync Now" manually
-
-**Data not syncing between devices**
-- Use same iCloud account
-- Enable sync on all devices
-- Force sync with "Sync Now"
-- Wait a few minutes
-
-**"Account temporarily unavailable"**
-- CloudKit rate limiting (normal during development)
-- Wait 5-10 minutes
-- Try again later
-
 ### Focus Mode Issues
 
 **Focus Mode suggestions not appearing**
@@ -670,7 +544,7 @@ View our complete privacy policy:
 - Force quit and reopen
 - Restart device
 - Update to latest iOS
-- Reinstall app (data preserved via iCloud)
+- Reinstall app
 
 **Settings not saving**
 - Check storage space
@@ -679,8 +553,7 @@ View our complete privacy policy:
 
 **Missing statistics**
 - Check if data was cleared
-- Verify iCloud sync status
-- Allow time for sync to complete
+- Restart the app
 
 ---
 
@@ -743,7 +616,7 @@ View our complete privacy policy:
 **Week 3:** Add complexity
 - Try Focus Mode
 - Experiment with Siri Shortcuts
-- Enable iCloud sync if multi-device
+- Build advanced workflows
 
 **Week 4+:** Master the technique
 - Build streaks
@@ -786,7 +659,7 @@ View our complete privacy policy:
 A: No! The app works immediately with no sign-up required.
 
 **Q: Does the app work offline?**
-A: Yes! Only iCloud sync requires internet. Everything else works offline.
+A: Yes! All features work offline.
 
 **Q: Does it work on iPad?**
 A: Yes! Universal app works on iPhone and iPad.
@@ -814,27 +687,13 @@ A: Yes! Use the Skip button or just start the next focus session.
 A: Absolutely not! No tracking, no analytics, no data selling. Ever.
 
 **Q: Where is my data stored?**
-A: Locally on your device. If iCloud sync is enabled, in your private iCloud account.
+A: Locally on your device only.
 
 **Q: Can you see my productivity data?**
 A: No. We have zero access to your data. It's completely private.
 
 **Q: How do I delete all my data?**
-A: Settings → scroll to bottom → "Clear All Data" and "Delete Cloud Data"
-
-### iCloud Sync
-
-**Q: Is iCloud sync required?**
-A: No, it's completely optional. The app works great without it.
-
-**Q: Does iCloud sync cost extra?**
-A: No! It uses your existing iCloud storage (included with your Apple ID).
-
-**Q: What if I don't have iCloud?**
-A: The app works perfectly with local storage only.
-
-**Q: Can I sync between iPhone and iPad?**
-A: Yes! Enable iCloud sync on both devices with the same Apple ID.
+A: Settings → scroll to bottom → "Clear All Data"
 
 ### Focus Mode
 
@@ -867,10 +726,10 @@ A: Yes! Full Siri integration with multiple commands.
 A: Check iOS Settings → Notifications → Pomodoro Timer → Allow Notifications
 
 **Q: My stats disappeared. What happened?**
-A: Check if you cleared data accidentally. Enable iCloud sync to prevent future loss.
+A: Check if you cleared data accidentally in Settings.
 
 **Q: App crashes on launch. What should I do?**
-A: Try force quit → restart device → reinstall app (iCloud data is safe).
+A: Try force quit → restart device → reinstall app.
 
 ---
 

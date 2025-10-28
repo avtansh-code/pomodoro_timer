@@ -108,17 +108,6 @@ class PersistenceManager {
         if let encoded = try? JSONEncoder().encode(sessions) {
             userDefaults.set(encoded, forKey: sessionsKey)
         }
-        
-        // Sync to iCloud if enabled (skip during unit tests to avoid memory issues)
-        let settings = loadSettings()
-        if settings.iCloudSyncEnabled && !isRunningTests {
-            CloudSyncManager.shared.syncSession(session)
-        }
-    }
-    
-    // Helper to detect if running in test environment
-    private var isRunningTests: Bool {
-        return ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
     }
     
     private func loadAllSessions() -> [TimerSession] {
@@ -146,42 +135,4 @@ class PersistenceManager {
         userDefaults.synchronize()
     }
     
-    // MARK: - iCloud Sync Integration
-    
-    func syncWithCloud(completion: @escaping () -> Void) {
-        let settings = loadSettings()
-        guard settings.iCloudSyncEnabled else {
-            completion()
-            return
-        }
-        
-        // Start automatic sync if enabled
-        CloudSyncManager.shared.startAutomaticSync()
-        
-        // Merge settings
-        CloudSyncManager.shared.mergeWithCloud(localSettings: settings) { [weak self] mergedSettings in
-            guard let self = self else {
-                completion()
-                return
-            }
-            
-            self.saveSettings(mergedSettings)
-            
-            // Merge sessions
-            let localSessions = self.loadAllSessions()
-            CloudSyncManager.shared.mergeSessions(localSessions: localSessions) { [weak self] mergedSessions in
-                guard let self = self else {
-                    completion()
-                    return
-                }
-                
-                // Save merged sessions
-                if let encoded = try? JSONEncoder().encode(mergedSessions) {
-                    self.userDefaults.set(encoded, forKey: self.sessionsKey)
-                }
-                
-                completion()
-            }
-        }
-    }
 }

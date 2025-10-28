@@ -26,14 +26,6 @@ struct PomodoroTimerApp: App {
             case .active:
                 Task {
                     timerManager.appWillEnterForeground()
-                    // iCloud sync temporarily disabled
-                    // Task(priority: .background) {
-                    //     await MainActor.run {
-                    //         PersistenceManager.shared.syncWithCloud {
-                    //             print("iCloud sync completed")
-                    //         }
-                    //     }
-                    // }
                 }
             case .inactive:
                 break

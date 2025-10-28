@@ -14,7 +14,7 @@ Welcome to the Mr. Pomodoro documentation! This folder contains comprehensive gu
 - Core timer features and controls
 - Statistics and analytics
 - Customization and theming
-- Advanced features (iCloud Sync, Focus Mode, Siri)
+- Advanced features (Focus Mode, Siri)
 - Privacy and security
 - Troubleshooting and FAQ
 - Tips and best practices
@@ -31,7 +31,6 @@ Welcome to the Mr. Pomodoro documentation! This folder contains comprehensive gu
 - Development setup instructions
 - Complete project structure (Models, Services, Views, AppIntents)
 - Testing strategy (unit, performance, UI tests)
-- iCloud integration (CloudKit setup and implementation)
 - Focus Mode technical integration
 - Background execution and notifications
 - Performance optimization techniques
@@ -132,8 +131,8 @@ Welcome to the Mr. Pomodoro documentation! This folder contains comprehensive gu
 **Run tests**
 → See [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) → Testing Strategy
 
-**Set up iCloud sync**
-→ See [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) → iCloud Integration
+**Set up Siri Shortcuts**
+→ See [USER_GUIDE.md](USER_GUIDE.md) → Siri Shortcuts
 
 **Integrate Focus Mode**
 → See [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) → Focus Mode Integration

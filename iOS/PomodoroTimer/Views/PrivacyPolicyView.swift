@@ -39,7 +39,7 @@ struct PrivacyPolicyView: View {
                 // Introduction
                 PolicySection(
                     title: "Our Commitment to Privacy",
-                    content: "Mr. Pomodoro is designed with privacy as a core principle. We believe your productivity data should remain yours, stored securely on your device with optional iCloud sync that you control."
+                    content: "Mr. Pomodoro is designed with privacy as a core principle. We believe your productivity data should remain yours, stored securely on your device."
                 )
                 
                 // What We Collect
@@ -60,18 +60,6 @@ struct PrivacyPolicyView: View {
                     BulletPoint(text: "Statistics: Calculated metrics from your session history")
                     BulletPoint(text: "Focus Mode Settings: iOS Focus Mode integration preferences")
                     
-                    Text("Optional iCloud Sync")
-                        .font(theme.typography.headline)
-                        .foregroundColor(theme.primaryColor)
-                        .padding(.top, 8)
-                    
-                    Text("If you enable iCloud sync:")
-                        .font(theme.typography.body)
-                    
-                    BulletPoint(text: "Data syncs to **your private iCloud account**")
-                    BulletPoint(text: "We do not have access to your iCloud data")
-                    BulletPoint(text: "Data is encrypted using Apple's security infrastructure")
-                    BulletPoint(text: "You can disable sync at any time")
                 }
                 
                 Divider()
@@ -86,7 +74,7 @@ struct PrivacyPolicyView: View {
                     PrivacyFeature(icon: "nosign", text: "No Third-Party Services", color: .red)
                     PrivacyFeature(icon: "nosign", text: "No Advertising", color: .red)
                     PrivacyFeature(icon: "nosign", text: "No Account Creation Required", color: .red)
-                    PrivacyFeature(icon: "nosign", text: "No Network Requests (except iCloud)", color: .red)
+                    PrivacyFeature(icon: "nosign", text: "No Network Requests", color: .red)
                     PrivacyFeature(icon: "nosign", text: "No Location Data", color: .red)
                     PrivacyFeature(icon: "nosign", text: "No Contact Information", color: .red)
                     PrivacyFeature(icon: "nosign", text: "No Camera or Photos Access", color: .red)
@@ -97,7 +85,7 @@ struct PrivacyPolicyView: View {
                 // How Data is Used
                 PolicySection(
                     title: "How Your Data Is Used",
-                    content: "All data collected is used solely to:\n\n• Display your timer settings and preferences\n• Show your productivity statistics\n• Calculate streaks and performance metrics\n• Sync across your devices (if enabled)\n• Enable Siri Shortcuts integration"
+                    content: "All data collected is used solely to:\n\n• Display your timer settings and preferences\n• Show your productivity statistics\n• Calculate streaks and performance metrics\n• Enable Siri Shortcuts integration"
                 )
                 
                 Divider()
@@ -109,8 +97,8 @@ struct PrivacyPolicyView: View {
                         .fontWeight(.bold)
                     
                     SecurityFeature(icon: "lock.shield.fill", title: "Local Storage", description: "Protected by iOS sandboxing and your device's security features")
-                    SecurityFeature(icon: "icloud.fill", title: "iCloud Storage", description: "Encrypted using Apple's security protocols in your private iCloud account")
                     SecurityFeature(icon: "checkmark.shield.fill", title: "No Server Storage", description: "We do not store any data on our servers")
+                    SecurityFeature(icon: "shield.fill", title: "No Cloud Sync", description: "All data stays on your device only")
                 }
                 
                 Divider()
@@ -128,7 +116,6 @@ struct PrivacyPolicyView: View {
                     ControlFeature(icon: "pencil", title: "Modify", description: "Edit or update preferences anytime")
                     ControlFeature(icon: "trash.fill", title: "Delete", description: "Clear session history or reset all data")
                     ControlFeature(icon: "arrow.down.doc.fill", title: "Export", description: "View session data in Statistics screen")
-                    ControlFeature(icon: "xmark.icloud.fill", title: "Opt-Out", description: "Disable iCloud sync at any time")
                 }
                 
                 Divider()
@@ -188,7 +175,7 @@ struct PrivacyPolicyView: View {
                     SummaryItem(label: "What We Collect", value: "Timer settings and session history stored locally")
                     SummaryItem(label: "What We Don't Collect", value: "No analytics, no tracking, no personal information")
                     SummaryItem(label: "Your Control", value: "Full control to view, modify, and delete all data")
-                    SummaryItem(label: "iCloud Sync", value: "Optional, stored in your private iCloud account")
+                    SummaryItem(label: "Data Storage", value: "All data stored locally on your device only")
                 }
                 .padding()
                 .background(
