@@ -188,16 +188,16 @@ fun SettingsScreen(
                 icon = Icons.Default.Timer,
                 description = "Set your ideal work and break intervals"
             ) {
-                DurationSettingGrid(
-                    focusDuration = settings.focusDuration.toInt() / 60,
-                    shortBreakDuration = settings.shortBreakDuration.toInt() / 60,
-                    longBreakDuration = settings.longBreakDuration.toInt() / 60,
-                    sessionsUntilLongBreak = settings.sessionsUntilLongBreak,
-                    onFocusChange = { viewModel.updateFocusDuration((it * 60).toInt()) },
-                    onShortBreakChange = { viewModel.updateShortBreakDuration((it * 60).toInt()) },
-                    onLongBreakChange = { viewModel.updateLongBreakDuration((it * 60).toInt()) },
-                    onSessionsChange = { viewModel.updateSessionsUntilLongBreak(it.toInt()) }
-                )
+            DurationSettingGrid(
+                focusDuration = settings.focusDuration.toInt() / 60,
+                shortBreakDuration = settings.shortBreakDuration.toInt() / 60,
+                longBreakDuration = settings.longBreakDuration.toInt() / 60,
+                sessionsUntilLongBreak = settings.sessionsUntilLongBreak,
+                onFocusChange = { viewModel.updateFocusDuration(it.toInt()) },
+                onShortBreakChange = { viewModel.updateShortBreakDuration(it.toInt()) },
+                onLongBreakChange = { viewModel.updateLongBreakDuration(it.toInt()) },
+                onSessionsChange = { viewModel.updateSessionsUntilLongBreak(it.toInt()) }
+            )
             }
             
             Spacer(modifier = Modifier.height(20.dp))
