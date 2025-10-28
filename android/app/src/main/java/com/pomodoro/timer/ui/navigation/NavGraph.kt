@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.pomodoro.timer.ui.screens.benefits.PomodoroBenefitsScreen
+import com.pomodoro.timer.ui.screens.privacy.PrivacyPolicyScreen
 import com.pomodoro.timer.ui.screens.settings.SettingsScreen
 import com.pomodoro.timer.ui.screens.statistics.StatisticsScreen
 import com.pomodoro.timer.ui.screens.timer.TimerScreen
@@ -30,7 +32,36 @@ fun PomodoroNavGraph(
         }
         
         composable(Screen.Settings.route) {
-            SettingsScreen()
+            SettingsScreen(
+                onPrivacyPolicyClick = {
+                    navController.navigate(Screen.PrivacyPolicy.route)
+                },
+                onBenefitsClick = {
+                    navController.navigate(Screen.Benefits.route)
+                }
+            )
+        }
+        
+        composable(Screen.PrivacyPolicy.route) {
+            PrivacyPolicyScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        composable(Screen.Benefits.route) {
+            PomodoroBenefitsScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onGetStartedClick = {
+                    // Navigate to timer and pop back stack
+                    navController.navigate(Screen.Timer.route) {
+                        popUpTo(Screen.Timer.route) { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }

@@ -38,7 +38,9 @@ import com.pomodoro.timer.presentation.viewmodel.SettingsViewModel
  */
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = hiltViewModel()
+    viewModel: SettingsViewModel = hiltViewModel(),
+    onPrivacyPolicyClick: () -> Unit = {},
+    onBenefitsClick: () -> Unit = {}
 ) {
     val settings by viewModel.settings.collectAsState()
     
@@ -143,6 +145,39 @@ fun SettingsScreen(
                 checked = settings.notificationsEnabled,
                 onCheckedChange = { viewModel.updateNotificationsEnabled(it) }
             )
+        }
+        
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        // About Section
+        SettingsSection(title = "About") {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onBenefitsClick() }
+                    .padding(vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "About Pomodoro Technique",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            
+            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onPrivacyPolicyClick() }
+                    .padding(vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Privacy Policy",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
         }
         
         Spacer(modifier = Modifier.height(24.dp))

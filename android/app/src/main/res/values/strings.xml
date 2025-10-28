@@ -59,4 +59,13 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="save">Save</string>
+    
+    <!-- App Shortcuts -->
+    <string name="shortcut_start_focus">Start Focus</string>
+    <string name="shortcut_start_focus_long">Start a 25-minute focus session</string>
+    <string name="shortcut_short_break">Short Break</string>
+    <string name="shortcut_short_break_long">Start a 5-minute short break</string>
+    <string name="shortcut_statistics">Statistics</string>
+    <string name="shortcut_statistics_long">View your productivity statistics</string>
+    <string name="shortcut_disabled">Shortcut is currently disabled</string>
 </resources>
