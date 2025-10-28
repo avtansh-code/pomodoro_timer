@@ -146,10 +146,19 @@ fun SettingsScreen(
         // Preferences Section
         SettingsSection(title = "Preferences") {
             ToggleSetting(
-                label = "Auto-start Next Session",
-                description = "Automatically start the next session",
-                checked = settings.autoStartNextSession,
-                onCheckedChange = { viewModel.updateAutoStartNextSession(it) }
+                label = "Auto-start Breaks",
+                description = "Automatically start break sessions",
+                checked = settings.autoStartBreaks,
+                onCheckedChange = { viewModel.toggleAutoStartBreaks() }
+            )
+            
+            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            
+            ToggleSetting(
+                label = "Auto-start Focus",
+                description = "Automatically start focus sessions after break",
+                checked = settings.autoStartFocus,
+                onCheckedChange = { viewModel.toggleAutoStartFocus() }
             )
             
             Divider(modifier = Modifier.padding(vertical = 8.dp))
@@ -158,7 +167,7 @@ fun SettingsScreen(
                 label = "Sound Effects",
                 description = "Play sounds when session completes",
                 checked = settings.soundEnabled,
-                onCheckedChange = { viewModel.updateSoundEnabled(it) }
+                onCheckedChange = { viewModel.toggleSound() }
             )
             
             Divider(modifier = Modifier.padding(vertical = 8.dp))
@@ -166,8 +175,8 @@ fun SettingsScreen(
             ToggleSetting(
                 label = "Haptic Feedback",
                 description = "Vibrate on button presses",
-                checked = settings.hapticFeedbackEnabled,
-                onCheckedChange = { viewModel.updateHapticFeedbackEnabled(it) }
+                checked = settings.hapticEnabled,
+                onCheckedChange = { viewModel.toggleHaptic() }
             )
             
             Divider(modifier = Modifier.padding(vertical = 8.dp))
@@ -176,7 +185,7 @@ fun SettingsScreen(
                 label = "Notifications",
                 description = "Show completion notifications",
                 checked = settings.notificationsEnabled,
-                onCheckedChange = { viewModel.updateNotificationsEnabled(it) }
+                onCheckedChange = { viewModel.toggleNotifications() }
             )
         }
         

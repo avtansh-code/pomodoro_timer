@@ -43,6 +43,9 @@ class TimerManager: ObservableObject {
         setupAudioSession()
         setupIntentObservers()
         setupFocusModeIfAvailable()
+        
+        // Configure HapticManager with settings
+        HapticManager.shared.configure(isEnabled: settings.hapticEnabled)
     }
     
     // MARK: - Timer Controls
@@ -129,9 +132,7 @@ class TimerManager: ObservableObject {
             playCompletionSound()
         }
         
-        if settings.hapticEnabled {
-            triggerHapticFeedback()
-        }
+        HapticManager.shared.timerComplete()
         
         // Send notification
         if settings.notificationsEnabled {
@@ -204,10 +205,6 @@ class TimerManager: ObservableObject {
         AudioServicesPlaySystemSound(1013) // Simple beep
     }
     
-    private func triggerHapticFeedback() {
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
-    }
     
     // MARK: - Notifications
     

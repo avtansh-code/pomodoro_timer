@@ -9,6 +9,7 @@ import com.pomodoro.timer.domain.model.TimerSettings
 import com.pomodoro.timer.domain.model.TimerState
 import com.pomodoro.timer.domain.repository.SettingsRepository
 import com.pomodoro.timer.service.TimerService
+import com.pomodoro.timer.util.DynamicShortcutManager
 import com.pomodoro.timer.util.TimerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -28,6 +29,9 @@ class TimerViewModel @Inject constructor(
     private val timerManager: TimerManager,
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
+    
+    // Dynamic shortcut manager
+    private val shortcutManager = DynamicShortcutManager(context)
     
     // Timer state from TimerManager
     val timerState: StateFlow<TimerState> = timerManager.state
@@ -78,6 +82,15 @@ class TimerViewModel @Inject constructor(
         viewModelScope.launch {
             remainingSeconds.collect { seconds ->
                 _formattedTime.value = timerManager.formatTime(seconds)
+            }
+        }
+        
+        // Update dynamic shortcuts when timer state changes
+        viewModelScope.launch {
+            combine(timerState, isServiceRunning) { state, running ->
+                state to running
+            }.collect { (state, running) ->
+                shortcutManager.updateShortcuts(state, running)
             }
         }
     }
