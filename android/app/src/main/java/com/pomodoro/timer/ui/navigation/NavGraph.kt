@@ -6,8 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.pomodoro.timer.ui.screens.benefits.PomodoroBenefitsScreen
 import com.pomodoro.timer.ui.screens.privacy.PrivacyPolicyScreen
+import com.pomodoro.timer.ui.screens.screenshot.ScreenshotPreparationScreen
 import com.pomodoro.timer.ui.screens.settings.SettingsScreen
 import com.pomodoro.timer.ui.screens.statistics.StatisticsScreen
+import com.pomodoro.timer.ui.screens.theme.ThemeSelectionScreen
 import com.pomodoro.timer.ui.screens.timer.TimerScreen
 
 /**
@@ -38,6 +40,28 @@ fun PomodoroNavGraph(
                 },
                 onBenefitsClick = {
                     navController.navigate(Screen.Benefits.route)
+                },
+                onThemeClick = {
+                    navController.navigate(Screen.ThemeSelection.route)
+                },
+                onScreenshotToolsClick = {
+                    navController.navigate(Screen.ScreenshotPreparation.route)
+                }
+            )
+        }
+        
+        composable(Screen.ThemeSelection.route) {
+            ThemeSelectionScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        composable(Screen.ScreenshotPreparation.route) {
+            ScreenshotPreparationScreen(
+                onBackClick = {
+                    navController.popBackStack()
                 }
             )
         }

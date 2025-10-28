@@ -40,7 +40,9 @@ import com.pomodoro.timer.presentation.viewmodel.SettingsViewModel
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
     onPrivacyPolicyClick: () -> Unit = {},
-    onBenefitsClick: () -> Unit = {}
+    onBenefitsClick: () -> Unit = {},
+    onThemeClick: () -> Unit = {},
+    onScreenshotToolsClick: () -> Unit = {}
 ) {
     val settings by viewModel.settings.collectAsState()
     
@@ -101,11 +103,42 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.height(24.dp))
         
         // Theme Selection Section
-        SettingsSection(title = "Theme") {
-            ThemeSelector(
-                currentTheme = settings.theme,
-                onThemeSelected = { viewModel.updateTheme(it) }
-            )
+        SettingsSection(title = "Appearance") {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onThemeClick() }
+                    .padding(vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "App Theme",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Medium
+                    )
+                    
+                    Spacer(modifier = Modifier.height(4.dp))
+                    
+                    Text(
+                        text = AppTheme.getById(settings.selectedCustomTheme).name,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                
+                Spacer(modifier = Modifier.width(16.dp))
+                
+                // Color preview circle
+                Card(
+                    modifier = Modifier.size(32.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = AppTheme.getById(settings.selectedCustomTheme).primaryColor
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                ) {}
+            }
         }
         
         Spacer(modifier = Modifier.height(24.dp))
@@ -177,6 +210,35 @@ fun SettingsScreen(
                     text = "Privacy Policy",
                     style = MaterialTheme.typography.bodyLarge
                 )
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        // Developer Tools Section (for screenshots)
+        SettingsSection(title = "Developer Tools") {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onScreenshotToolsClick() }
+                    .padding(vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Screenshot Preparation",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Medium
+                    )
+                    
+                    Spacer(modifier = Modifier.height(4.dp))
+                    
+                    Text(
+                        text = "Generate test data for Play Store screenshots",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
         
