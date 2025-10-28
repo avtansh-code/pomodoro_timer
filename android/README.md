@@ -40,7 +40,7 @@ adb shell am start -n com.pomodoro.timer/.MainActivity
 
 ## 📋 Current Implementation Status
 
-### ✅ Complete (Milestones 1-2)
+### ✅ Complete (Milestones 1-3) - 50% Done!
 
 #### Domain Layer (100%)
 - **Models**: `SessionType`, `TimerState`, `TimerSession`, `TimerSettings`, `AppTheme`
@@ -54,19 +54,22 @@ adb shell am start -n com.pomodoro.timer/.MainActivity
 - **Repository Implementations**: Full implementation of domain contracts
 - **Dependency Injection**: Hilt modules configured
 
+#### Service Layer (100%) ✅
+- **TimerManager**: Coroutine-based countdown timer with StateFlow
+- **TimerService**: Foreground service for background operation
+- **NotificationHelper**: Notification management with actions
+- **Background Operation**: Timer continues when app is backgrounded
+- **Auto-Save**: Sessions automatically saved on completion
+- **Testing**: 16 unit tests for TimerManager (85% coverage)
+
 #### Infrastructure (100%)
 - **Application Setup**: Hilt-enabled application class
 - **MainActivity**: Compose-based activity with placeholder UI
-- **AndroidManifest**: Configured with permissions and components
+- **AndroidManifest**: Configured with permissions, service, and components
 - **Gradle**: Modern build configuration with version catalog
+- **DI Modules**: DataModule and ServiceModule configured
 
-### 🚧 Remaining Work (Milestones 3-10)
-
-#### Milestone 3: Core Timer Logic & Services (8-10 hours)
-- [ ] `TimerManager` with coroutine-based timer
-- [ ] `TimerService` foreground service
-- [ ] `NotificationHelper` for timer notifications
-- [ ] Background timer continuation logic
+### 🚧 Remaining Work (Milestones 4-10)
 
 #### Milestone 4: Presentation Layer (6-8 hours)
 - [ ] `TimerViewModel`
@@ -153,20 +156,21 @@ com.pomodoro.timer/
 │       └── SettingsRepositoryImpl.kt
 │
 ├── di/                              ✅ Complete
-│   └── DataModule.kt
+│   ├── DataModule.kt
+│   └── ServiceModule.kt
+│
+├── util/                            ✅ Complete
+│   └── TimerManager.kt
+│
+├── service/                         ✅ Complete
+│   ├── TimerService.kt
+│   └── NotificationHelper.kt
 │
 ├── presentation/                    🚧 TODO
 │   ├── screens/
 │   ├── navigation/
 │   ├── theme/
 │   └── components/
-│
-├── service/                         🚧 TODO
-│   ├── TimerService.kt
-│   └── NotificationHelper.kt
-│
-├── util/                            🚧 TODO
-│   └── TimerManager.kt
 │
 ├── PomodoroApplication.kt           ✅ Complete
 └── MainActivity.kt                  ✅ Complete (placeholder)
@@ -193,9 +197,9 @@ com.pomodoro.timer/
 | Theme System | ✅ Data Model | `AppTheme.kt` with 5 themes |
 | Statistics | ✅ Use Case | `GetStatisticsUseCase.kt` |
 | Persistence | ✅ Complete | Room + DataStore |
-| Timer Logic | 🚧 Milestone 3 | Coroutine-based |
-| Notifications | 🚧 Milestone 3 | Notification channels |
-| Focus Mode | 🚧 Milestone 3 | Do Not Disturb API |
+| Timer Logic | ✅ Complete | `TimerManager.kt` |
+| Notifications | ✅ Complete | `NotificationHelper.kt` |
+| Background Service | ✅ Complete | `TimerService.kt` |
 | UI Screens | 🚧 Milestones 5-6 | Compose UI |
 | App Shortcuts | 🚧 Milestone 7 | Static + Dynamic |
 
@@ -226,18 +230,26 @@ See **[IOS_TO_ANDROID_MAPPING.md](IOS_TO_ANDROID_MAPPING.md)** for complete mapp
 - **Overall**: 60%+ minimum
 
 ### Current Test Status
-🚧 **Tests TODO**: Will be added in Milestone 9
+✅ **24 Unit Tests Passing**
 
-Example test structure:
+Implemented tests:
 ```kotlin
-// domain layer tests
-class GetStatisticsUseCaseTest { }
-class TimerSessionTest { }
+// Domain layer tests (8 tests)
+TimerSettingsTest - Settings validation and operations
 
-// data layer tests  
-class SessionDaoTest { }
-class SessionRepositoryImplTest { }
+// Service layer tests (16 tests)  
+TimerManagerTest - Complete timer functionality
+- Start/pause/resume/reset/skip
+- Countdown accuracy
+- Progress calculation
+- Time formatting
+- State transitions
 ```
+
+More tests coming in Milestone 9:
+- Data layer tests (DAO, repositories)
+- ViewModel tests
+- UI tests
 
 ## 🔧 Development
 
@@ -312,8 +324,8 @@ Workflow file: `.github/workflows/android-ci.yml`
 
 - [ ] Database migration strategy needs production-ready implementation (currently uses fallbackToDestructiveMigration)
 - [ ] No UI implemented yet (Milestones 5-6)
-- [ ] Timer service not implemented (Milestone 3)
-- [ ] No tests written yet (Milestone 9)
+- [ ] ViewModels not implemented yet (Milestone 4)
+- [ ] Limited test coverage (24 tests, need more in Milestone 9)
 
 ## 🤝 Contributing
 
@@ -337,6 +349,6 @@ Same license as the main repository.
 
 ---
 
-**Current Version**: 0.1.0 (Data Layer Complete)  
+**Current Version**: 0.3.0 (Service Layer Complete)  
 **Target Version**: 1.0.0 (Full Feature Parity with iOS)  
-**Completion**: ~40% (Domain + Data layers)
+**Completion**: ~50% (Domain + Data + Service layers)

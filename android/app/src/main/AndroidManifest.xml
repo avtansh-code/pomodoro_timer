@@ -30,8 +30,7 @@
             </intent-filter>
         </activity>
 
-        <!-- TODO: Add TimerService in Milestone 3 -->
-        <!-- 
+        <!-- Timer Service for background timer functionality -->
         <service
             android:name=".service.TimerService"
             android:foregroundServiceType="specialUse"
@@ -40,7 +39,6 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Pomodoro timer running" />
         </service>
-        -->
 
     </application>
 
