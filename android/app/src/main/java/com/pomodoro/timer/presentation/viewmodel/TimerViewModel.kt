@@ -64,10 +64,12 @@ class TimerViewModel @Inject constructor(
         // Initialize timer manager with viewModel scope
         timerManager.initialize(viewModelScope)
         
-        // Observe settings
+        // Observe settings and update TimerManager when they change
         viewModelScope.launch {
             settingsRepository.getSettings().collect { newSettings ->
                 _settings.value = newSettings
+                // Update TimerManager with new settings so it uses the latest durations
+                timerManager.updateSettings(newSettings)
             }
         }
         
