@@ -94,3 +94,6 @@ iOSInjectionProject/
 
 # Development tools
 splash_screen_generator.html
+
+
+android/keystore/*

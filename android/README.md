@@ -150,6 +150,23 @@ The app follows **Clean Architecture** principles with **MVVM** pattern:
 ./gradlew bundleRelease
 ```
 
+### Native Debug Symbols
+
+The app is configured to generate native debug symbols automatically when building release bundles. This helps with crash analysis in Google Play Console:
+
+- **Debug symbols** are included in the AAB by default
+- **Symbol level**: FULL (complete stack traces)
+- **Location**: Build output includes native `.so` files with debug info
+- **Upload**: Symbols are automatically uploaded with the AAB to Play Console
+
+If you need to manually upload symbols:
+```bash
+# Symbols are located in:
+# app/build/intermediates/merged_native_libs/release/out/lib/
+```
+
+**Note**: After enabling debug symbols, the first build may take slightly longer and produce a larger AAB file (~2-5MB increase).
+
 ---
 
 ## App Shortcuts
@@ -297,7 +314,7 @@ See [LICENSE](../LICENSE) for details.
 
 ---
 
-**Version**: 1.1.0  
+**Version**: 1.2.0  
 **Min SDK**: 34 (Android 14.0)  
-**Target SDK**: 34  
+**Target SDK**: 35  
 **Built with**: Kotlin 1.9.20 + Jetpack Compose

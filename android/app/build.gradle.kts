@@ -15,7 +15,7 @@ android {
         applicationId = "com.avtanshgupta.mr.pomodoro"
         minSdk = 34
         targetSdk = 35
-        versionCode = 2
+        versionCode = 3
         versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -37,10 +37,17 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Enable native debug symbols for crash reporting
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
         debug {
             isMinifyEnabled = false
             versionNameSuffix = "-debug"
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
     }
 
