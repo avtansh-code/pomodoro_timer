@@ -425,6 +425,7 @@ private fun LineChart(
     modifier: Modifier = Modifier
 ) {
     val primary = MaterialTheme.colorScheme.primary
+    val primaryContainer = MaterialTheme.colorScheme.primaryContainer
     
     Canvas(modifier = modifier.padding(vertical = 16.dp)) {
         if (data.size < 2) return@Canvas
@@ -434,31 +435,81 @@ private fun LineChart(
         val range = maxValue - minValue
         
         val stepX = size.width / (data.size - 1)
-        val path = Path()
+        val linePath = Path()
+        val fillPath = Path()
         
-        data.forEachIndexed { index, value ->
+        // Create list of points
+        val points = data.mapIndexed { index, value ->
             val x = index * stepX
             val y = size.height - ((value - minValue) / range) * size.height
+            Offset(x, y)
+        }
+        
+        // Start the paths
+        linePath.moveTo(points[0].x, points[0].y)
+        fillPath.moveTo(points[0].x, size.height)
+        fillPath.lineTo(points[0].x, points[0].y)
+        
+        // Create smooth curves using Catmull-Rom spline algorithm
+        for (i in 0 until points.size - 1) {
+            val p0 = if (i > 0) points[i - 1] else points[i]
+            val p1 = points[i]
+            val p2 = points[i + 1]
+            val p3 = if (i < points.size - 2) points[i + 2] else points[i + 1]
             
-            if (index == 0) {
-                path.moveTo(x, y)
-            } else {
-                path.lineTo(x, y)
-            }
+            // Catmull-Rom to Bezier conversion with tension = 0.5 for smooth curves
+            val tension = 0.5f
             
-            // Draw point
-            drawCircle(
-                color = primary,
-                radius = 6.dp.toPx(),
-                center = Offset(x, y)
+            val controlPoint1X = p1.x + (p2.x - p0.x) / 6f * tension
+            val controlPoint1Y = p1.y + (p2.y - p0.y) / 6f * tension
+            
+            val controlPoint2X = p2.x - (p3.x - p1.x) / 6f * tension
+            val controlPoint2Y = p2.y - (p3.y - p1.y) / 6f * tension
+            
+            linePath.cubicTo(
+                controlPoint1X, controlPoint1Y,
+                controlPoint2X, controlPoint2Y,
+                p2.x, p2.y
+            )
+            
+            fillPath.cubicTo(
+                controlPoint1X, controlPoint1Y,
+                controlPoint2X, controlPoint2Y,
+                p2.x, p2.y
             )
         }
         
+        // Complete the fill path by going back to baseline
+        fillPath.lineTo(points.last().x, size.height)
+        fillPath.close()
+        
+        // Draw filled area with theme color (semi-transparent)
         drawPath(
-            path = path,
+            path = fillPath,
+            color = primary.copy(alpha = 0.2f)
+        )
+        
+        // Draw the smooth line
+        drawPath(
+            path = linePath,
             color = primary,
             style = Stroke(width = 4.dp.toPx())
         )
+        
+        // Draw points on the line
+        points.forEach { point ->
+            drawCircle(
+                color = primary,
+                radius = 6.dp.toPx(),
+                center = point
+            )
+            // Draw inner white circle for better visibility
+            drawCircle(
+                color = Color.White,
+                radius = 3.dp.toPx(),
+                center = point
+            )
+        }
     }
 }
 
