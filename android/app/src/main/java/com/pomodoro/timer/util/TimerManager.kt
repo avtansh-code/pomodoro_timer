@@ -1,6 +1,5 @@
 package com.pomodoro.timer.util
 
-import android.util.Log
 import com.pomodoro.timer.domain.model.SessionType
 import com.pomodoro.timer.domain.model.TimerSettings
 import com.pomodoro.timer.domain.model.TimerState
@@ -49,23 +48,17 @@ class TimerManager @Inject constructor() {
      * Initialize timer with coroutine scope (called from TimerService)
      */
     fun initialize(scope: CoroutineScope) {
-        Log.d("TimerManager", "=== initialize() called ===")
         timerScope = scope
-        Log.d("TimerManager", "TimerScope set, current state: ${_timerState.value}")
     }
     
     /**
      * Update settings
      */
     fun updateSettings(newSettings: TimerSettings) {
-        Log.d("TimerManager", ">>> updateSettings() called")
-        Log.d("TimerManager", "focusDuration: ${newSettings.focusDuration}, shortBreakDuration: ${newSettings.shortBreakDuration}, longBreakDuration: ${newSettings.longBreakDuration}")
-        
         _settings.value = newSettings
         // If idle, update time remaining to match new duration
         if (_timerState.value == TimerState.IDLE) {
             val newDuration = getDuration(_currentSessionType.value)
-            Log.d("TimerManager", "Timer is IDLE, updating timeRemaining to: $newDuration")
             _timeRemaining.value = newDuration
         }
     }
@@ -76,23 +69,13 @@ class TimerManager @Inject constructor() {
      * Start the timer (matches iOS startTimer())
      */
     fun startTimer() {
-        Log.d("TimerManager", ">>> startTimer() called")
-        Log.d("TimerManager", "Current state: ${_timerState.value}")
-        Log.d("TimerManager", "Current timeRemaining: ${_timeRemaining.value}")
-        Log.d("TimerManager", "Current sessionType: ${_currentSessionType.value}")
-        Log.d("TimerManager", "timerScope is null: ${timerScope == null}")
-        
         if (_timerState.value == TimerState.RUNNING) {
-            Log.d("TimerManager", "Timer already running, returning")
             return
         }
         
         // Important: Set state to RUNNING BEFORE starting countdown so the loop condition passes
-        Log.d("TimerManager", "Setting state to RUNNING")
         _timerState.value = TimerState.RUNNING
-        Log.d("TimerManager", "State is now: ${_timerState.value}")
         
-        Log.d("TimerManager", "Starting countdown coroutine...")
         startCountdown()
     }
     
@@ -100,38 +83,26 @@ class TimerManager @Inject constructor() {
      * Pause the timer (matches iOS pauseTimer())
      */
     fun pauseTimer() {
-        Log.d("TimerManager", ">>> pauseTimer() called")
-        Log.d("TimerManager", "Current state: ${_timerState.value}")
-        
         if (_timerState.value != TimerState.RUNNING) {
-            Log.d("TimerManager", "Timer not running, returning")
             return
         }
         
-        Log.d("TimerManager", "Setting state to PAUSED and canceling job")
         _timerState.value = TimerState.PAUSED
         timerJob?.cancel()
         timerJob = null
-        Log.d("TimerManager", "State is now: ${_timerState.value}")
     }
     
     /**
      * Reset timer (matches iOS resetTimer())
      */
     fun resetTimer() {
-        Log.d("TimerManager", ">>> resetTimer() called")
-        Log.d("TimerManager", "Current state: ${_timerState.value}")
-        
         timerJob?.cancel()
         timerJob = null
         
-        Log.d("TimerManager", "Setting state to IDLE")
         _timerState.value = TimerState.IDLE
         
         val newDuration = getDuration(_currentSessionType.value)
-        Log.d("TimerManager", "Resetting timeRemaining to: $newDuration")
         _timeRemaining.value = newDuration
-        Log.d("TimerManager", "Reset complete, state: ${_timerState.value}, timeRemaining: ${_timeRemaining.value}")
     }
     
     /**
@@ -155,12 +126,7 @@ class TimerManager @Inject constructor() {
     private fun tick() {
         if (_timeRemaining.value > 0) {
             _timeRemaining.value -= 1
-            // Only log every 10 seconds to avoid spam
-            if (_timeRemaining.value % 10 == 0L) {
-                Log.d("TimerManager", "Tick: timeRemaining = ${_timeRemaining.value}")
-            }
         } else {
-            Log.d("TimerManager", "Timer reached 0, completing session")
             completeSession()
         }
     }
@@ -170,16 +136,11 @@ class TimerManager @Inject constructor() {
      * Returns true if session completed, false otherwise
      */
     private fun completeSession(): Boolean {
-        Log.d("TimerManager", ">>> completeSession() called")
-        Log.d("TimerManager", "Current sessionType: ${_currentSessionType.value}")
-        
         timerJob?.cancel()
         timerJob = null
         
-        Log.d("TimerManager", "Setting state to IDLE after completion")
         _timerState.value = TimerState.IDLE
         
-        Log.d("TimerManager", "Session completed successfully")
         // Session completed successfully
         return true
     }
@@ -266,18 +227,11 @@ class TimerManager @Inject constructor() {
      * Start the countdown coroutine
      */
     private fun startCountdown() {
-        Log.d("TimerManager", ">>> startCountdown() called")
-        Log.d("TimerManager", "timerScope is null: ${timerScope == null}")
-        
         if (timerScope == null) {
-            Log.e("TimerManager", "ERROR: timerScope is null! Cannot start countdown")
             return
         }
         
         timerJob = timerScope?.launch(Dispatchers.Default) {
-            Log.d("TimerManager", "Countdown coroutine launched on Default dispatcher")
-            Log.d("TimerManager", "Starting countdown loop with timeRemaining=${_timeRemaining.value}, state=${_timerState.value}")
-            
             try {
                 while (_timeRemaining.value > 0 && _timerState.value == TimerState.RUNNING) {
                     delay(1000L) // Wait 1 second
@@ -287,18 +241,11 @@ class TimerManager @Inject constructor() {
                         tick()
                     }
                 }
-                
-                Log.d("TimerManager", "Countdown loop ended normally")
             } catch (e: kotlinx.coroutines.CancellationException) {
                 // Expected when timer is paused or reset - not an error
-                Log.d("TimerManager", "Countdown cancelled (paused or reset)")
                 throw e  // Re-throw to properly cancel the coroutine
-            } catch (e: Exception) {
-                Log.e("TimerManager", "Unexpected exception in countdown loop", e)
             }
         }
-        
-        Log.d("TimerManager", "timerJob created: ${timerJob != null}")
     }
     
     /**

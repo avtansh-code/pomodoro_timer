@@ -1,6 +1,5 @@
 package com.pomodoro.timer.ui.screens.timer
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -81,13 +80,6 @@ fun TimerScreen(
     val progress by viewModel.progress.collectAsState()
     val completedSessions by viewModel.completedFocusSessions.collectAsState()
     
-    Log.d("TimerScreen", "=== TimerScreen Recomposition ===")
-    Log.d("TimerScreen", "timerState: $timerState")
-    Log.d("TimerScreen", "sessionType: $sessionType")
-    Log.d("TimerScreen", "timeRemaining: $timeRemaining")
-    Log.d("TimerScreen", "progress: $progress")
-    Log.d("TimerScreen", "completedSessions: $completedSessions")
-    
     val sessionColor = getColorForSession(sessionType)
     
     Box(
@@ -146,19 +138,15 @@ fun TimerScreen(
                 timerState = timerState,
                 sessionColor = sessionColor,
                 onStart = { 
-                    Log.d("TimerScreen", ">>> UI: Start button pressed")
                     viewModel.startTimer()
                 },
                 onPause = { 
-                    Log.d("TimerScreen", ">>> UI: Pause button pressed")
                     viewModel.pauseTimer()
                 },
                 onResume = { 
-                    Log.d("TimerScreen", ">>> UI: Resume button pressed")
                     viewModel.resumeTimer()
                 },
                 onReset = { 
-                    Log.d("TimerScreen", ">>> UI: Reset button pressed")
                     viewModel.resetTimer()
                 }
             )
@@ -169,7 +157,6 @@ fun TimerScreen(
             SkipButton(
                 nextSessionName = getNextSessionName(sessionType, completedSessions, viewModel),
                 onSkip = { 
-                    Log.d("TimerScreen", ">>> UI: Skip button pressed")
                     viewModel.skipSession()
                 },
                 color = sessionColor
