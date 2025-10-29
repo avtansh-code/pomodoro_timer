@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Pomodoro Timer</string>
+    <string name="app_name">Mr. Pomodoro</string>
     
     <!-- Session Types -->
     <string name="session_focus">Focus</string>

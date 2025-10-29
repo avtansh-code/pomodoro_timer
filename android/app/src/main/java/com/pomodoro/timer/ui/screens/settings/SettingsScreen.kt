@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import android.widget.Toast
+import com.pomodoro.timer.BuildConfig
 import com.pomodoro.timer.domain.model.AppTheme
 import com.pomodoro.timer.presentation.viewmodel.SettingsViewModel
 import com.pomodoro.timer.ui.theme.PomodoroTheme
@@ -293,9 +294,31 @@ fun SettingsScreen(
                 textColor = MaterialTheme.colorScheme.error
             )
             
-            Spacer(modifier = Modifier.height(20.dp))
+            // 7. Developer Tools (Debug Only)
+            if (BuildConfig.DEBUG) {
+                Spacer(modifier = Modifier.height(20.dp))
+                
+                Text(
+                    text = "Developer Tools",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    letterSpacing = 0.5.sp,
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                        .semantics { heading() }
+                )
+                SimpleMenuItem(
+                    label = "Screenshot Preparation",
+                    description = "Generate test data for screenshots",
+                    icon = Icons.Default.Camera,
+                    onClick = onScreenshotToolsClick
+                )
+                
+                Spacer(modifier = Modifier.height(20.dp))
+            }
             
-            // 7. About
+            // 8. About
             Text(
                 text = "About",
                 style = MaterialTheme.typography.labelLarge,
