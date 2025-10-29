@@ -28,7 +28,8 @@ class SessionRepositoryImpl @Inject constructor(
     }
     
     override fun getAllSessions(): Flow<List<TimerSession>> {
-        return sessionDao.getAllSessions().map { entities ->
+        // Use limited query to prevent OOM errors with large datasets
+        return sessionDao.getRecentSessionsFlow(limit = 100).map { entities ->
             entities.map { it.toDomainModel() }
         }
     }

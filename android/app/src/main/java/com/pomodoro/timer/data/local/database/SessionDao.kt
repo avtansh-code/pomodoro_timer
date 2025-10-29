@@ -22,9 +22,16 @@ interface SessionDao {
     
     /**
      * Get all sessions ordered by completion time (newest first)
+     * WARNING: This can load a large amount of data. Consider using getRecentSessionsFlow instead.
      */
     @Query("SELECT * FROM sessions ORDER BY completedAt DESC")
     fun getAllSessions(): Flow<List<SessionEntity>>
+    
+    /**
+     * Get recent sessions with a limit (for UI display)
+     */
+    @Query("SELECT * FROM sessions ORDER BY completedAt DESC LIMIT :limit")
+    fun getRecentSessionsFlow(limit: Int = 50): Flow<List<SessionEntity>>
     
     /**
      * Get all sessions as a list (one-time read)

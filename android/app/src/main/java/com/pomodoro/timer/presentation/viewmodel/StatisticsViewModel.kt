@@ -80,10 +80,12 @@ class StatisticsViewModel @Inject constructor(
         
         // Observe session changes and reload statistics
         viewModelScope.launch {
-            sessionRepository.getAllSessions().collect {
+            sessionRepository.getAllSessions().collect { sessions ->
                 // Reload statistics whenever sessions change
                 loadAllStatistics()
                 loadStreakStatistics()
+                // Update recent sessions in the same collector to avoid duplicate Flow
+                _recentSessions.value = sessions.take(10)
             }
         }
     }
@@ -135,13 +137,11 @@ class StatisticsViewModel @Inject constructor(
     
     /**
      * Load recent sessions (last 10)
+     * Note: This is handled in the init block to avoid duplicate Flow collection
      */
     private fun loadRecentSessions() {
-        viewModelScope.launch {
-            sessionRepository.getAllSessions().collect { sessions ->
-                _recentSessions.value = sessions.take(10)
-            }
-        }
+        // No-op: Recent sessions are now loaded in the init block
+        // to prevent duplicate Flow collectors which can cause OOM
     }
     
     /**
