@@ -2,13 +2,369 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=/pomodoro_timer/index.html">
-    <title>Redirecting...</title>
-    <script>
-        window.location.href = '/pomodoro_timer/index.html';
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Break Time! | Mr. Pomodoro</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .error-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1d1d1f 0%, #2d2d2f 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .error-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(237, 66, 66, 0.15) 0%, rgba(89, 87, 214, 0.15) 50%, rgba(51, 199, 89, 0.15) 100%);
+            animation: gradientShift 10s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .error-container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            color: var(--text-white);
+        }
+
+        .error-code {
+            font-size: 12rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: pulse 2s ease-in-out infinite;
+            font-family: var(--font-family-rounded);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+        }
+
+        .timer-illustration {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .timer-segment {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .timer-segment:nth-child(1) {
+            background: linear-gradient(135deg, var(--focus-color) 0%, var(--secondary-color) 100%);
+            animation-delay: 0s;
+        }
+
+        .timer-segment:nth-child(2) {
+            background: linear-gradient(135deg, var(--break-gradient-start) 0%, var(--break-gradient-end) 100%);
+            animation-delay: 0.3s;
+        }
+
+        .timer-segment:nth-child(3) {
+            background: linear-gradient(135deg, var(--longbreak-gradient-start) 0%, var(--longbreak-gradient-end) 100%);
+            animation-delay: 0.6s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .error-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .error-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .error-message {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .break-message {
+            background-color: rgba(51, 199, 89, 0.1);
+            border: 2px solid rgba(51, 199, 89, 0.3);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .break-message p {
+            margin: 0;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .break-message strong {
+            color: var(--accent-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .btn-404 {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary-404 {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--text-white);
+            box-shadow: 0 4px 16px rgba(237, 66, 66, 0.4);
+        }
+
+        .btn-primary-404:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 24px rgba(237, 66, 66, 0.5);
+        }
+
+        .btn-secondary-404 {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-white);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary-404:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .helpful-links {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .helpful-links h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .quick-link {
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quick-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            color: var(--text-white);
+        }
+
+        .pomodoro-fact {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: rgba(255, 230, 109, 0.1);
+            border-left: 4px solid var(--accent-color);
+            border-radius: var(--border-radius);
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        .pomodoro-fact h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .pomodoro-fact p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 8rem;
+            }
+
+            .error-title {
+                font-size: 2rem;
+            }
+
+            .error-subtitle {
+                font-size: 1.25rem;
+            }
+
+            .error-message {
+                font-size: 1.1rem;
+            }
+
+            .timer-segment {
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
+            }
+
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .error-code {
+                font-size: 6rem;
+            }
+
+            .error-title {
+                font-size: 1.75rem;
+            }
+
+            .timer-segment {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-404 {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <p>Redirecting to <a href="/pomodoro_timer/index.html">Mr. Pomodoro</a>...</p>
+    <div class="error-page">
+        <div class="error-container">
+            <div class="error-code">404</div>
+            
+            <div class="timer-illustration">
+                <div class="timer-segment">🍅</div>
+                <div class="timer-segment">☕</div>
+                <div class="timer-segment">🎯</div>
+            </div>
+
+            <h1 class="error-title">Oops! Time for a Break</h1>
+            <p class="error-subtitle">Page Not Found</p>
+            
+            <p class="error-message">
+                Looks like this page took an unscheduled break session!<br>
+                Just like a good Pomodoro cycle, sometimes we need to step back and redirect our focus.
+            </p>
+
+            <div class="break-message">
+                <p>
+                    🕐 <strong>Pro Tip:</strong> Even 404 errors remind us to take breaks! 
+                    A 5-minute break every 25 minutes keeps your productivity flowing.
+                </p>
+            </div>
+
+            <div class="action-buttons">
+                <a href="index.html" class="btn-404 btn-primary-404">
+                    🏠 Back to Home
+                </a>
+                <a href="contact.html" class="btn-404 btn-secondary-404">
+                    📧 Contact Us
+                </a>
+            </div>
+
+            <div class="helpful-links">
+                <h3>Quick Links</h3>
+                <div class="links-grid">
+                    <a href="index.html#features" class="quick-link">✨ Features</a>
+                    <a href="index.html#screenshots" class="quick-link">📱 Screenshots</a>
+                    <a href="privacy.html" class="quick-link">🔒 Privacy</a>
+                </div>
+            </div>
+
+            <div class="pomodoro-fact">
+                <h4>💡 Did You Know?</h4>
+                <p>
+                    The Pomodoro Technique was invented by Francesco Cirillo in the late 1980s. 
+                    He used a tomato-shaped kitchen timer (pomodoro is Italian for tomato) to track his work intervals. 
+                    Today, millions use this technique to boost productivity and maintain focus!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth fade-in animation
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.error-container').style.opacity = '0';
+            setTimeout(function() {
+                document.querySelector('.error-container').style.transition = 'opacity 0.5s ease-in';
+                document.querySelector('.error-container').style.opacity = '1';
+            }, 100);
+        });
+    </script>
 </body>
 </html>
