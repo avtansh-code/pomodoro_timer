@@ -257,7 +257,7 @@ private fun HeroCard() {
             Spacer(modifier = Modifier.height(4.dp))
             
             Text(
-                text = "Effective Date: October 27, 2025",
+                text = "Effective Date: October 25, 2025",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
                 modifier = Modifier.fillMaxWidth(),
@@ -265,7 +265,7 @@ private fun HeroCard() {
             )
             
             Text(
-                text = "Last Updated: October 27, 2025",
+                text = "Last Updated: October 29, 2025",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
                 modifier = Modifier.fillMaxWidth(),

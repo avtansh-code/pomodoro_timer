@@ -80,11 +80,11 @@ class ScreenshotHelper @Inject constructor(
             // Most sessions are completed (90% completion rate)
             val isCompleted = Random.nextDouble() < 0.9
             
-            // Create timestamp for this session
+            // Create timestamp for this session (in seconds, not milliseconds)
             val startTime = date.atTime(currentHour, currentMinute)
                 .atZone(ZoneId.systemDefault())
                 .toInstant()
-                .toEpochMilli()
+                .epochSecond
             
             val session = TimerSession(
                 id = java.util.UUID.randomUUID().toString(),
@@ -170,7 +170,7 @@ class ScreenshotHelper @Inject constructor(
         
         val startTime = Instant.now()
             .minus(elapsed, ChronoUnit.SECONDS)
-            .toEpochMilli()
+            .epochSecond
         
         val session = TimerSession(
             id = java.util.UUID.randomUUID().toString(),
@@ -193,7 +193,7 @@ class ScreenshotHelper @Inject constructor(
         
         val startTime = Instant.now()
             .minus(elapsed, ChronoUnit.SECONDS)
-            .toEpochMilli()
+            .epochSecond
         
         val session = TimerSession(
             id = java.util.UUID.randomUUID().toString(),
@@ -223,7 +223,7 @@ class ScreenshotHelper @Inject constructor(
             .minusDays(days.toLong())
             .atStartOfDay(ZoneId.systemDefault())
             .toInstant()
-            .toEpochMilli()
+            .epochSecond
         
         // Note: This requires a new repository method
         // For now, we'll clear all sessions

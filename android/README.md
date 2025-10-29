@@ -4,7 +4,7 @@ Android implementation of the Pomodoro Timer app, ported from the iOS version wi
 
 ## 🎉 Project Status: PRODUCTION-READY + ENHANCED!
 
-**Current Version**: v1.0.0-beta  
+**Current Version**: v1.1.0  
 **Status**: ✅ **FULLY FUNCTIONAL - Ready to Build & Deploy**  
 **Completion**: **87%** (Core app + educational features complete, testing optional)
 
@@ -42,7 +42,7 @@ See **[PROGRESS_REPORT.md](PROGRESS_REPORT.md)** for detailed completion report.
 - **Android Studio**: Hedgehog (2023.1.1) or newer
 - **JDK**: 17 or higher
 - **Android SDK**: API 34 (Android 14)
-- **Minimum Android Version**: API 26 (Android 8.0 Oreo)
+- **Minimum Android Version**: API 34 (Android 14.0)
 
 ### Build and Run
 
@@ -439,7 +439,7 @@ Same license as the main repository.
 
 ---
 
-**Current Version**: 1.0.0-beta  
-**Target Version**: 1.0.0 (with optional testing)  
+**Current Version**: 1.1.0  
+**Target Version**: 1.1.0 (stable release)  
 **Status**: ✅ **PRODUCTION-READY + ENHANCED - 87% Complete**  
 **Achievement**: Full iOS Feature Parity + Educational Content 🎉

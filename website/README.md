@@ -1,10 +1,11 @@
 # Mr. Pomodoro Website
 
-A modern, responsive static website for the Mr. Pomodoro iOS app.
+A modern, responsive static website for the Mr. Pomodoro app (iOS & Android).
 
 ## Files Created
 
-- `index.html` - Main landing page with app features and download links
+- `index.html` - Main landing page with app features and download links for iOS and Android
+- `contact.html` - Contact page with support form and FAQs
 - `privacy.html` - Privacy policy page with comprehensive data handling information
 - `styles.css` - Modern, responsive CSS with beautiful styling
 
@@ -18,17 +19,24 @@ A modern, responsive static website for the Mr. Pomodoro iOS app.
 
 ## Customization
 
-### Update App Store Link
+### Update Download Links
 
-Replace the `href="#"` in both download buttons with your actual App Store URL:
+Replace the `href="#"` in download buttons with your actual store URLs:
 
+**App Store:**
 ```html
 <a href="https://apps.apple.com/app/your-app-id" class="btn btn-primary app-store-btn">
+```
+
+**Google Play:**
+```html
+<a href="https://play.google.com/store/apps/details?id=com.pomodoro.timer" class="btn btn-primary play-store-btn">
 ```
 
 ### Update Contact Information
 
 Update the email addresses in:
+- `contact.html` - Email links and contact information
 - `privacy.html` - Contact section
 - `index.html` - Footer support link
 

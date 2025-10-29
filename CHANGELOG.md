@@ -18,6 +18,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - Android - 2025-10-29
+
+### Added
+- 🎉 Android stable release (upgraded from beta)
+- ✨ All features from iOS 1.1.0 ported to Android
+- 📊 Enhanced statistics with improved data visualization
+- 🎨 Complete theme system with all 5 themes
+- 🔔 Improved notification system
+- 📱 Better background timer handling
+
+### Changed
+- 🔧 Updated version from 1.0.0-beta to 1.1.0
+- 🔧 Improved app performance and stability
+- 🔧 Enhanced UI/UX consistency with iOS version
+- 📱 Better Material3 design integration
+
+### Fixed
+- 🐛 Various bug fixes from beta feedback
+- 🐛 Improved timer accuracy
+- 🐛 Better memory management
+
+---
+
 ## [1.1.0] - iOS - 2025-10-28
 
 ### Added
@@ -113,6 +136,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Platform | Release Date | Status |
 |---------|----------|--------------|--------|
+| 1.1.0 | Android | 2025-10-29 | ✅ Released |
 | 1.1.0 | iOS | 2025-10-28 | ✅ Released |
 | 1.0.0 | iOS | 2025-10-15 | ✅ Released |
 | 1.0.0-beta | Android | 2025-10-28 | 🚧 Beta |
@@ -185,8 +209,8 @@ We use the following categories for changes:
 
 #### Play Store
 - **Package:** com.pomodoro.timer
-- **Version:** 1.0.0-beta
-- **Version Code:** 1
+- **Version:** 1.1.0
+- **Version Code:** 2
 
 ---
 

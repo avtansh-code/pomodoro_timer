@@ -84,13 +84,23 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="ios-version">iOS Version (if relevant)</label>
-                            <input type="text" id="ios-version" name="ios-version" placeholder="e.g., iOS 17.1">
+                            <label for="platform">Platform (if relevant)</label>
+                            <select id="platform" name="platform">
+                                <option value="">Select platform...</option>
+                                <option value="ios">iOS</option>
+                                <option value="android">Android</option>
+                                <option value="both">Both</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="version">OS Version (if relevant)</label>
+                            <input type="text" id="version" name="version" placeholder="e.g., iOS 18.6 or Android 14">
                         </div>
                         
                         <div class="form-group">
                             <label for="device">Device Model (if relevant)</label>
-                            <input type="text" id="device" name="device" placeholder="e.g., iPhone 15 Pro, iPad Air">
+                            <input type="text" id="device" name="device" placeholder="e.g., iPhone 15 Pro, Samsung Galaxy S24">
                         </div>
                         
                         <div class="form-group">
@@ -130,8 +140,8 @@
                     
                     <div class="guideline-card">
                         <div class="guideline-icon">📱</div>
-                        <h3>Consider iOS Design</h3>
-                        <p>Think about how the feature would fit into the existing app design and iOS patterns.</p>
+                        <h3>Consider Platform Design</h3>
+                        <p>Think about how the feature would fit into iOS and Android design patterns and the existing app experience.</p>
                     </div>
                     
                     <div class="guideline-card">
@@ -152,8 +162,8 @@
                     </div>
                     
                     <div class="faq-item">
-                        <h3>Can I use Siri to control the timer?</h3>
-                        <p>Absolutely! Mr. Pomodoro includes Siri Shortcuts support. You can start, pause, resume, or reset your timer using voice commands. Set up shortcuts in the Settings app to customize your commands.</p>
+                        <h3>Can I use voice commands or shortcuts?</h3>
+                        <p>Yes! iOS users can control the timer with Siri Shortcuts. Android users can use App Shortcuts for quick actions from the home screen. Customize your experience in the app settings.</p>
                     </div>
                     
                     <div class="faq-item">
@@ -167,13 +177,13 @@
                     </div>
                     
                     <div class="faq-item">
-                        <h3>Does the app work with Focus Mode?</h3>
-                        <p>Yes! Mr. Pomodoro integrates with iOS Focus Modes to help minimize distractions during your focus sessions. Enable this in the app settings to automatically activate your preferred Focus Mode.</p>
+                        <h3>Does the app work with Focus/Do Not Disturb Mode?</h3>
+                        <p>Yes! iOS integrates with Focus Mode, and Android supports Do Not Disturb to help minimize distractions during your focus sessions. Enable this in the app settings to automatically activate your preferred mode.</p>
                     </div>
                     
                     <div class="faq-item">
                         <h3>How do I report a bug or request a feature?</h3>
-                        <p>Use the contact form above or email <a href="mailto:support@mrpomodoro.com">support@mrpomodoro.com</a>. For bugs, include your iOS version and device model. We respond within 24-48 hours and carefully consider all feature requests.</p>
+                        <p>Use the contact form above or email <a href="mailto:support@mrpomodoro.com">support@mrpomodoro.com</a>. For bugs, include your platform (iOS/Android), OS version, and device model. We respond within 24-48 hours and carefully consider all feature requests.</p>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 # Privacy Policy for Mr. Pomodoro
 
-**Effective Date:** October 27, 2025  
-**Last Updated:** October 27, 2025
+**Effective Date:** October 25, 2025  
+**Last Updated:** October 29, 2025
 
 ## Introduction
 

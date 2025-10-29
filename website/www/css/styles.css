@@ -133,19 +133,39 @@ a:hover {
     color: var(--text-white);
 }
 
-.app-store-btn {
+.app-store-btn,
+.play-store-btn {
     padding: 0;
     background: transparent;
     box-shadow: none;
+    display: inline-flex;
+    align-items: center;
 }
 
-.app-store-btn:hover {
+.app-store-btn:hover,
+.play-store-btn:hover {
     transform: translateY(-2px);
     background: transparent;
 }
 
+.app-store-btn img {
+    height: 40px;
+    width: auto;
+}
+
+.play-store-btn img {
+    height: 58px;
+    width: auto;
+}
+
 .app-store-btn.large img {
-    width: 240px;
+    height: 60px;
+    width: auto;
+}
+
+.play-store-btn.large img {
+    height: 85px;
+    width: auto;
 }
 
 /* Header */
@@ -226,11 +246,27 @@ nav {
 
 .hero-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr auto;
     gap: 4rem;
     align-items: center;
     position: relative;
     z-index: 2;
+}
+
+.hero-content > .hero-image {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-content > .hero-image:nth-of-type(2) {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.hero-content > .hero-image:nth-of-type(3) {
+    grid-column: 3;
+    grid-row: 1;
 }
 
 .hero-text h1 {
@@ -250,7 +286,11 @@ nav {
 }
 
 .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
     margin-bottom: 2rem;
+    align-items: center;
 }
 
 .hero-features {
@@ -268,12 +308,6 @@ nav {
     backdrop-filter: blur(10px);
 }
 
-/* Hero Screenshot */
-.hero-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
 .hero-screenshot {
     max-width: 280px;
@@ -1250,6 +1284,10 @@ footer {
         gap: 1rem;
     }
     
+    .cta-buttons {
+        justify-content: center;
+    }
+    
     .summary-grid {
         grid-template-columns: 1fr;
     }
@@ -1340,6 +1378,18 @@ footer {
     
     .app-info {
         grid-template-columns: 1fr;
+    }
+    
+    .app-store-btn img,
+    .play-store-btn img {
+        height: 36px;
+        width: auto;
+    }
+    
+    .app-store-btn.large img,
+    .play-store-btn.large img {
+        height: 50px;
+        width: auto;
     }
     
     .contact-header h1 {

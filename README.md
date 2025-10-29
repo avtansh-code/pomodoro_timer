@@ -5,7 +5,7 @@
 A beautiful, privacy-first Pomodoro timer that helps you stay focused and productive. Available on iOS and Android.
 
 [![iOS](https://img.shields.io/badge/iOS-18.6+-blue.svg)](https://www.apple.com/ios/)
-[![Android](https://img.shields.io/badge/Android-8.0+-green.svg)](https://www.android.com/)
+[![Android](https://img.shields.io/badge/Android-14.0+-green.svg)](https://www.android.com/)
 [![License](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 [![Swift](https://img.shields.io/badge/Swift-5.0+-orange.svg)](https://swift.org/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-1.9+-purple.svg)](https://kotlinlang.org/)
@@ -50,7 +50,7 @@ A beautiful, privacy-first Pomodoro timer that helps you stay focused and produc
 [Download on the App Store](#) *(Coming Soon)*
 
 ### Android
-**Requirements:** Android 8.0 (API 26) or later
+**Requirements:** Android 14.0 (API 34) or later
 
 [Get it on Google Play](#) *(Coming Soon)*
 
@@ -119,7 +119,7 @@ Mr. Pomodoro/
 - **Language:** Kotlin 1.9+
 - **Framework:** Jetpack Compose
 - **Architecture:** MVVM + Clean Architecture
-- **Min Version:** Android 8.0 (API 26)
+- **Min Version:** Android 14.0 (API 34)
 - **Features:** Material3, Room, DataStore, Hilt
 
 ### Website
@@ -254,7 +254,7 @@ This project is proprietary software. See [LICENSE](LICENSE) for details.
   </tr>
   <tr>
     <td><strong>Android Version</strong></td>
-    <td>1.0.0-beta</td>
+    <td>1.1.0</td>
   </tr>
   <tr>
     <td><strong>Lines of Code</strong></td>
