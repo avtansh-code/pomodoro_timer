@@ -77,6 +77,15 @@ class StatisticsViewModel @Inject constructor(
     
     init {
         loadData()
+        
+        // Observe session changes and reload statistics
+        viewModelScope.launch {
+            sessionRepository.getAllSessions().collect {
+                // Reload statistics whenever sessions change
+                loadAllStatistics()
+                loadStreakStatistics()
+            }
+        }
     }
     
     /**
@@ -234,7 +243,7 @@ class StatisticsViewModel @Inject constructor(
     }
     
     /**
-     * Get chart data for session types
+     * Get chart data for session types based on time spent (duration in minutes)
      */
     fun getSessionTypeChartData(): List<Pair<SessionType, Int>> {
         val stats = when (_selectedPeriod.value) {
@@ -244,10 +253,11 @@ class StatisticsViewModel @Inject constructor(
             StatisticsPeriod.ALL_TIME -> _allTimeStatistics.value
         }
         
+        // Return durations in minutes (converted from seconds)
         return listOf(
-            SessionType.FOCUS to stats.focusSessionsCount,
-            SessionType.SHORT_BREAK to stats.shortBreakSessionsCount,
-            SessionType.LONG_BREAK to stats.longBreakSessionsCount
+            SessionType.FOCUS to (stats.focusDurationSeconds / 60).toInt(),
+            SessionType.SHORT_BREAK to (stats.shortBreakDurationSeconds / 60).toInt(),
+            SessionType.LONG_BREAK to (stats.longBreakDurationSeconds / 60).toInt()
         ).filter { it.second > 0 }
     }
     
@@ -302,6 +312,60 @@ class StatisticsViewModel @Inject constructor(
             StatisticsPeriod.WEEK -> "No sessions this week. Time to get started!"
             StatisticsPeriod.MONTH -> "No sessions this month yet."
             StatisticsPeriod.ALL_TIME -> "No sessions recorded. Complete your first Pomodoro!"
+        }
+    }
+    
+    /**
+     * Get daily sessions count for the last N days (for bar chart)
+     */
+    suspend fun getDailySessionsCount(days: Int): List<Float> {
+        return try {
+            val sessionsGrouped = sessionRepository.getSessionsGroupedByDate(days)
+            
+            // Create a list for the last N days
+            val result = mutableListOf<Float>()
+            val today = java.time.LocalDate.now()
+            
+            for (i in (days - 1) downTo 0) {
+                val date = today.minusDays(i.toLong())
+                val dateString = date.toString() // ISO format YYYY-MM-DD
+                val count = sessionsGrouped[dateString]?.size ?: 0
+                result.add(count.toFloat())
+            }
+            
+            result
+        } catch (e: Exception) {
+            List(days) { 0f }
+        }
+    }
+    
+    /**
+     * Get daily focus time in minutes for the last N days (for line chart)
+     */
+    suspend fun getDailyFocusTime(days: Int): List<Float> {
+        return try {
+            val sessionsGrouped = sessionRepository.getSessionsGroupedByDate(days)
+            
+            // Create a list for the last N days
+            val result = mutableListOf<Float>()
+            val today = java.time.LocalDate.now()
+            
+            for (i in (days - 1) downTo 0) {
+                val date = today.minusDays(i.toLong())
+                val dateString = date.toString() // ISO format YYYY-MM-DD
+                
+                // Calculate total focus time for this day
+                val focusTime = sessionsGrouped[dateString]
+                    ?.filter { it.type == SessionType.FOCUS }
+                    ?.sumOf { it.duration } ?: 0L
+                
+                // Convert seconds to minutes
+                result.add((focusTime / 60f))
+            }
+            
+            result
+        } catch (e: Exception) {
+            List(days) { 0f }
         }
     }
 }

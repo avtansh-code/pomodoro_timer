@@ -1,7 +1,12 @@
 package com.pomodoro.timer.ui.screens.settings
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,32 +17,52 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import android.widget.Toast
 import com.pomodoro.timer.domain.model.AppTheme
-import com.pomodoro.timer.domain.model.TimerSettings
 import com.pomodoro.timer.presentation.viewmodel.SettingsViewModel
 import com.pomodoro.timer.ui.theme.PomodoroTheme
 
 /**
- * Settings Screen matching iOS SettingsView functionality.
+ * Settings Screen with organized sections.
  */
 @Composable
 fun SettingsScreen(
@@ -47,293 +72,689 @@ fun SettingsScreen(
     onThemeClick: () -> Unit = {},
     onScreenshotToolsClick: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     val settings by viewModel.settings.collectAsState()
+    var showResetStatsDialog by remember { mutableStateOf(false) }
+    var showResetAppDialog by remember { mutableStateOf(false) }
     
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.05f),
+                        MaterialTheme.colorScheme.background
+                    )
+                )
+            )
     ) {
-        Text(
-            text = "Settings",
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
-        
-        // Timer Durations Section
-        SettingsSection(title = "Timer Durations") {
-            DurationSetting(
-                label = "Focus Duration",
-                value = (settings.focusDuration.toInt() / 60),
-                onValueChange = { viewModel.updateFocusDuration((it * 60).toInt()) },
-                unit = "min",
-                range = 1f..60f
-            )
-            
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
-            
-            DurationSetting(
-                label = "Short Break",
-                value = (settings.shortBreakDuration.toInt() / 60),
-                onValueChange = { viewModel.updateShortBreakDuration((it * 60).toInt()) },
-                unit = "min",
-                range = 1f..30f
-            )
-            
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
-            
-            DurationSetting(
-                label = "Long Break",
-                value = (settings.longBreakDuration.toInt() / 60),
-                onValueChange = { viewModel.updateLongBreakDuration((it * 60).toInt()) },
-                unit = "min",
-                range = 5f..60f
-            )
-            
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
-            
-            DurationSetting(
-                label = "Sessions Until Long Break",
-                value = settings.sessionsUntilLongBreak,
-                onValueChange = { viewModel.updateSessionsUntilLongBreak(it.toInt()) },
-                unit = "sessions",
-                range = 2f..10f
-            )
-        }
-        
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        // Theme Selection Section
-        SettingsSection(title = "Appearance") {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onThemeClick() }
-                    .padding(vertical = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "App Theme",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Medium
-                    )
-                    
-                    Spacer(modifier = Modifier.height(4.dp))
-                    
-                    Text(
-                        text = AppTheme.getById(settings.selectedCustomTheme).name,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                
-                Spacer(modifier = Modifier.width(16.dp))
-                
-                // Color preview circle
-                Card(
-                    modifier = Modifier.size(32.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = AppTheme.getById(settings.selectedCustomTheme).primaryColor
-                    ),
-                    shape = RoundedCornerShape(16.dp)
-                ) {}
-            }
-        }
-        
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        // Preferences Section
-        SettingsSection(title = "Preferences") {
-            ToggleSetting(
-                label = "Auto-start Breaks",
-                description = "Automatically start break sessions",
-                checked = settings.autoStartBreaks,
-                onCheckedChange = { viewModel.toggleAutoStartBreaks() }
-            )
-            
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
-            
-            ToggleSetting(
-                label = "Auto-start Focus",
-                description = "Automatically start focus sessions after break",
-                checked = settings.autoStartFocus,
-                onCheckedChange = { viewModel.toggleAutoStartFocus() }
-            )
-            
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
-            
-            ToggleSetting(
-                label = "Sound Effects",
-                description = "Play sounds when session completes",
-                checked = settings.soundEnabled,
-                onCheckedChange = { viewModel.toggleSound() }
-            )
-            
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
-            
-            ToggleSetting(
-                label = "Haptic Feedback",
-                description = "Vibrate on button presses",
-                checked = settings.hapticEnabled,
-                onCheckedChange = { viewModel.toggleHaptic() }
-            )
-            
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
-            
-            ToggleSetting(
-                label = "Notifications",
-                description = "Show completion notifications",
-                checked = settings.notificationsEnabled,
-                onCheckedChange = { viewModel.toggleNotifications() }
-            )
-        }
-        
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        // About Section
-        SettingsSection(title = "About") {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onBenefitsClick() }
-                    .padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "About Pomodoro Technique",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-            
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
-            
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onPrivacyPolicyClick() }
-                    .padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Privacy Policy",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-        }
-        
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        // Developer Tools Section (for screenshots)
-        SettingsSection(title = "Developer Tools") {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onScreenshotToolsClick() }
-                    .padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "Screenshot Preparation",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Medium
-                    )
-                    
-                    Spacer(modifier = Modifier.height(4.dp))
-                    
-                    Text(
-                        text = "Generate test data for Play Store screenshots",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
-        
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        // Reset Button
-        TextButton(
-            onClick = { viewModel.resetToDefaults() },
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp, vertical = 24.dp)
         ) {
-            Text(
-                text = "Reset to Defaults",
-                color = MaterialTheme.colorScheme.error
-            )
-        }
+            // Header - Creative Design
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(CircleShape)
+                            .background(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(
+                                        MaterialTheme.colorScheme.primary,
+                                        MaterialTheme.colorScheme.tertiary
+                                    )
+                                )
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text(
+                            text = "Settings",
+                            style = MaterialTheme.typography.headlineLarge,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.semantics { heading() }
+                        )
+                        Text(
+                            text = "Personalize your experience",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
+            }
         
-        Spacer(modifier = Modifier.height(32.dp))
+            // 1. Getting Started
+            Text(
+                text = "Getting Started",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                letterSpacing = 0.5.sp,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .semantics { heading() }
+            )
+            SimpleMenuItem(
+                label = "Learn about Pomodoro",
+                icon = Icons.Default.School,
+                onClick = onBenefitsClick
+            )
+            
+            Spacer(modifier = Modifier.height(20.dp))
+            
+            // 2. Appearance
+            Text(
+                text = "Appearance",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                letterSpacing = 0.5.sp,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .semantics { heading() }
+            )
+            ThemeMenuItem(
+                selectedTheme = settings.selectedCustomTheme,
+                onClick = onThemeClick
+            )
+            
+            Spacer(modifier = Modifier.height(20.dp))
+            
+            // 3. Session Durations
+            SettingsSection(
+                title = "Session Durations",
+                icon = Icons.Default.Timer,
+                description = "Set your ideal work and break intervals"
+            ) {
+            DurationSettingGrid(
+                focusDuration = settings.focusDuration.toInt() / 60,
+                shortBreakDuration = settings.shortBreakDuration.toInt() / 60,
+                longBreakDuration = settings.longBreakDuration.toInt() / 60,
+                sessionsUntilLongBreak = settings.sessionsUntilLongBreak,
+                onFocusChange = { viewModel.updateFocusDuration(it.toInt()) },
+                onShortBreakChange = { viewModel.updateShortBreakDuration(it.toInt()) },
+                onLongBreakChange = { viewModel.updateLongBreakDuration(it.toInt()) },
+                onSessionsChange = { viewModel.updateSessionsUntilLongBreak(it.toInt()) }
+            )
+            }
+            
+            Spacer(modifier = Modifier.height(20.dp))
+            
+            // 4. Auto Start
+            SettingsSection(
+                title = "Auto Start",
+                icon = Icons.Default.PlayArrow,
+                description = "Automatically start sessions"
+            ) {
+                ToggleSetting(
+                    label = "Auto-start Breaks",
+                    description = "Start break sessions automatically",
+                    checked = settings.autoStartBreaks,
+                    onCheckedChange = { viewModel.toggleAutoStartBreaks() },
+                    icon = Icons.Default.Coffee
+                )
+                
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                
+                ToggleSetting(
+                    label = "Auto-start Focus",
+                    description = "Start focus sessions after breaks",
+                    checked = settings.autoStartFocus,
+                    onCheckedChange = { viewModel.toggleAutoStartFocus() },
+                    icon = Icons.Default.FitnessCenter
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(20.dp))
+            
+            // 5. Notifications and Feedback
+            SettingsSection(
+                title = "Notifications & Feedback",
+                icon = Icons.Default.Notifications,
+                description = "Manage alerts and sensory feedback"
+            ) {
+                ToggleSetting(
+                    label = "Notifications",
+                    description = "Show completion notifications",
+                    checked = settings.notificationsEnabled,
+                    onCheckedChange = { viewModel.toggleNotifications() },
+                    icon = Icons.Default.NotificationsActive
+                )
+                
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                
+                ToggleSetting(
+                    label = "Sound Effects",
+                    description = "Play sounds when session completes",
+                    checked = settings.soundEnabled,
+                    onCheckedChange = { viewModel.toggleSound() },
+                    icon = Icons.Default.VolumeUp
+                )
+                
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                
+                ToggleSetting(
+                    label = "Haptic Feedback",
+                    description = "Vibrate on button presses",
+                    checked = settings.hapticEnabled,
+                    onCheckedChange = { viewModel.toggleHaptic() },
+                    icon = Icons.Default.Vibration
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(20.dp))
+            
+            // 6. Data Management
+            Text(
+                text = "Data Management",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                letterSpacing = 0.5.sp,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .semantics { heading() }
+            )
+            SimpleMenuItem(
+                label = "Reset Statistics",
+                description = "Clear all session history and stats",
+                icon = Icons.Default.DeleteSweep,
+                onClick = { showResetStatsDialog = true },
+                textColor = MaterialTheme.colorScheme.error
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            SimpleMenuItem(
+                label = "Reset App Completely",
+                description = "Restore all default settings",
+                icon = Icons.Default.RestartAlt,
+                onClick = { showResetAppDialog = true },
+                textColor = MaterialTheme.colorScheme.error
+            )
+            
+            Spacer(modifier = Modifier.height(20.dp))
+            
+            // 7. About
+            Text(
+                text = "About",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                letterSpacing = 0.5.sp,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .semantics { heading() }
+            )
+            SimpleMenuItem(
+                label = "Privacy Policy",
+                icon = Icons.Default.PrivacyTip,
+                onClick = onPrivacyPolicyClick
+            )
+            
+            Spacer(modifier = Modifier.height(32.dp))
+            
+            // Version at bottom with creative styling
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(6.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Version 1.0.0",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                    fontWeight = FontWeight.Medium,
+                    letterSpacing = 1.sp
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Box(
+                    modifier = Modifier
+                        .size(6.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+                )
+            }
+        }
+    }
+    
+    // Reset Statistics Confirmation Dialog
+    if (showResetStatsDialog) {
+        AlertDialog(
+            onDismissRequest = { showResetStatsDialog = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.DeleteSweep,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error
+                )
+            },
+            title = {
+                Text(
+                    text = "Reset Statistics?",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "This will permanently delete all your session history, statistics, and streak data. This action cannot be undone.\n\nYour settings will be preserved.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.resetStatistics()
+                        showResetStatsDialog = false
+                        Toast.makeText(
+                            context,
+                            "Statistics reset successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    colors = androidx.compose.material3.ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text("Reset Statistics", fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showResetStatsDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+    
+    // Reset App Confirmation Dialog
+    if (showResetAppDialog) {
+        AlertDialog(
+            onDismissRequest = { showResetAppDialog = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.RestartAlt,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error
+                )
+            },
+            title = {
+                Text(
+                    text = "Reset App Completely?",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "This will reset all settings to defaults AND delete all your session history and statistics. This action cannot be undone.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.resetToDefaults()
+                        showResetAppDialog = false
+                        Toast.makeText(
+                            context,
+                            "App reset to defaults successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    colors = androidx.compose.material3.ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text("Reset Everything", fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showResetAppDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }
 
 @Composable
 private fun SettingsSection(
     title: String,
+    icon: ImageVector,
+    description: String,
     content: @Composable () -> Unit
 ) {
     Column {
+        // Simple Section Header
         Text(
             text = title,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(bottom = 12.dp)
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            letterSpacing = 0.5.sp,
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .semantics { heading() }
         )
         
+        // Content Card with shadow
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                containerColor = MaterialTheme.colorScheme.surface
             ),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(24.dp),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 3.dp,
+                pressedElevation = 1.dp
+            )
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
+            content()
+        }
+    }
+}
+
+@Composable
+private fun DurationSettingGrid(
+    focusDuration: Int,
+    shortBreakDuration: Int,
+    longBreakDuration: Int,
+    sessionsUntilLongBreak: Int,
+    onFocusChange: (Float) -> Unit,
+    onShortBreakChange: (Float) -> Unit,
+    onLongBreakChange: (Float) -> Unit,
+    onSessionsChange: (Float) -> Unit
+) {
+    Column(
+        modifier = Modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        DurationControl(
+            label = "Focus Duration",
+            value = focusDuration,
+            unit = "min",
+            range = 1f..60f,
+            onValueChange = onFocusChange
+        )
+        
+        DurationControl(
+            label = "Short Break",
+            value = shortBreakDuration,
+            unit = "min",
+            range = 1f..30f,
+            onValueChange = onShortBreakChange
+        )
+        
+        DurationControl(
+            label = "Long Break",
+            value = longBreakDuration,
+            unit = "min",
+            range = 5f..60f,
+            onValueChange = onLongBreakChange
+        )
+        
+        DurationControl(
+            label = "Sessions Until Long Break",
+            value = sessionsUntilLongBreak,
+            unit = "sessions",
+            range = 2f..10f,
+            onValueChange = onSessionsChange
+        )
+    }
+}
+
+@Composable
+private fun DurationControl(
+    label: String,
+    value: Int,
+    unit: String,
+    range: ClosedFloatingPointRange<Float>,
+    onValueChange: (Float) -> Unit
+) {
+    val scale by animateFloatAsState(
+        targetValue = if (value > range.start.toInt()) 1.02f else 1f,
+        animationSpec = tween(150),
+        label = "valueScale"
+    )
+    
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) {
+                contentDescription = "$label is set to $value $unit"
+            },
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.weight(1f)
+        )
+        
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            FilledIconButton(
+                onClick = {
+                    val newValue = (value - 1).coerceAtLeast(range.start.toInt())
+                    onValueChange(newValue.toFloat())
+                },
+                enabled = value > range.start.toInt(),
+                modifier = Modifier.size(36.dp),
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                )
             ) {
-                content()
+                Icon(
+                    imageVector = Icons.Default.Remove,
+                    contentDescription = "Decrease",
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+            
+            Box(
+                modifier = Modifier
+                    .width(80.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .scale(scale),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = if (unit == "sessions") "$value" else "$value $unit",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+            
+            FilledIconButton(
+                onClick = {
+                    val newValue = (value + 1).coerceAtMost(range.endInclusive.toInt())
+                    onValueChange(newValue.toFloat())
+                },
+                enabled = value < range.endInclusive.toInt(),
+                modifier = Modifier.size(36.dp),
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Increase",
+                    modifier = Modifier.size(18.dp)
+                )
             }
         }
     }
 }
 
 @Composable
-private fun DurationSetting(
-    label: String,
-    value: Int,
-    onValueChange: (Float) -> Unit,
-    unit: String,
-    range: ClosedFloatingPointRange<Float>
+private fun ThemeMenuItem(
+    selectedTheme: String,
+    onClick: () -> Unit
 ) {
-    Column {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        shape = RoundedCornerShape(24.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp,
+            pressedElevation = 1.dp
+        )
+    ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onClick() }
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyLarge
-            )
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .background(AppTheme.getById(selectedTheme).primaryColor)
+                )
+                
+                Spacer(modifier = Modifier.width(16.dp))
+                
+                Column {
+                    Text(
+                        text = "Color Theme",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = AppTheme.getById(selectedTheme).name,
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Normal,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
             
-            Text(
-                text = "$value $unit",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.primary
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = "Change theme",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        
-        Slider(
-            value = value.toFloat(),
-            onValueChange = onValueChange,
-            valueRange = range,
-            steps = (range.endInclusive - range.start).toInt() - 1,
-            modifier = Modifier.fillMaxWidth()
+    }
+}
+
+@Composable
+private fun SimpleMenuItem(
+    label: String,
+    icon: ImageVector,
+    onClick: () -> Unit,
+    description: String? = null,
+    textColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        shape = RoundedCornerShape(24.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp,
+            pressedElevation = 1.dp
         )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onClick() }
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = textColor,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
+                    Text(
+                        text = label,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Medium,
+                        color = textColor
+                    )
+                    description?.let {
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }
 
@@ -342,92 +763,71 @@ private fun ToggleSetting(
     label: String,
     description: String,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
+    icon: ImageVector? = null
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onCheckedChange(!checked) }
-            .padding(vertical = 8.dp),
+            .clickable(
+                role = androidx.compose.ui.semantics.Role.Switch,
+                onClickLabel = if (checked) "Disable $label" else "Enable $label"
+            ) {
+                onCheckedChange(!checked)
+            }
+            .padding(16.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "$label, $description, ${if (checked) "enabled" else "disabled"}"
+            },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium
-            )
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            icon?.let {
+                Icon(
+                    imageVector = it,
+                    contentDescription = null,
+                    tint = if (checked) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+            }
             
-            Spacer(modifier = Modifier.height(4.dp))
-            
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Column {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
         
         Spacer(modifier = Modifier.width(16.dp))
         
         Switch(
             checked = checked,
-            onCheckedChange = onCheckedChange
-        )
-    }
-}
-
-@Composable
-private fun ThemeSelector(
-    currentTheme: AppTheme,
-    onThemeSelected: (AppTheme) -> Unit
-) {
-    Column {
-        AppTheme.allThemes.forEach { theme ->
-            ThemeOption(
-                theme = theme,
-                isSelected = theme.id == currentTheme.id,
-                onSelected = { onThemeSelected(theme) }
+            onCheckedChange = null,
+            modifier = Modifier.height(48.dp),
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
             )
-            
-            if (theme != AppTheme.allThemes.last()) {
-                Divider(modifier = Modifier.padding(vertical = 8.dp))
-            }
-        }
-    }
-}
-
-@Composable
-private fun ThemeOption(
-    theme: AppTheme,
-    isSelected: Boolean,
-    onSelected: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onSelected() }
-            .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Color preview circle
-        Card(
-            modifier = Modifier.size(40.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = androidx.compose.ui.graphics.Color(
-                    android.graphics.Color.parseColor(theme.primaryColorHex)
-                )
-            ),
-            shape = RoundedCornerShape(20.dp)
-        ) {}
-        
-        Spacer(modifier = Modifier.width(16.dp))
-        
-        Text(
-            text = theme.displayName,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
         )
     }
 }
@@ -436,47 +836,12 @@ private fun ThemeOption(
 @Composable
 private fun SettingsSectionPreview() {
     PomodoroTheme {
-        SettingsSection(title = "Timer Durations") {
+        SettingsSection(
+            title = "Session Durations",
+            icon = Icons.Default.Timer,
+            description = "Set your ideal work and break intervals"
+        ) {
             Text("Setting content goes here")
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun DurationSettingPreview() {
-    PomodoroTheme {
-        DurationSetting(
-            label = "Focus Duration",
-            value = 25,
-            onValueChange = {},
-            unit = "min",
-            range = 1f..60f
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun ToggleSettingPreview() {
-    PomodoroTheme {
-        ToggleSetting(
-            label = "Auto-start Breaks",
-            description = "Automatically start break sessions",
-            checked = true,
-            onCheckedChange = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun ThemeOptionPreview() {
-    PomodoroTheme {
-        ThemeOption(
-            theme = AppTheme.allThemes.first(),
-            isSelected = true,
-            onSelected = {}
-        )
     }
 }

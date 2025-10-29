@@ -11,5 +11,8 @@ data class Statistics(
     val completedSessionsCount: Int = 0,
     val skippedSessionsCount: Int = 0,
     val totalMinutes: Int = 0,
-    val averageSessionMinutes: Double = 0.0
+    val averageSessionMinutes: Double = 0.0,
+    val focusDurationSeconds: Long = 0,
+    val shortBreakDurationSeconds: Long = 0,
+    val longBreakDurationSeconds: Long = 0
 )

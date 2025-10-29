@@ -90,14 +90,21 @@ class TimerManager: ObservableObject {
     }
     
     func skipSession() {
-        // Save skipped session to stats
-        let elapsedTime = getDuration(for: currentSessionType) - timeRemaining
-        let session = TimerSession(
-            type: currentSessionType,
-            duration: elapsedTime,
-            wasCompleted: false
-        )
-        persistenceManager.saveSession(session)
+        // Only save skipped session if it was actually started (running or paused)
+        // Don't save if session was never started (still in idle state)
+        if (timerState == .running || timerState == .paused) {
+            let elapsedTime = getDuration(for: currentSessionType) - timeRemaining
+            
+            // Only save if there was actual elapsed time
+            if elapsedTime > 0 {
+                let session = TimerSession(
+                    type: currentSessionType,
+                    duration: elapsedTime,
+                    wasCompleted: false
+                )
+                persistenceManager.saveSession(session)
+            }
+        }
         
         resetTimer()
         switchToNextSession()

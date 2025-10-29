@@ -51,7 +51,7 @@ class TimerManagerTest {
         timerManager.start(SessionType.FOCUS, 5L)
         
         // Advance time by 3 seconds
-        advanceTimeBy(3000L)
+        testScheduler.apply { advanceTimeBy(3000L); runCurrent() }
         
         // Should have 2 seconds remaining
         assertEquals(2L, timerManager.remainingSeconds.value)
@@ -62,14 +62,14 @@ class TimerManagerTest {
     fun `pause should stop timer countdown`() = testScope.runTest {
         timerManager.start(SessionType.FOCUS, 10L)
         
-        advanceTimeBy(3000L)
+        testScheduler.apply { advanceTimeBy(3000L); runCurrent() }
         assertEquals(7L, timerManager.remainingSeconds.value)
         
         timerManager.pause()
         assertEquals(TimerState.PAUSED, timerManager.state.value)
         
         // Advance time while paused
-        advanceTimeBy(3000L)
+        testScheduler.apply { advanceTimeBy(3000L); runCurrent() }
         
         // Time should not have changed
         assertEquals(7L, timerManager.remainingSeconds.value)
@@ -78,7 +78,7 @@ class TimerManagerTest {
     @Test
     fun `resume should continue timer from paused state`() = testScope.runTest {
         timerManager.start(SessionType.FOCUS, 10L)
-        advanceTimeBy(3000L)
+        testScheduler.apply { advanceTimeBy(3000L); runCurrent() }
         
         timerManager.pause()
         assertEquals(7L, timerManager.remainingSeconds.value)
@@ -86,7 +86,7 @@ class TimerManagerTest {
         timerManager.resume()
         assertEquals(TimerState.RUNNING, timerManager.state.value)
         
-        advanceTimeBy(2000L)
+        testScheduler.apply { advanceTimeBy(2000L); runCurrent() }
         assertEquals(5L, timerManager.remainingSeconds.value)
     }
     
@@ -131,10 +131,10 @@ class TimerManagerTest {
         
         assertEquals(0.0f, timerManager.getProgress(), 0.01f)
         
-        advanceTimeBy(25000L)
+        testScheduler.apply { advanceTimeBy(25000L); runCurrent() }
         assertEquals(0.25f, timerManager.getProgress(), 0.01f)
         
-        advanceTimeBy(25000L)
+        testScheduler.apply { advanceTimeBy(25000L); runCurrent() }
         assertEquals(0.50f, timerManager.getProgress(), 0.01f)
     }
     

@@ -121,7 +121,8 @@ class SessionRepositoryImpl @Inject constructor(
         // Group sessions by date (YYYY-MM-DD format)
         return sessions.groupBy { session ->
             val instant = Instant.ofEpochSecond(session.completedAt)
-            val date = LocalDate.ofInstant(instant, ZoneId.systemDefault())
+            val zonedDateTime = instant.atZone(ZoneId.systemDefault())
+            val date = zonedDateTime.toLocalDate()
             date.toString() // ISO format: YYYY-MM-DD
         }
     }
