@@ -57,7 +57,7 @@ Potentially exposes session timestamps to anyone with file access.
 
 Affected Versions:
 - iOS 1.1.0
-- Android 1.0.0-beta
+- Android 1.1.0
 
 Suggested Fix:
 Strip metadata before file export or use a different export format.

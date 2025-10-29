@@ -254,7 +254,7 @@ This project is proprietary software. See [LICENSE](LICENSE) for details.
   </tr>
   <tr>
     <td><strong>Android Version</strong></td>
-    <td>1.0.0-beta</td>
+    <td>1.1.0</td>
   </tr>
   <tr>
     <td><strong>Lines of Code</strong></td>
