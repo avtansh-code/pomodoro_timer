@@ -21,6 +21,23 @@ Native Android implementation of the Mr. Pomodoro timer app built with Jetpack C
 
 ---
 
+## Screenshots
+
+<table>
+  <tr>
+    <td><img src="../screenshots/android/focus_mode.png" alt="Focus Mode" width="200"/></td>
+    <td><img src="../screenshots/android/short_break_mode.png" alt="Break Mode" width="200"/></td>
+    <td><img src="../screenshots/android/stats_1.png" alt="Statistics" width="200"/></td>
+  </tr>
+  <tr>
+    <td align="center"><em>Focus Mode</em></td>
+    <td align="center"><em>Break Time</em></td>
+    <td align="center"><em>Your Progress</em></td>
+  </tr>
+</table>
+
+---
+
 ## Prerequisites
 
 - **Android Studio**: Hedgehog (2023.1.1) or newer

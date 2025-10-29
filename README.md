@@ -25,23 +25,6 @@ A beautiful, privacy-first Pomodoro timer for iOS and Android. Stay focused, tra
 
 ---
 
-## Screenshots
-
-<table>
-  <tr>
-    <td><img src="screenshots/iPhone/focus_mode.png" alt="Focus Mode" width="200"/></td>
-    <td><img src="screenshots/iPhone/short_break_mode.png" alt="Break Mode" width="200"/></td>
-    <td><img src="screenshots/iPhone/stats_1.png" alt="Statistics" width="200"/></td>
-  </tr>
-  <tr>
-    <td align="center"><em>Focus Mode</em></td>
-    <td align="center"><em>Break Time</em></td>
-    <td align="center"><em>Your Progress</em></td>
-  </tr>
-</table>
-
----
-
 ## Download
 
 ### iOS
