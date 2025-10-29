@@ -20,7 +20,6 @@ jobs:
         run: |
           mkdir -p deploy_temp
           cp -r website/www/* deploy_temp/
-          cp -r website/css deploy_temp/
           
       - name: Deploy to mr_pomodoro repository
         env:
