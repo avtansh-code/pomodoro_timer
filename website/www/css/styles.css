@@ -148,15 +148,23 @@ a:hover {
     background: transparent;
 }
 
-.app-store-btn img,
-.play-store-btn img {
+.app-store-btn img {
     height: 40px;
     width: auto;
 }
 
-.app-store-btn.large img,
-.play-store-btn.large img {
+.play-store-btn img {
+    height: 58px;
+    width: auto;
+}
+
+.app-store-btn.large img {
     height: 60px;
+    width: auto;
+}
+
+.play-store-btn.large img {
+    height: 85px;
     width: auto;
 }
 

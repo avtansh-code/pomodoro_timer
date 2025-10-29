@@ -42,7 +42,7 @@ See **[PROGRESS_REPORT.md](PROGRESS_REPORT.md)** for detailed completion report.
 - **Android Studio**: Hedgehog (2023.1.1) or newer
 - **JDK**: 17 or higher
 - **Android SDK**: API 34 (Android 14)
-- **Minimum Android Version**: API 26 (Android 8.0 Oreo)
+- **Minimum Android Version**: API 34 (Android 14.0)
 
 ### Build and Run
 
