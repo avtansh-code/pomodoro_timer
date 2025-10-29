@@ -1,93 +1,162 @@
 # Mr. Pomodoro Website
 
-A modern, responsive static website for the Mr. Pomodoro app (iOS & Android).
+Static marketing website for the Mr. Pomodoro app (iOS & Android).
 
-## Files Created
+---
 
-- `index.html` - Main landing page with app features and download links for iOS and Android
-- `contact.html` - Contact page with support form and FAQs
-- `privacy.html` - Privacy policy page with comprehensive data handling information
-- `styles.css` - Modern, responsive CSS with beautiful styling
+## Overview
+
+A modern, responsive static website showcasing the Mr. Pomodoro timer app. The site features clean design, fast loading, and excellent SEO optimization.
+
+**Live Site**: [pomodorotimer.in](https://pomodorotimer.in)
+
+---
 
 ## Features
 
 - **Responsive Design** - Works perfectly on desktop, tablet, and mobile
-- **Modern UI** - Clean, professional design following Apple's design principles
-- **SEO Optimized** - Proper meta tags and structure for search engines
-- **Fast Loading** - Optimized CSS and minimal dependencies
-- **Accessibility** - Proper semantic HTML and ARIA labels
+- **Modern UI** - Clean, professional design with smooth animations
+- **SEO Optimized** - Proper meta tags and semantic structure
+- **Fast Loading** - Optimized CSS, minimal dependencies
+- **Accessibility** - Semantic HTML and ARIA labels
+- **Static Site** - No server-side processing required
 
-## Customization
+---
 
-### Update Download Links
+## Structure
 
-Replace the `href="#"` in download buttons with your actual store URLs:
-
-**App Store:**
-```html
-<a href="https://apps.apple.com/app/your-app-id" class="btn btn-primary app-store-btn">
+```
+website/
+├── www/                    # Static files
+│   ├── index.html          # Landing page
+│   ├── contact.html        # Contact/support page
+│   ├── privacy.html        # Privacy policy
+│   ├── css/
+│   │   └── styles.css      # Main stylesheet
+│   ├── favicon.png         # Site icon
+│   ├── ios_focus.png       # iOS screenshot
+│   └── android_focus.png   # Android screenshot
+│
+├── app.yaml                # Google Cloud config
+├── .gcloudignore          # Deployment ignore file
+└── README.md               # This file
 ```
 
-**Google Play:**
-```html
-<a href="https://play.google.com/store/apps/details?id=com.pomodoro.timer" class="btn btn-primary play-store-btn">
-```
+---
 
-### Update Contact Information
+## Pages
 
-Update the email addresses in:
-- `contact.html` - Email links and contact information
-- `privacy.html` - Contact section
-- `index.html` - Footer support link
+### Landing Page (`index.html`)
+- Hero section with app tagline
+- Key features showcase
+- App screenshots
+- Download buttons (iOS & Android)
+- Pomodoro technique explanation
+- Privacy commitment
+- Footer with links
 
-### Add Analytics (Optional)
+### Contact Page (`contact.html`)
+- Support email contact
+- FAQ section
+- Social media links
+- Issue reporting guidance
 
-Add Google Analytics or other tracking by including the script in the `<head>` section:
+### Privacy Policy (`privacy.html`)
+- Complete privacy policy
+- Data handling information
+- User rights
+- Contact details
 
-```html
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'GA_MEASUREMENT_ID');
-</script>
-```
-
-### Update Domain/URL
-
-Replace placeholder URLs in meta tags with your actual domain:
-
-```html
-<meta property="og:url" content="https://your-actual-domain.com">
-```
+---
 
 ## Deployment
 
 ### Option 1: GitHub Pages (Free)
 
-1. Create a new repository on GitHub
-2. Upload these files to the repository
-3. Go to repository Settings → Pages
-4. Select "Deploy from a branch" and choose "main"
-5. Your site will be available at `https://yourusername.github.io/repository-name`
+```bash
+# Push to GitHub
+git add website/www/*
+git commit -m "Update website"
+git push origin main
+
+# Enable GitHub Pages in repository settings
+# Select source: main branch, /website/www folder
+```
+
+Site will be available at: `https://yourusername.github.io/repository-name`
 
 ### Option 2: Netlify (Free)
 
-1. Create account on [Netlify](https://netlify.com)
-2. Drag and drop the website folder to Netlify
-3. Get instant deployment with custom domain support
+1. Create account at [netlify.com](https://netlify.com)
+2. Connect GitHub repository
+3. Set build directory to `website/www`
+4. Deploy automatically on push
 
 ### Option 3: Vercel (Free)
 
-1. Create account on [Vercel](https://vercel.com)
-2. Import from GitHub or upload files directly
-3. Automatic deployments with custom domain support
+```bash
+# Install Vercel CLI
+npm install -g vercel
 
-### Option 4: Traditional Web Hosting
+# Deploy from website/www directory
+cd website/www
+vercel
+```
 
-Upload all files to your web hosting provider's public folder (usually `public_html` or `www`).
+### Option 4: Google Cloud Platform
+
+```bash
+# Install Google Cloud SDK
+# Authenticate
+gcloud auth login
+
+# Deploy (from website directory)
+cd website
+gcloud app deploy
+
+# View deployed site
+gcloud app browse
+```
+
+---
+
+## Customization
+
+### Update Store Links
+
+Replace placeholder links in `index.html`:
+
+```html
+<!-- iOS App Store -->
+<a href="YOUR_APP_STORE_URL">Download on the App Store</a>
+
+<!-- Google Play Store -->
+<a href="YOUR_PLAY_STORE_URL">Get it on Google Play</a>
+```
+
+### Update Contact Information
+
+Update email addresses in:
+- `contact.html` - Support email
+- `privacy.html` - Contact section
+- `index.html` - Footer
+
+### Add Analytics (Optional)
+
+Add tracking code in `<head>` section:
+
+```html
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_ID');
+</script>
+```
+
+---
 
 ## Browser Support
 
@@ -95,7 +164,9 @@ Upload all files to your web hosting provider's public folder (usually `public_h
 - ✅ Firefox 65+
 - ✅ Safari 12+
 - ✅ Edge 79+
-- ✅ Mobile browsers (iOS Safari, Chrome Mobile)
+- ✅ Mobile browsers
+
+---
 
 ## Performance
 
@@ -104,70 +175,78 @@ Upload all files to your web hosting provider's public folder (usually `public_h
 - **Images**: Optimized and responsive
 - **CSS**: Minified and efficient
 
+---
+
 ## SEO Features
 
 - Semantic HTML structure
-- Open Graph meta tags for social sharing
+- Open Graph meta tags
 - Twitter Card support
 - Proper heading hierarchy
-- Alt tags for images
-- Fast loading speed
+- Alt tags for all images
+- Mobile-friendly design
+
+---
+
+## Local Development
+
+```bash
+# Simple HTTP server (Python)
+cd website/www
+python3 -m http.server 8000
+
+# Or using Node.js
+npx http-server www -p 8000
+
+# Visit: http://localhost:8000
+```
+
+---
 
 ## Maintenance
 
 ### Regular Updates
 
-1. Update the "Last Updated" date in privacy policy when needed
-2. Keep app version and requirements current
-3. Update screenshots if app UI changes significantly
+- Keep app version and requirements current
+- Update screenshots when UI changes
+- Refresh store links when available
+- Update "Last Modified" dates
 
 ### Legal Compliance
 
-- Privacy policy is comprehensive and GDPR/CCPA compliant
+- Keep privacy policy current
 - Update effective dates when making changes
-- Ensure App Store links are working
-
-## Content Strategy
-
-The website includes:
-
-- **Hero Section**: Compelling headline and key benefits
-- **Features**: Six main selling points of your app
-- **Pomodoro Education**: Explains the technique for newcomers
-- **Privacy Focus**: Highlights your privacy-first approach
-- **Social Proof**: Space for testimonials or statistics
-- **Clear CTAs**: Multiple download opportunities
-
-## Technical Notes
-
-- CSS uses modern features with good browser support
-- Responsive design uses CSS Grid and Flexbox
-- No JavaScript dependencies (vanilla JS for animations)
-- Optimized for Core Web Vitals
-- Progressive enhancement approach
-
-## Future Enhancements
-
-Consider adding:
-- App screenshots carousel
-- User testimonials
-- Feature comparison table
-- Press kit/media resources page
-- Blog for app updates
-- Newsletter signup
+- Ensure store links are working
+- Monitor for broken links
 
 ---
 
-## Launch Checklist
+## Technical Stack
 
-- [ ] Update App Store URL
-- [ ] Update contact email addresses
-- [ ] Test on mobile devices
-- [ ] Check all links work
-- [ ] Run Lighthouse audit
-- [ ] Set up analytics (optional)
-- [ ] Configure custom domain
-- [ ] Submit to search engines
-- [ ] Share on social media
+- **HTML5** - Semantic markup
+- **CSS3** - Modern styling with Grid and Flexbox
+- **JavaScript** - Minimal vanilla JS for interactions
+- **No Framework** - Pure static files
+- **No Build Process** - Direct deployment
 
-**Ready to launch!** 🚀
+---
+
+## Related Documentation
+
+- **[Main README](../README.md)** - Project overview
+- **[Privacy Policy](../PrivacyPolicy.md)** - Complete privacy information
+- **[iOS App](../iOS/README.md)** - iOS development guide
+- **[Android App](../android/README.md)** - Android development guide
+
+---
+
+## Support
+
+- **Issues**: [GitHub Issues](https://github.com/avtansh-code/pomodoro_timer/issues)
+- **Email**: support@pomodorotimer.in
+
+---
+
+**Deployment**: Static hosting  
+**Framework**: None (vanilla HTML/CSS/JS)  
+**Performance**: Optimized for speed
