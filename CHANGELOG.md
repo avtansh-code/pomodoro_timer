@@ -18,6 +18,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.1] - Android - 2025-10-31
+
+### Changed
+- 📱 Reduced minimum Android version to Android 13 (API 33) from Android 14 (API 34)
+- 🔧 Expanded device compatibility to support more Android 13+ devices
+- 🔧 Updated version code to 4
+
+### Technical
+- **Min SDK:** 33 (Android 13)
+- **Target SDK:** 35 (Android 15)
+- **Version Code:** 4
+- All features fully compatible with Android 13
+- Foreground service works on Android 13 (specialUse type gracefully degrades)
+- POST_NOTIFICATIONS permission fully supported
+
+---
+
 ## [1.1.0] - Android - 2025-10-29
 
 ### Added
@@ -136,6 +153,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Platform | Release Date | Status |
 |---------|----------|--------------|--------|
+| 1.1.1 | Android | 2025-10-31 | ✅ Released |
 | 1.1.0 | Android | 2025-10-29 | ✅ Released |
 | 1.1.0 | iOS | 2025-10-28 | ✅ Released |
 | 1.0.0 | iOS | 2025-10-15 | ✅ Released |
@@ -202,15 +220,15 @@ We use the following categories for changes:
 
 #### Build Information
 - **Android Studio:** Hedgehog+
-- **Kotlin:** 1.9.21
-- **Min SDK:** 26 (Android 8.0)
-- **Target SDK:** 34 (Android 14)
-- **Compile SDK:** 34
+- **Kotlin:** 2.0.21
+- **Min SDK:** 33 (Android 13)
+- **Target SDK:** 35 (Android 15)
+- **Compile SDK:** 35
 
 #### Play Store
-- **Package:** com.pomodoro.timer
-- **Version:** 1.1.0
-- **Version Code:** 2
+- **Package:** com.avtanshgupta.mr.pomodoro
+- **Version:** 1.1.1
+- **Version Code:** 4
 
 ---
 

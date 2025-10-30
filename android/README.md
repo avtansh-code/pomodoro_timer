@@ -2,9 +2,9 @@
 
 Native Android implementation of the Mr. Pomodoro timer app built with Jetpack Compose and modern Android development practices.
 
-[![Android](https://img.shields.io/badge/Android-14.0+-green.svg)](https://www.android.com/)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.9+-purple.svg)](https://kotlinlang.org/)
-[![Compose](https://img.shields.io/badge/Compose-2024.02-blue.svg)](https://developer.android.com/jetpack/compose)
+[![Android](https://img.shields.io/badge/Android-13.0+-green.svg)](https://www.android.com/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.0+-purple.svg)](https://kotlinlang.org/)
+[![Compose](https://img.shields.io/badge/Compose-2024.12-blue.svg)](https://developer.android.com/jetpack/compose)
 
 ---
 
@@ -42,8 +42,8 @@ Native Android implementation of the Mr. Pomodoro timer app built with Jetpack C
 
 - **Android Studio**: Hedgehog (2023.1.1) or newer
 - **JDK**: 17 or higher
-- **Android SDK**: API 34 (Android 14)
-- **Minimum Android Version**: API 34 (Android 14.0)
+- **Android SDK**: API 35 (Android 15)
+- **Minimum Android Version**: API 33 (Android 13.0)
 
 ---
 
@@ -209,12 +209,12 @@ Key configurations in `build.gradle.kts`:
 
 ```kotlin
 android {
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
-        minSdk = 34
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.1.0"
+        minSdk = 33
+        targetSdk = 35
+        versionCode = 4
+        versionName = "1.1.1"
     }
 }
 ```
@@ -223,11 +223,11 @@ android {
 
 Major dependencies (see `gradle/libs.versions.toml`):
 
-- Compose BOM 2024.02.00
+- Compose BOM 2024.12.01
 - Room 2.6.1
-- Hilt 2.48
-- Kotlin 1.9.20
-- Coroutines 1.7.3
+- Hilt 2.54
+- Kotlin 2.0.21
+- Coroutines 1.9.0
 
 ---
 
@@ -314,7 +314,7 @@ See [LICENSE](../LICENSE) for details.
 
 ---
 
-**Version**: 1.2.0  
-**Min SDK**: 34 (Android 14.0)  
+**Version**: 1.1.1  
+**Min SDK**: 33 (Android 13.0)  
 **Target SDK**: 35  
-**Built with**: Kotlin 1.9.20 + Jetpack Compose
+**Built with**: Kotlin 2.0.21 + Jetpack Compose

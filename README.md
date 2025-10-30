@@ -5,10 +5,10 @@
 A beautiful, privacy-first Pomodoro timer for iOS and Android. Stay focused, track your productivity, and build better work habits—all while keeping your data completely private.
 
 [![iOS](https://img.shields.io/badge/iOS-18.6+-blue.svg)](https://www.apple.com/ios/)
-[![Android](https://img.shields.io/badge/Android-14.0+-green.svg)](https://www.android.com/)
+[![Android](https://img.shields.io/badge/Android-13.0+-green.svg)](https://www.android.com/)
 [![License](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 [![Swift](https://img.shields.io/badge/Swift-5.0+-orange.svg)](https://swift.org/)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.9+-purple.svg)](https://kotlinlang.org/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.0+-purple.svg)](https://kotlinlang.org/)
 
 ---
 
@@ -33,7 +33,7 @@ A beautiful, privacy-first Pomodoro timer for iOS and Android. Stay focused, tra
 Coming soon to the App Store
 
 ### Android
-**Requirements:** Android 14.0 (API 34) or later
+**Requirements:** Android 13.0 (API 33) or later
 
 Coming soon to Google Play
 
@@ -78,10 +78,10 @@ Mr. Pomodoro/
 - **Min Version:** iOS 18.6
 
 ### Android
-- **Language:** Kotlin 1.9+
+- **Language:** Kotlin 2.0+
 - **Framework:** Jetpack Compose
 - **Architecture:** MVVM + Clean Architecture
-- **Min Version:** Android 14.0 (API 34)
+- **Min Version:** Android 13.0 (API 33)
 
 ---
 
