@@ -35,7 +35,7 @@ Coming soon to the App Store
 ### Android
 **Requirements:** Android 13.0 (API 33) or later
 
-Coming soon to Google Play
+[Get it on Google Play](https://play.google.com/store/apps/details?id=com.avtanshgupta.mr.pomodoro&pli=1)
 
 ---
 
