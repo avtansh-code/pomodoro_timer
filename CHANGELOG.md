@@ -18,6 +18,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.2] - iOS - 2025-10-31
+
+### Changed
+- 📱 Reduced minimum iOS version from 18.6 to 17.0 for broader device compatibility
+- 🔧 Expanded device support to include iPhone 8 and later, iPad (5th gen) and later
+
+### Technical
+- **Version:** 1.1.2
+- **Build:** 6
+- **Min iOS:** 17.0 (reduced from 18.6)
+- Significantly increased potential user base
+- All features fully compatible with iOS 17.0+
+
+---
+
 ## [1.1.1] - iOS - 2025-10-31
 
 ### Fixed
@@ -90,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 🔧 Improved Focus Mode integration
 - 🔧 Enhanced notification handling
 - 🔧 Better memory management
-- 📱 Updated minimum iOS version to 18.6
+- 📱 Updated minimum iOS version to 17.0
 
 ### Fixed
 - 🐛 Fixed streak calculation across timezone changes
@@ -169,7 +184,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Platform | Release Date | Status |
 |---------|----------|--------------|--------|
-| 1.1.1 | iOS | 2025-10-31 | ✅ Released |
+| 1.1.2 | iOS | 2025-10-31 | ✅ Released |
 | 1.1.1 | Android | 2025-10-31 | ✅ Released |
 | 1.1.0 | Android | 2025-10-29 | ✅ Released |
 | 1.1.0 | iOS | 2025-10-28 | ✅ Released |
@@ -225,13 +240,13 @@ We use the following categories for changes:
 #### Build Information
 - **Xcode:** 26.0.1+
 - **Swift:** 5.0+
-- **Min iOS:** 18.6
+- **Min iOS:** 17.0
 - **Target SDK:** iOS 18.6
 
 #### App Store
 - **Bundle ID:** avtanshgupta.PomodoroTimer
-- **Version:** 1.1.1
-- **Build:** 5
+- **Version:** 1.1.2
+- **Build:** 6
 
 ### Android
 

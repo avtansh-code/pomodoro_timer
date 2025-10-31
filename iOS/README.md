@@ -2,7 +2,7 @@
 
 Native iOS implementation of the Mr. Pomodoro timer app built with SwiftUI for modern iOS devices.
 
-[![iOS](https://img.shields.io/badge/iOS-18.6+-blue.svg)](https://www.apple.com/ios/)
+[![iOS](https://img.shields.io/badge/iOS-17.0+-blue.svg)](https://www.apple.com/ios/)
 [![Swift](https://img.shields.io/badge/Swift-5.0+-orange.svg)](https://swift.org/)
 [![SwiftUI](https://img.shields.io/badge/SwiftUI-6.0-red.svg)](https://developer.apple.com/xcode/swiftui/)
 
@@ -42,7 +42,7 @@ Native iOS implementation of the Mr. Pomodoro timer app built with SwiftUI for m
 ## Prerequisites
 
 - **Xcode**: 26.0.1 or later
-- **iOS**: 18.6+ (Minimum deployment target)
+- **iOS**: 17.0+ (Minimum deployment target)
 - **Swift**: 5.0+
 - **macOS**: Latest version for Xcode support
 
@@ -164,7 +164,7 @@ The app integrates with iOS Focus Mode:
 Key configurations in Xcode project:
 
 ```
-IPHONEOS_DEPLOYMENT_TARGET = 18.6
+IPHONEOS_DEPLOYMENT_TARGET = 17.0
 SDKROOT = iphoneos
 TARGETED_DEVICE_FAMILY = 1,2 (iPhone and iPad)
 MARKETING_VERSION = 1.1.0
@@ -329,6 +329,6 @@ See [LICENSE](../LICENSE) for details.
 
 ---
 
-**Version**: 1.1.0 (Build 3)  
-**Min iOS**: 18.6  
+**Version**: 1.1.2 (Build 6)  
+**Min iOS**: 17.0  
 **Built with**: Xcode 26.0.1 / Swift 5.0+ / SwiftUI
