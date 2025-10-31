@@ -24,7 +24,14 @@ class TimerManager: ObservableObject {
     @Published var timerState: TimerState = .idle
     @Published var timeRemaining: TimeInterval = 25 * 60
     @Published var completedFocusSessions: Int = 0
-    @Published var settings: TimerSettings
+    @Published var settings: TimerSettings {
+        didSet {
+            // Update timeRemaining when settings change and timer is idle
+            if timerState == .idle {
+                timeRemaining = getDuration(for: currentSessionType)
+            }
+        }
+    }
     
     private var timer: Timer?
     private var backgroundTime: Date?

@@ -18,6 +18,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.1] - iOS - 2025-10-31
+
+### Fixed
+- 🐛 Fixed timer display not updating when settings change in idle state
+- 🐛 Fixed progress bar calculation issue in MainTimerView
+- 🐛 Corrected theme color reference in PrivacyPolicyView
+
+### Technical
+- **Version:** 1.1.1
+- **Build:** 5
+- Added `didSet` observer to `settings` property in TimerManager to automatically update timer display when settings change
+- Timer now properly reflects new settings when changed while in idle state
+- Preserves session integrity by not updating active or paused timers
+
+---
+
 ## [1.1.1] - Android - 2025-10-31
 
 ### Changed
@@ -153,6 +169,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Platform | Release Date | Status |
 |---------|----------|--------------|--------|
+| 1.1.1 | iOS | 2025-10-31 | ✅ Released |
 | 1.1.1 | Android | 2025-10-31 | ✅ Released |
 | 1.1.0 | Android | 2025-10-29 | ✅ Released |
 | 1.1.0 | iOS | 2025-10-28 | ✅ Released |
@@ -212,9 +229,9 @@ We use the following categories for changes:
 - **Target SDK:** iOS 18.6
 
 #### App Store
-- **Bundle ID:** com.example.pomodoro (placeholder)
-- **Version:** 1.1.0
-- **Build:** 3
+- **Bundle ID:** avtanshgupta.PomodoroTimer
+- **Version:** 1.1.1
+- **Build:** 5
 
 ### Android
 
@@ -261,4 +278,4 @@ We welcome your feedback! Please:
 
 ---
 
-*Last Updated: October 28, 2025*
+*Last Updated: October 31, 2025*
