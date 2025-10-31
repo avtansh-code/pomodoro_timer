@@ -380,11 +380,11 @@ struct SettingsView: View {
                     .frame(width: 24)
                 Text("Version")
                 Spacer()
-                Text("1.1.0")
+                Text("1.1.1")
                     .foregroundColor(.secondary)
             }
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("Version 1.1.0")
+            .accessibilityLabel("Version 1.1.1")
         } header: {
             Label("About", systemImage: "info.circle")
         }

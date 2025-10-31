@@ -4,7 +4,7 @@
 
 A beautiful, privacy-first Pomodoro timer for iOS and Android. Stay focused, track your productivity, and build better work habits—all while keeping your data completely private.
 
-[![iOS](https://img.shields.io/badge/iOS-18.6+-blue.svg)](https://www.apple.com/ios/)
+[![iOS](https://img.shields.io/badge/iOS-17.0+-blue.svg)](https://www.apple.com/ios/)
 [![Android](https://img.shields.io/badge/Android-13.0+-green.svg)](https://www.android.com/)
 [![License](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 [![Swift](https://img.shields.io/badge/Swift-5.0+-orange.svg)](https://swift.org/)
@@ -28,7 +28,7 @@ A beautiful, privacy-first Pomodoro timer for iOS and Android. Stay focused, tra
 ## Download
 
 ### iOS
-**Requirements:** iOS 18.6 or later
+**Requirements:** iOS 17.0 or later
 
 Coming soon to the App Store
 
@@ -75,7 +75,7 @@ Mr. Pomodoro/
 - **Language:** Swift 5.0+
 - **Framework:** SwiftUI
 - **Architecture:** MVVM
-- **Min Version:** iOS 18.6
+- **Min Version:** iOS 17.0
 
 ### Android
 - **Language:** Kotlin 2.0+
