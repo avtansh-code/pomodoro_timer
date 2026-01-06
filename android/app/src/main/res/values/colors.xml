@@ -1,4 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#FF5722</color>
+    <!-- Material 3 Dynamic Color System -->
+    <!-- These colors follow Material Design 3 naming conventions -->
+    
+    <!-- Primary Colors - Brand colors used across UI -->
+    <color name="md_theme_light_primary">#ED4242</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#FFDAD6</color>
+    <color name="md_theme_light_onPrimaryContainer">#410002</color>
+    
+    <color name="md_theme_dark_primary">#FFB4AB</color>
+    <color name="md_theme_dark_onPrimary">#690005</color>
+    <color name="md_theme_dark_primaryContainer">#93000A</color>
+    <color name="md_theme_dark_onPrimaryContainer">#FFDAD6</color>
+    
+    <!-- Secondary Colors - Supporting colors -->
+    <color name="md_theme_light_secondary">#FA7343</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#FFDAD6</color>
+    <color name="md_theme_light_onSecondaryContainer">#2C160D</color>
+    
+    <color name="md_theme_dark_secondary">#FFB4AB</color>
+    <color name="md_theme_dark_onSecondary">#5F1415</color>
+    <color name="md_theme_dark_secondaryContainer">#7A2E25</color>
+    <color name="md_theme_dark_onSecondaryContainer">#FFDAD6</color>
+    
+    <!-- Tertiary Colors - Complementary accent colors -->
+    <color name="md_theme_light_tertiary">#FF9B73</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiaryContainer">#FFE0D3</color>
+    <color name="md_theme_light_onTertiaryContainer">#3A1900</color>
+    
+    <color name="md_theme_dark_tertiary">#FFB68A</color>
+    <color name="md_theme_dark_onTertiary">#5B2000</color>
+    <color name="md_theme_dark_tertiaryContainer">#7D3000</color>
+    <color name="md_theme_dark_onTertiaryContainer">#FFE0D3</color>
+    
+    <!-- Error Colors - For error states and destructive actions -->
+    <color name="md_theme_light_error">#BA1A1A</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_errorContainer">#FFDAD6</color>
+    <color name="md_theme_light_onErrorContainer">#410002</color>
+    
+    <color name="md_theme_dark_error">#FFB4AB</color>
+    <color name="md_theme_dark_onError">#690005</color>
+    <color name="md_theme_dark_errorContainer">#93000A</color>
+    <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
+    
+    <!-- Background Colors - Main app background -->
+    <color name="md_theme_light_background">#FFFBFF</color>
+    <color name="md_theme_light_onBackground">#201A19</color>
+    
+    <color name="md_theme_dark_background">#201A19</color>
+    <color name="md_theme_dark_onBackground">#EDE0DE</color>
+    
+    <!-- Surface Colors - Cards, sheets, menus -->
+    <color name="md_theme_light_surface">#FFFBFF</color>
+    <color name="md_theme_light_onSurface">#201A19</color>
+    <color name="md_theme_light_surfaceVariant">#F5DDDA</color>
+    <color name="md_theme_light_onSurfaceVariant">#534341</color>
+    
+    <color name="md_theme_dark_surface">#201A19</color>
+    <color name="md_theme_dark_onSurface">#EDE0DE</color>
+    <color name="md_theme_dark_surfaceVariant">#534341</color>
+    <color name="md_theme_dark_onSurfaceVariant">#D8C2BF</color>
+    
+    <!-- Outline - Borders and dividers -->
+    <color name="md_theme_light_outline">#857370</color>
+    <color name="md_theme_light_outlineVariant">#D8C2BF</color>
+    
+    <color name="md_theme_dark_outline">#A08C89</color>
+    <color name="md_theme_dark_outlineVariant">#534341</color>
+    
+    <!-- Inverse Colors - For snackbars and tooltips -->
+    <color name="md_theme_light_inverseSurface">#362F2E</color>
+    <color name="md_theme_light_inverseOnSurface">#FBEEEC</color>
+    <color name="md_theme_light_inversePrimary">#FFB4AB</color>
+    
+    <color name="md_theme_dark_inverseSurface">#EDE0DE</color>
+    <color name="md_theme_dark_inverseOnSurface">#362F2E</color>
+    <color name="md_theme_dark_inversePrimary">#C00011</color>
+    
+    <!-- Surface Tint - Elevation tint color -->
+    <color name="md_theme_light_surfaceTint">#ED4242</color>
+    <color name="md_theme_dark_surfaceTint">#FFB4AB</color>
+    
+    <!-- Scrim - For modal overlays -->
+    <color name="md_theme_light_scrim">#000000</color>
+    <color name="md_theme_dark_scrim">#000000</color>
+    
+    <!-- Session Type Colors (functional colors) -->
+    <color name="focus_color">#ED4242</color>
+    <color name="short_break_color">#33C759</color>
+    <color name="long_break_color">#5957D6</color>
+    
+    <!-- Splash Screen Colors -->
+    <color name="splash_background">#FFFBFF</color>
+    <color name="splash_icon_tint">#ED4242</color>
+    
+    <!-- Legacy Material 2 colors (for backwards compatibility) -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
 </resources>
