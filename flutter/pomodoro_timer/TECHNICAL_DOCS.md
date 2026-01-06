@@ -363,12 +363,47 @@ flutter build apk && flutter build ios
 
 ---
 
-#### Phase 2: Core Timer Logic
-**Status:** Not Started  
-**Planned Approach:**
-- Implement timer using `Stream.periodic` for countdown
-- BLoC will manage three states: initial, running, paused, finished
-- Timer accuracy will be maintained using system time checks
+#### Phase 2: Core Timer Logic and Main UI
+**Status:** ✅ Complete  
+**Completed:** January 6, 2026
+
+**Implementation Summary:**
+1. ✅ Created TimerBloc with comprehensive event/state management
+2. ✅ Implemented accurate countdown using Stream.periodic
+3. ✅ Built MainTimerScreen with BlocProvider integration
+4. ✅ Created TimerDisplay widget with session-based styling
+5. ✅ Created TimerControls widget with state-based buttons
+
+**Key Implementations:**
+- **TimerEvent (7 events)**: Sealed class hierarchy with TimerStarted, TimerPaused, TimerResumed, TimerReset, TimerTicked, TimerSkipped, TimerCompleted
+- **TimerState (5 states)**: Sealed class with TimerInitial, TimerRunning, TimerPaused, TimerCompleted, TimerError - all extending base TimerState with duration and sessionType
+- **TimerBloc**: Full BLoC implementation with Stream.periodic ticker, automatic session transitions, notification/audio integration, proper cleanup in close()
+- **MainTimerScreen**: Material 3 UI with BlocBuilder, session counter, timer display, controls, completion messages, navigation placeholders
+- **TimerDisplay Widget**: Large format MM:SS display, session-type colors (primary/green/blue), progress indicator, rounded container design
+- **TimerControls Widget**: State-based button rendering (Start/Pause/Resume), secondary actions (Reset/Skip), elevated/outlined button styles
+
+**Technical Decisions Made:**
+- Used import prefixes (`as event`, `as state`) to resolve naming collisions between events and states
+- Stream.periodic provides 1-second accuracy with takeWhile for automatic completion
+- SessionType enum determines colors, labels, and next session logic
+- Auto-transition after 2 seconds on completion for smooth UX
+- Material 3 with deepOrange seed color for modern, accessible design
+- BlocProvider scoped to screen level for proper lifecycle management
+
+**Files Created:**
+- `lib/features/timer/bloc/timer_event.dart` (68 lines)
+- `lib/features/timer/bloc/timer_state.dart` (95 lines)
+- `lib/features/timer/bloc/timer_bloc.dart` (210 lines)
+- `lib/features/timer/view/widgets/timer_display.dart` (106 lines)
+- `lib/features/timer/view/widgets/timer_controls.dart` (124 lines)
+- `lib/features/timer/view/main_timer_screen.dart` (163 lines)
+- Updated `lib/main.dart` (40 lines) - service initialization and app root
+
+**Architecture Notes:**
+- Clean separation: Events trigger BLoC → BLoC emits States → UI rebuilds
+- Dependency injection via GetIt for services (notification, audio)
+- Widgets are pure and stateless - all state managed by BLoC
+- Session counter and completion messages enhance user feedback
 
 ---
 
