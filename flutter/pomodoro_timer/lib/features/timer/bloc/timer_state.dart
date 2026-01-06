@@ -2,16 +2,16 @@ import 'package:equatable/equatable.dart';
 import '../../../core/models/timer_session.dart';
 
 /// Base class for all timer states.
-/// 
+///
 /// Timer states represent the current condition of the timer
 /// and are emitted by the TimerBloc in response to events.
 sealed class TimerState extends Equatable {
   /// Current duration in seconds
   final int duration;
-  
+
   /// Current session type
   final SessionType sessionType;
-  
+
   /// Number of completed work sessions in current cycle
   final int completedSessions;
 
@@ -26,7 +26,7 @@ sealed class TimerState extends Equatable {
 }
 
 /// Initial state when the timer is first created or reset.
-/// 
+///
 /// The timer is ready to start but not yet running.
 class TimerInitial extends TimerState {
   const TimerInitial({
@@ -49,11 +49,16 @@ class TimerRunning extends TimerState {
   });
 
   @override
-  List<Object?> get props => [duration, sessionType, completedSessions, startTime];
+  List<Object?> get props => [
+    duration,
+    sessionType,
+    completedSessions,
+    startTime,
+  ];
 }
 
 /// State when the timer is paused.
-/// 
+///
 /// The remaining duration is preserved and can be resumed.
 class TimerPaused extends TimerState {
   const TimerPaused({
@@ -64,7 +69,7 @@ class TimerPaused extends TimerState {
 }
 
 /// State when a timer session has completed.
-/// 
+///
 /// This state is shown briefly before transitioning to the next session.
 class TimerCompleted extends TimerState {
   /// The type of session that just completed
@@ -79,11 +84,11 @@ class TimerCompleted extends TimerState {
 
   @override
   List<Object?> get props => [
-        duration,
-        sessionType,
-        completedSessions,
-        completedSessionType,
-      ];
+    duration,
+    sessionType,
+    completedSessions,
+    completedSessionType,
+  ];
 }
 
 /// State when the timer encounters an error.
@@ -98,5 +103,10 @@ class TimerError extends TimerState {
   });
 
   @override
-  List<Object?> get props => [duration, sessionType, completedSessions, message];
+  List<Object?> get props => [
+    duration,
+    sessionType,
+    completedSessions,
+    message,
+  ];
 }

@@ -5,19 +5,19 @@ import 'circular_timer_progress.dart';
 import 'state_indicator_chip.dart';
 
 /// Widget that displays the timer countdown in a large, readable format.
-/// 
+///
 /// Shows minutes and seconds in MM:SS format with appropriate styling
 /// based on the current session type. Now uses circular progress indicator.
 class TimerDisplay extends StatelessWidget {
   /// Duration to display in seconds
   final int duration;
-  
+
   /// Total duration for the current session (to calculate progress)
   final int totalDuration;
-  
+
   /// Current session type (affects color and style)
   final SessionType sessionType;
-  
+
   /// Current timer state
   final state.TimerState timerState;
 
@@ -57,17 +57,14 @@ class TimerDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = _getSessionColor(context);
-    
+
     return CircularTimerProgress(
       progress: _getProgress(),
       timeText: _formatDuration(duration),
       color: color,
       size: 300.0,
       strokeWidth: 16.0,
-      stateIndicator: StateIndicatorChip(
-        timerState: timerState,
-        color: color,
-      ),
+      stateIndicator: StateIndicatorChip(timerState: timerState, color: color),
     );
   }
 }

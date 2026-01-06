@@ -9,7 +9,7 @@ import '../../features/settings/view/settings_screen.dart';
 import '../../features/statistics/view/statistics_screen.dart';
 
 /// Main navigation screen with bottom tab bar.
-/// 
+///
 /// Provides a tab-based navigation structure matching iOS/Android legacy apps
 /// with three main tabs: Timer, Stats, and Settings.
 class MainNavigationScreen extends StatefulWidget {
@@ -21,13 +21,13 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
-  
+
   late final StatisticsCubit _statisticsCubit;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     // Create StatisticsCubit
     _statisticsCubit = StatisticsCubit(getIt<StatisticsRepository>());
   }
@@ -36,13 +36,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     setState(() {
       _selectedIndex = index;
     });
-    
+
     // Refresh statistics when navigating to Stats tab
     if (index == 1) {
       _statisticsCubit.refresh();
     }
   }
-  
+
   @override
   void dispose() {
     _statisticsCubit.close();
@@ -53,27 +53,24 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     // Watch settings to rebuild when they change
     context.watch<SettingsCubit>();
-    
+
     // Build pages dynamically
     final pages = [
       // Timer Tab - MainTimerScreen rebuilds via BlocBuilder inside it
       const MainTimerScreen(),
-      
+
       // Statistics Tab - provide the StatisticsCubit
       BlocProvider.value(
         value: _statisticsCubit,
         child: const StatisticsScreen(),
       ),
-      
+
       // Settings Tab - SettingsScreen is provided by parent
       const SettingsScreen(),
     ];
-    
+
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: pages,
-      ),
+      body: IndexedStack(index: _selectedIndex, children: pages),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onItemTapped,

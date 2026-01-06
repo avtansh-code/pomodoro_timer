@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Privacy Policy screen displaying the app's privacy commitments.
-/// 
+///
 /// Matches the iOS app's PrivacyPolicyView with comprehensive sections on:
 /// - Data collection practices
 /// - What we DON'T collect
@@ -14,11 +14,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Privacy Policy'),
-      ),
+      appBar: AppBar(title: const Text('Privacy Policy')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -52,32 +50,34 @@ class PrivacyPolicyScreen extends StatelessWidget {
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 24),
-          
+
           // Introduction
           _buildSection(
             theme: theme,
             title: 'Our Commitment to Privacy',
-            content: 'Mr. Pomodoro is designed with privacy as a core principle. We believe your productivity data should remain yours, stored securely on your device.',
+            content:
+                'Mr. Pomodoro is designed with privacy as a core principle. We believe your productivity data should remain yours, stored securely on your device.',
           ),
           const SizedBox(height: 24),
-          
+
           // What We Collect
           _buildDataCollectionSection(theme),
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 24),
-          
+
           // What We DON'T Collect
           _buildWhatWeDoNotCollectSection(theme),
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 24),
-          
+
           // How Data is Used
           _buildSection(
             theme: theme,
             title: 'How Your Data Is Used',
-            content: 'All data collected is used solely to:\n\n'
+            content:
+                'All data collected is used solely to:\n\n'
                 '• Display your timer settings and preferences\n'
                 '• Show your productivity statistics\n'
                 '• Calculate streaks and performance metrics\n'
@@ -86,45 +86,46 @@ class PrivacyPolicyScreen extends StatelessWidget {
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 24),
-          
+
           // Data Security
           _buildSecuritySection(theme),
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 24),
-          
+
           // Your Rights
           _buildRightsSection(theme),
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 24),
-          
+
           // Compliance
           _buildComplianceSection(theme),
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 24),
-          
+
           // Children's Privacy
           _buildSection(
             theme: theme,
             title: "Children's Privacy",
-            content: 'Pomodoro Timer is not directed at children under 13 years of age. We do not knowingly collect personal information from children.',
+            content:
+                'Pomodoro Timer is not directed at children under 13 years of age. We do not knowingly collect personal information from children.',
           ),
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 24),
-          
+
           // Contact
           _buildContactSection(theme),
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 24),
-          
+
           // Summary
           _buildSummarySection(theme),
           const SizedBox(height: 24),
-          
+
           // Footer
           Text(
             'This Privacy Policy reflects our commitment to protecting your privacy. If you have questions or need clarification, please don\'t hesitate to contact us.',
@@ -153,10 +154,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(
-          content,
-          style: theme.textTheme.bodyMedium,
-        ),
+        Text(content, style: theme.textTheme.bodyMedium),
       ],
     );
   }
@@ -179,12 +177,20 @@ class PrivacyPolicyScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        const Text('The app stores the following information locally on your device only:'),
+        const Text(
+          'The app stores the following information locally on your device only:',
+        ),
         const SizedBox(height: 12),
-        _buildBullet('Timer Settings: Your preferences for focus duration, break lengths, sound/haptic settings, and theme'),
+        _buildBullet(
+          'Timer Settings: Your preferences for focus duration, break lengths, sound/haptic settings, and theme',
+        ),
         _buildBullet('Session History: Records of completed Pomodoro sessions'),
-        _buildBullet('Statistics: Calculated metrics from your session history'),
-        _buildBullet('Focus Mode Settings: iOS Focus Mode integration preferences'),
+        _buildBullet(
+          'Statistics: Calculated metrics from your session history',
+        ),
+        _buildBullet(
+          'Focus Mode Settings: iOS Focus Mode integration preferences',
+        ),
       ],
     );
   }
@@ -257,10 +263,26 @@ class PrivacyPolicyScreen extends StatelessWidget {
         const SizedBox(height: 12),
         const Text('You have complete control over your data:'),
         const SizedBox(height: 12),
-        _buildControlFeature(Icons.visibility, 'Access', 'View all settings and session history'),
-        _buildControlFeature(Icons.edit, 'Modify', 'Edit or update preferences anytime'),
-        _buildControlFeature(Icons.delete, 'Delete', 'Clear session history or reset all data'),
-        _buildControlFeature(Icons.download, 'Export', 'View session data in Statistics screen'),
+        _buildControlFeature(
+          Icons.visibility,
+          'Access',
+          'View all settings and session history',
+        ),
+        _buildControlFeature(
+          Icons.edit,
+          'Modify',
+          'Edit or update preferences anytime',
+        ),
+        _buildControlFeature(
+          Icons.delete,
+          'Delete',
+          'Clear session history or reset all data',
+        ),
+        _buildControlFeature(
+          Icons.download,
+          'Export',
+          'View session data in Statistics screen',
+        ),
       ],
     );
   }
@@ -311,7 +333,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        const Text('If you have questions or concerns about this Privacy Policy:'),
+        const Text(
+          'If you have questions or concerns about this Privacy Policy:',
+        ),
         const SizedBox(height: 12),
         Row(
           children: [
@@ -349,13 +373,25 @@ class PrivacyPolicyScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            _buildSummaryItem('What We Collect', 'Timer settings and session history stored locally'),
+            _buildSummaryItem(
+              'What We Collect',
+              'Timer settings and session history stored locally',
+            ),
             const SizedBox(height: 12),
-            _buildSummaryItem('What We Don\'t Collect', 'No analytics, no tracking, no personal information'),
+            _buildSummaryItem(
+              'What We Don\'t Collect',
+              'No analytics, no tracking, no personal information',
+            ),
             const SizedBox(height: 12),
-            _buildSummaryItem('Your Control', 'Full control to view, modify, and delete all data'),
+            _buildSummaryItem(
+              'Your Control',
+              'Full control to view, modify, and delete all data',
+            ),
             const SizedBox(height: 12),
-            _buildSummaryItem('Data Storage', 'All data stored locally on your device only'),
+            _buildSummaryItem(
+              'Data Storage',
+              'All data stored locally on your device only',
+            ),
           ],
         ),
       ),
@@ -388,7 +424,11 @@ class PrivacyPolicyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSecurityFeature(IconData icon, String title, String description) {
+  Widget _buildSecurityFeature(
+    IconData icon,
+    String title,
+    String description,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -398,17 +438,11 @@ class PrivacyPolicyScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
               const SizedBox(height: 4),
               Text(
                 description,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
             ],
           ),
@@ -435,10 +469,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 ),
                 Text(
                   description,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -448,7 +479,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildComplianceBadge(String title, String subtitle, IconData icon, Color color) {
+  Widget _buildComplianceBadge(
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -473,10 +509,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 ),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
             ),

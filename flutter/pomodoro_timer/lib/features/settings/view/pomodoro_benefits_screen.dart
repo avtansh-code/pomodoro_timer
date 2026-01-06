@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Educational screen explaining the Pomodoro Technique.
-/// 
+///
 /// Matches the iOS app's PomodoroBenefitsView with:
 /// - Origin story
 /// - How it works (5 steps)
@@ -14,11 +14,9 @@ class PomodoroBenefitsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('The Pomodoro Way'),
-      ),
+      appBar: AppBar(title: const Text('The Pomodoro Way')),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -36,23 +34,23 @@ class PomodoroBenefitsScreen extends StatelessWidget {
             // Header
             _buildHeader(theme),
             const SizedBox(height: 32),
-            
+
             // History Section
             _buildHistorySection(theme),
             const SizedBox(height: 32),
-            
+
             // How It Works
             _buildHowItWorksSection(theme),
             const SizedBox(height: 32),
-            
+
             // Benefits
             _buildBenefitsSection(theme),
             const SizedBox(height: 32),
-            
+
             // Considerations
             _buildConsiderationsSection(theme),
             const SizedBox(height: 32),
-            
+
             // CTA
             _buildCTA(context, theme),
             const SizedBox(height: 24),
@@ -72,11 +70,7 @@ class PomodoroBenefitsScreen extends StatelessWidget {
             shape: BoxShape.circle,
             color: theme.colorScheme.primary.withValues(alpha: 0.15),
           ),
-          child: Icon(
-            Icons.timer,
-            size: 44,
-            color: theme.colorScheme.primary,
-          ),
+          child: Icon(Icons.timer, size: 44, color: theme.colorScheme.primary),
         ),
         const SizedBox(height: 16),
         Text(
@@ -224,42 +218,48 @@ class PomodoroBenefitsScreen extends StatelessWidget {
         _buildBenefitCard(
           icon: Icons.visibility,
           title: 'Enhanced Focus',
-          description: 'Short, timed sessions help maintain deep concentration and prevent mental drift.',
+          description:
+              'Short, timed sessions help maintain deep concentration and prevent mental drift.',
           color: theme.colorScheme.primary,
         ),
         const SizedBox(height: 12),
         _buildBenefitCard(
           icon: Icons.battery_full,
           title: 'Reduced Mental Fatigue',
-          description: 'Regular breaks prevent burnout and keep your mind fresh throughout the day.',
+          description:
+              'Regular breaks prevent burnout and keep your mind fresh throughout the day.',
           color: Colors.green,
         ),
         const SizedBox(height: 12),
         _buildBenefitCard(
           icon: Icons.schedule,
           title: 'Better Time Awareness',
-          description: 'Learn to accurately estimate how long tasks take and plan more effectively.',
+          description:
+              'Learn to accurately estimate how long tasks take and plan more effectively.',
           color: Colors.blue,
         ),
         const SizedBox(height: 12),
         _buildBenefitCard(
           icon: Icons.trending_up,
           title: 'Increased Motivation',
-          description: 'Small wins and completed sessions create positive momentum and build confidence.',
+          description:
+              'Small wins and completed sessions create positive momentum and build confidence.',
           color: Colors.purple,
         ),
         const SizedBox(height: 12),
         _buildBenefitCard(
           icon: Icons.directions_walk,
           title: 'Sustainable Work Rhythm',
-          description: 'Balance focused work with restorative breaks for long-term productivity.',
+          description:
+              'Balance focused work with restorative breaks for long-term productivity.',
           color: Colors.cyan,
         ),
         const SizedBox(height: 12),
         _buildBenefitCard(
           icon: Icons.back_hand,
           title: 'Distraction Management',
-          description: 'The commitment to 25 minutes helps you defer interruptions and stay on track.',
+          description:
+              'The commitment to 25 minutes helps you defer interruptions and stay on track.',
           color: Colors.orange,
         ),
       ],
@@ -283,22 +283,26 @@ class PomodoroBenefitsScreen extends StatelessWidget {
               children: [
                 _buildConsiderationRow(
                   icon: Icons.account_tree,
-                  text: 'May interrupt deep creative flow states that benefit from longer unbroken periods.',
+                  text:
+                      'May interrupt deep creative flow states that benefit from longer unbroken periods.',
                 ),
                 const Divider(height: 24),
                 _buildConsiderationRow(
                   icon: Icons.calendar_today,
-                  text: 'The rigid structure might not suit all task types or work environments.',
+                  text:
+                      'The rigid structure might not suit all task types or work environments.',
                 ),
                 const Divider(height: 24),
                 _buildConsiderationRow(
                   icon: Icons.people,
-                  text: 'Collaborative work may require flexibility with timing to accommodate others.',
+                  text:
+                      'Collaborative work may require flexibility with timing to accommodate others.',
                 ),
                 const Divider(height: 24),
                 _buildConsiderationRow(
                   icon: Icons.tune,
-                  text: 'Feel free to adjust session lengths to find what works best for you!',
+                  text:
+                      'Feel free to adjust session lengths to find what works best for you!',
                 ),
               ],
             ),
@@ -418,10 +422,7 @@ class PomodoroBenefitsScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     description,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 15, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -468,10 +469,7 @@ class PomodoroBenefitsScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     description,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 15, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -491,12 +489,7 @@ class PomodoroBenefitsScreen extends StatelessWidget {
       children: [
         Icon(icon, color: Colors.orange, size: 20),
         const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            text,
-            style: const TextStyle(fontSize: 15),
-          ),
-        ),
+        Expanded(child: Text(text, style: const TextStyle(fontSize: 15))),
       ],
     );
   }

@@ -9,7 +9,7 @@ import 'pomodoro_benefits_screen.dart';
 import 'privacy_policy_screen.dart';
 
 /// Settings screen matching iOS legacy app structure.
-/// 
+///
 /// Includes all sections from iOS:
 /// - Learn about Pomodoro
 /// - Duration Settings
@@ -33,7 +33,7 @@ class _SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       body: BlocConsumer<SettingsCubit, SettingsState>(
         listener: (context, state) {
@@ -74,32 +74,32 @@ class _SettingsView extends StatelessWidget {
               children: [
                 // Learn Section - Featured at top
                 _buildLearnSection(context),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // Duration Settings
                 _buildDurationSection(context, state),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // Auto-start Settings
                 _buildAutoStartSection(context, state),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // Notifications & Feedback
                 _buildNotificationSection(context, state),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // Data Management
                 _buildDataSection(context),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // About Section
                 _buildAboutSection(context),
-                
+
                 const SizedBox(height: 24),
               ],
             ),
@@ -137,7 +137,7 @@ class _SettingsView extends StatelessWidget {
 
   Widget _buildDurationSection(BuildContext context, SettingsState state) {
     final theme = Theme.of(context);
-    
+
     return _buildSection(
       context: context,
       icon: Icons.schedule,
@@ -165,7 +165,9 @@ class _SettingsView extends StatelessWidget {
           min: 1,
           max: 30,
           onChanged: (value) {
-            context.read<SettingsCubit>().updateShortBreakDuration(value.round());
+            context.read<SettingsCubit>().updateShortBreakDuration(
+              value.round(),
+            );
           },
         ),
         const Divider(height: 1),
@@ -178,7 +180,9 @@ class _SettingsView extends StatelessWidget {
           min: 1,
           max: 60,
           onChanged: (value) {
-            context.read<SettingsCubit>().updateLongBreakDuration(value.round());
+            context.read<SettingsCubit>().updateLongBreakDuration(
+              value.round(),
+            );
           },
         ),
         const Divider(height: 1),
@@ -201,7 +205,9 @@ class _SettingsView extends StatelessWidget {
                 icon: const Icon(Icons.remove_circle_outline),
                 onPressed: state.settings.sessionsBeforeLongBreak > 2
                     ? () {
-                        context.read<SettingsCubit>().updateSessionsBeforeLongBreak(
+                        context
+                            .read<SettingsCubit>()
+                            .updateSessionsBeforeLongBreak(
                               state.settings.sessionsBeforeLongBreak - 1,
                             );
                       }
@@ -211,7 +217,9 @@ class _SettingsView extends StatelessWidget {
                 icon: const Icon(Icons.add_circle_outline),
                 onPressed: state.settings.sessionsBeforeLongBreak < 10
                     ? () {
-                        context.read<SettingsCubit>().updateSessionsBeforeLongBreak(
+                        context
+                            .read<SettingsCubit>()
+                            .updateSessionsBeforeLongBreak(
                               state.settings.sessionsBeforeLongBreak + 1,
                             );
                       }
@@ -229,7 +237,8 @@ class _SettingsView extends StatelessWidget {
       context: context,
       icon: Icons.play_circle,
       title: 'Auto-Start',
-      footer: 'Automatically begin the next session when the current one completes.',
+      footer:
+          'Automatically begin the next session when the current one completes.',
       children: [
         SwitchListTile(
           secondary: const Icon(Icons.play_circle, color: Colors.green),
@@ -241,7 +250,10 @@ class _SettingsView extends StatelessWidget {
         ),
         const Divider(height: 1),
         SwitchListTile(
-          secondary: Icon(Icons.play_circle, color: Theme.of(context).colorScheme.primary),
+          secondary: Icon(
+            Icons.play_circle,
+            color: Theme.of(context).colorScheme.primary,
+          ),
           title: const Text('Auto-start focus'),
           value: state.settings.autoStartFocus,
           onChanged: (value) {
@@ -293,7 +305,8 @@ class _SettingsView extends StatelessWidget {
       context: context,
       icon: Icons.storage,
       title: 'Data Management',
-      footer: 'Use these options to manage your app data. All destructive actions require confirmation.',
+      footer:
+          'Use these options to manage your app data. All destructive actions require confirmation.',
       children: [
         ListTile(
           leading: const Icon(Icons.delete, color: Colors.red),
@@ -338,10 +351,7 @@ class _SettingsView extends StatelessWidget {
         const ListTile(
           leading: Icon(Icons.info_outline, color: Colors.grey),
           title: Text('Version'),
-          trailing: Text(
-            '1.0.0',
-            style: TextStyle(color: Colors.grey),
-          ),
+          trailing: Text('1.0.0', style: TextStyle(color: Colors.grey)),
         ),
       ],
     );
@@ -355,7 +365,7 @@ class _SettingsView extends StatelessWidget {
     String? footer,
   }) {
     final theme = Theme.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -475,11 +485,11 @@ class _SettingsView extends StatelessWidget {
             onPressed: () async {
               // Reset settings
               context.read<SettingsCubit>().resetToDefaults();
-              
+
               // Clear statistics
               final repository = getIt<StatisticsRepository>();
               await repository.clearAllSessions();
-              
+
               if (dialogContext.mounted) {
                 Navigator.of(dialogContext).pop();
                 ScaffoldMessenger.of(context).showSnackBar(

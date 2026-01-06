@@ -14,12 +14,12 @@ class ThemeState {
 }
 
 /// Cubit for managing application theme.
-/// 
+///
 /// Handles loading, switching, and persisting the current theme mode.
 /// Supports light, dark, and system theme modes.
 class ThemeCubit extends Cubit<ThemeState> {
   final SharedPreferences _prefs;
-  
+
   static const String _themeKey = 'theme_mode';
 
   ThemeCubit(this._prefs) : super(const ThemeState(ThemeMode.system)) {
@@ -30,7 +30,7 @@ class ThemeCubit extends Cubit<ThemeState> {
   void _loadTheme() {
     try {
       final themeIndex = _prefs.getInt(_themeKey);
-      
+
       if (themeIndex != null) {
         emit(ThemeState(ThemeMode.values[themeIndex]));
       }

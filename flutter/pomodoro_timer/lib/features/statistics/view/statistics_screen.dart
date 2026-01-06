@@ -8,14 +8,14 @@ import '../bloc/statistics_state.dart';
 import 'dart:math' as math;
 
 /// Statistics screen matching iOS design with charts and analytics.
-/// 
+///
 /// Displays comprehensive session statistics including:
 /// - Current streak
 /// - Bar chart for sessions per day
 /// - Line chart for focus time trend
 /// - Pie chart for session distribution
 /// - Detailed statistics sections
-/// 
+///
 /// NOTE: This screen expects a StatisticsCubit to be provided by an ancestor.
 class StatisticsScreen extends StatelessWidget {
   const StatisticsScreen({super.key});
@@ -40,7 +40,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Statistics'),
@@ -75,29 +75,29 @@ class _StatisticsViewState extends State<_StatisticsView> {
               children: [
                 // Time Range Picker
                 _buildTimeRangePicker(context),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Streak Card
                 _buildStreakCard(context, streak),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Weekly Sessions Chart
                 _buildWeeklySessionsChart(context, currentSessions),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Focus Time Trend Chart
                 _buildFocusTimeTrendChart(context, currentSessions),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Session Type Distribution
                 _buildSessionTypeDistribution(context, currentSessions),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Today's Stats
                 _buildStatsSection(
                   context,
@@ -105,22 +105,24 @@ class _StatisticsViewState extends State<_StatisticsView> {
                   todaySessions,
                   Icons.calendar_today,
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Selected Range Stats
                 _buildStatsSection(
                   context,
-                  _selectedTimeRange == StatisticsFilter.week ? 'Week' : 'Month',
+                  _selectedTimeRange == StatisticsFilter.week
+                      ? 'Week'
+                      : 'Month',
                   currentSessions,
                   Icons.calendar_month,
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Motivational Quote
                 _buildMotivationalQuote(context),
-                
+
                 const SizedBox(height: 16),
               ],
             ),
@@ -163,11 +165,11 @@ class _StatisticsViewState extends State<_StatisticsView> {
 
   int _calculateStreak(StatisticsState state) {
     if (state.sessions.isEmpty) return 0;
-    
+
     int streak = 0;
     final now = DateTime.now();
     var checkDate = DateTime(now.year, now.month, now.day);
-    
+
     while (true) {
       final hasSessions = state.sessions.any((session) {
         final sessionDate = DateTime(
@@ -177,27 +179,21 @@ class _StatisticsViewState extends State<_StatisticsView> {
         );
         return sessionDate == checkDate;
       });
-      
+
       if (!hasSessions) break;
-      
+
       streak++;
       checkDate = checkDate.subtract(const Duration(days: 1));
     }
-    
+
     return streak;
   }
 
   Widget _buildTimeRangePicker(BuildContext context) {
     return SegmentedButton<StatisticsFilter>(
       segments: const [
-        ButtonSegment(
-          value: StatisticsFilter.week,
-          label: Text('Week'),
-        ),
-        ButtonSegment(
-          value: StatisticsFilter.month,
-          label: Text('Month'),
-        ),
+        ButtonSegment(value: StatisticsFilter.week, label: Text('Week')),
+        ButtonSegment(value: StatisticsFilter.month, label: Text('Month')),
       ],
       selected: {_selectedTimeRange},
       onSelectionChanged: (Set<StatisticsFilter> newSelection) {
@@ -250,16 +246,16 @@ class _StatisticsViewState extends State<_StatisticsView> {
           Text(
             '$streak',
             style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontFeatures: [const FontFeature.tabularFigures()],
-                ),
+              fontWeight: FontWeight.bold,
+              fontFeatures: [const FontFeature.tabularFigures()],
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             streak == 1 ? 'Day Streak' : 'Days Streak',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),
@@ -272,7 +268,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
   ) {
     final theme = Theme.of(context);
     final dailyData = _getDailySessionData(sessions);
-    
+
     if (dailyData.every((data) => data.count == 0)) {
       return _buildEmptyChart(
         context,
@@ -326,7 +322,8 @@ class _StatisticsViewState extends State<_StatisticsView> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        if (value.toInt() >= 0 && value.toInt() < dailyData.length) {
+                        if (value.toInt() >= 0 &&
+                            value.toInt() < dailyData.length) {
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
@@ -351,17 +348,18 @@ class _StatisticsViewState extends State<_StatisticsView> {
                       },
                     ),
                   ),
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                 ),
                 gridData: FlGridData(
                   show: true,
                   drawVerticalLine: false,
                   getDrawingHorizontalLine: (value) {
-                    return FlLine(
-                      color: theme.dividerColor,
-                      strokeWidth: 1,
-                    );
+                    return FlLine(color: theme.dividerColor, strokeWidth: 1);
                   },
                 ),
                 borderData: FlBorderData(show: false),
@@ -374,7 +372,9 @@ class _StatisticsViewState extends State<_StatisticsView> {
                         toY: dailyData[index].count.toDouble(),
                         color: theme.colorScheme.primary,
                         width: 16,
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(8),
+                        ),
                       ),
                     ],
                   ),
@@ -393,7 +393,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
   ) {
     final theme = Theme.of(context);
     final trendData = _getFocusTimeTrendData(sessions);
-    
+
     if (trendData.every((data) => data.minutes == 0)) {
       return _buildEmptyChart(
         context,
@@ -442,10 +442,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
                   show: true,
                   drawVerticalLine: false,
                   getDrawingHorizontalLine: (value) {
-                    return FlLine(
-                      color: theme.dividerColor,
-                      strokeWidth: 1,
-                    );
+                    return FlLine(color: theme.dividerColor, strokeWidth: 1);
                   },
                 ),
                 titlesData: FlTitlesData(
@@ -454,7 +451,8 @@ class _StatisticsViewState extends State<_StatisticsView> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        if (value.toInt() >= 0 && value.toInt() < trendData.length) {
+                        if (value.toInt() >= 0 &&
+                            value.toInt() < trendData.length) {
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
@@ -479,8 +477,12 @@ class _StatisticsViewState extends State<_StatisticsView> {
                       },
                     ),
                   ),
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                 ),
                 borderData: FlBorderData(show: false),
                 minX: 0,
@@ -491,10 +493,8 @@ class _StatisticsViewState extends State<_StatisticsView> {
                   LineChartBarData(
                     spots: List.generate(
                       trendData.length,
-                      (index) => FlSpot(
-                        index.toDouble(),
-                        trendData[index].minutes,
-                      ),
+                      (index) =>
+                          FlSpot(index.toDouble(), trendData[index].minutes),
                     ),
                     isCurved: true,
                     color: theme.colorScheme.primary,
@@ -521,7 +521,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
   ) {
     final theme = Theme.of(context);
     final distributionData = _getSessionDistribution(sessions);
-    
+
     if (distributionData.isEmpty) {
       return _buildEmptyChart(
         context,
@@ -630,7 +630,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
     IconData icon,
   ) {
     final theme = Theme.of(context);
-    
+
     if (sessions.isEmpty) {
       return Container(
         padding: const EdgeInsets.all(16),
@@ -671,7 +671,9 @@ class _StatisticsViewState extends State<_StatisticsView> {
       );
     }
 
-    final focusCount = sessions.where((s) => s.sessionType == SessionType.work).length;
+    final focusCount = sessions
+        .where((s) => s.sessionType == SessionType.work)
+        .length;
     final totalFocusTime = sessions
         .where((s) => s.sessionType == SessionType.work)
         .fold<int>(0, (sum, s) => sum + s.durationInMinutes);
@@ -756,16 +758,13 @@ class _StatisticsViewState extends State<_StatisticsView> {
         Icon(icon, color: color, size: 20),
         const SizedBox(width: 12),
         Expanded(
-          child: Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          child: Text(label, style: Theme.of(context).textTheme.bodyMedium),
         ),
         Text(
           value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -780,12 +779,12 @@ class _StatisticsViewState extends State<_StatisticsView> {
       "Every session brings you closer to your goals. ⭐",
       "Believe in yourself and all that you are. 🌟",
       "Focus on progress, not perfection. 📈",
-      "You've got this! One session at a time. 🚀"
+      "You've got this! One session at a time. 🚀",
     ];
-    
+
     final quote = (quotes..shuffle()).first;
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -805,11 +804,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
       ),
       child: Column(
         children: [
-          const Icon(
-            Icons.auto_awesome,
-            color: Colors.yellow,
-            size: 32,
-          ),
+          const Icon(Icons.auto_awesome, color: Colors.yellow, size: 32),
           const SizedBox(height: 12),
           Text(
             quote,
@@ -830,7 +825,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
     String message,
   ) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -871,51 +866,57 @@ class _StatisticsViewState extends State<_StatisticsView> {
     );
   }
 
-  List<({String day, int count})> _getDailySessionData(List<TimerSession> sessions) {
+  List<({String day, int count})> _getDailySessionData(
+    List<TimerSession> sessions,
+  ) {
     final now = DateTime.now();
     final daysToShow = _selectedTimeRange == StatisticsFilter.week ? 7 : 30;
     final data = <({String day, int count})>[];
-    
+
     for (int i = daysToShow - 1; i >= 0; i--) {
       final date = now.subtract(Duration(days: i));
       final dayName = _selectedTimeRange == StatisticsFilter.month
           ? '${date.day}'
           : DateFormat('E').format(date);
-      
+
       final count = sessions.where((session) {
         return session.startTime.year == date.year &&
             session.startTime.month == date.month &&
             session.startTime.day == date.day;
       }).length;
-      
+
       data.add((day: dayName, count: count));
     }
-    
+
     return data;
   }
 
-  List<({String day, double minutes})> _getFocusTimeTrendData(List<TimerSession> sessions) {
+  List<({String day, double minutes})> _getFocusTimeTrendData(
+    List<TimerSession> sessions,
+  ) {
     final now = DateTime.now();
     final daysToShow = _selectedTimeRange == StatisticsFilter.week ? 7 : 30;
     final data = <({String day, double minutes})>[];
-    
+
     for (int i = daysToShow - 1; i >= 0; i--) {
       final date = now.subtract(Duration(days: i));
       final dayName = _selectedTimeRange == StatisticsFilter.month
           ? '${date.day}'
           : DateFormat('E').format(date);
-      
+
       final focusMinutes = sessions
-          .where((session) =>
-              session.sessionType == SessionType.work &&
-              session.startTime.year == date.year &&
-              session.startTime.month == date.month &&
-              session.startTime.day == date.day)
+          .where(
+            (session) =>
+                session.sessionType == SessionType.work &&
+                session.startTime.year == date.year &&
+                session.startTime.month == date.month &&
+                session.startTime.day == date.day,
+          )
           .fold<double>(0, (sum, s) => sum + s.durationInMinutes);
-      
+
       data.add((day: dayName, minutes: focusMinutes));
     }
-    
+
     return data;
   }
 
@@ -923,22 +924,40 @@ class _StatisticsViewState extends State<_StatisticsView> {
     List<TimerSession> sessions,
   ) {
     final theme = Theme.of(context);
-    final focusCount = sessions.where((s) => s.sessionType == SessionType.work).length;
-    final shortBreakCount = sessions.where((s) => s.sessionType == SessionType.shortBreak).length;
-    final longBreakCount = sessions.where((s) => s.sessionType == SessionType.longBreak).length;
-    
+    final focusCount = sessions
+        .where((s) => s.sessionType == SessionType.work)
+        .length;
+    final shortBreakCount = sessions
+        .where((s) => s.sessionType == SessionType.shortBreak)
+        .length;
+    final longBreakCount = sessions
+        .where((s) => s.sessionType == SessionType.longBreak)
+        .length;
+
     final data = <({String type, int count, Color color})>[];
-    
+
     if (focusCount > 0) {
-      data.add((type: 'Focus', count: focusCount, color: theme.colorScheme.primary));
+      data.add((
+        type: 'Focus',
+        count: focusCount,
+        color: theme.colorScheme.primary,
+      ));
     }
     if (shortBreakCount > 0) {
-      data.add((type: 'Short Break', count: shortBreakCount, color: const Color(0xFF34C759)));
+      data.add((
+        type: 'Short Break',
+        count: shortBreakCount,
+        color: const Color(0xFF34C759),
+      ));
     }
     if (longBreakCount > 0) {
-      data.add((type: 'Long Break', count: longBreakCount, color: const Color(0xFF007AFF)));
+      data.add((
+        type: 'Long Break',
+        count: longBreakCount,
+        color: const Color(0xFF007AFF),
+      ));
     }
-    
+
     return data;
   }
 

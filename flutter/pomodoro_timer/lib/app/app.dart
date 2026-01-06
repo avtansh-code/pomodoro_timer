@@ -8,7 +8,7 @@ import 'theme/app_theme.dart';
 import 'theme/themes.dart';
 
 /// Root application widget.
-/// 
+///
 /// Provides global BLoCs/Cubits and configures MaterialApp with
 /// theme management and go_router navigation.
 class PomodoroApp extends StatelessWidget {
@@ -23,21 +23,19 @@ class PomodoroApp extends StatelessWidget {
           create: (context) => SettingsCubit(getIt<PersistenceService>()),
         ),
         // Global Theme Provider
-        BlocProvider(
-          create: (context) => ThemeCubit(getIt()),
-        ),
+        BlocProvider(create: (context) => ThemeCubit(getIt())),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, themeState) {
           return MaterialApp.router(
             title: 'Pomodoro Timer',
             debugShowCheckedModeBanner: false,
-            
+
             // Theme Configuration
             theme: AppThemes.lightTheme,
             darkTheme: AppThemes.darkTheme,
             themeMode: themeState.themeMode,
-            
+
             // Router Configuration
             routerConfig: AppRouter.router,
           );

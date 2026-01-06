@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Screen explaining the benefits of the Pomodoro Technique.
-/// 
+///
 /// Provides information about how the technique works and its advantages.
 class PomodoroBenefitsScreen extends StatelessWidget {
   const PomodoroBenefitsScreen({super.key});
@@ -9,28 +9,22 @@ class PomodoroBenefitsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('About Pomodoro Technique'),
-      ),
+      appBar: AppBar(title: const Text('About Pomodoro Technique')),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
           // Header
-          const Icon(
-            Icons.lightbulb,
-            size: 80,
-            color: Colors.orange,
-          ),
+          const Icon(Icons.lightbulb, size: 80, color: Colors.orange),
           const SizedBox(height: 24),
           Text(
             'The Pomodoro Technique',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
-          
+
           // What is it?
           _buildSection(
             context,
@@ -39,9 +33,9 @@ class PomodoroBenefitsScreen extends StatelessWidget {
             content:
                 'The Pomodoro Technique is a time management method that uses a timer to break work into intervals, traditionally 25 minutes in length, separated by short breaks.',
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // How it works
           _buildSection(
             context,
@@ -54,9 +48,9 @@ class PomodoroBenefitsScreen extends StatelessWidget {
                 '4. Take a short break (5 minutes)\n'
                 '5. After 4 Pomodoros, take a longer break (15-30 minutes)',
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Benefits
           _buildSection(
             context,
@@ -70,9 +64,9 @@ class PomodoroBenefitsScreen extends StatelessWidget {
                 '• Reduced burnout\n'
                 '• Better work-life balance',
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           // Get Started Button
           FilledButton.icon(
             onPressed: () => Navigator.of(context).pop(),
@@ -105,17 +99,14 @@ class PomodoroBenefitsScreen extends StatelessWidget {
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            Text(
-              content,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
+            Text(content, style: Theme.of(context).textTheme.bodyLarge),
           ],
         ),
       ),

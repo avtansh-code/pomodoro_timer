@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../bloc/timer_state.dart' as state;
 
 /// A chip that displays the current timer state (Ready, Running, Paused).
-/// 
+///
 /// Matches the state indicator design from iOS/Android legacy apps.
 class StateIndicatorChip extends StatelessWidget {
   final state.TimerState timerState;
@@ -48,15 +48,14 @@ class StateIndicatorChip extends StatelessWidget {
         end: timerState is state.TimerRunning ? 1.0 : 0.85,
       ),
       builder: (context, opacity, child) {
-        return Opacity(
-          opacity: opacity,
-          child: child,
-        );
+        return Opacity(opacity: opacity, child: child);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.8),
+          color: Theme.of(
+            context,
+          ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(

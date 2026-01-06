@@ -2,7 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 /// A circular progress indicator with timer display, matching iOS/Android legacy apps.
-/// 
+///
 /// Features:
 /// - Animated circular progress arc
 /// - Timer text centered inside
@@ -11,19 +11,19 @@ import 'package:flutter/material.dart';
 class CircularTimerProgress extends StatelessWidget {
   /// Progress from 0.0 to 1.0
   final double progress;
-  
+
   /// Time remaining in MM:SS format
   final String timeText;
-  
+
   /// Color of the progress arc
   final Color color;
-  
+
   /// Diameter of the circle
   final double size;
-  
+
   /// Width of the progress arc stroke
   final double strokeWidth;
-  
+
   /// Optional state indicator widget shown below timer
   final Widget? stateIndicator;
 
@@ -49,10 +49,7 @@ class CircularTimerProgress extends StatelessWidget {
           TweenAnimationBuilder<double>(
             duration: const Duration(milliseconds: 1000),
             curve: Curves.easeInOut,
-            tween: Tween<double>(
-              begin: 0,
-              end: progress,
-            ),
+            tween: Tween<double>(begin: 0, end: progress),
             builder: (context, value, _) {
               return CustomPaint(
                 size: Size(size, size),
@@ -65,7 +62,7 @@ class CircularTimerProgress extends StatelessWidget {
               );
             },
           ),
-          
+
           // Center content
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +80,7 @@ class CircularTimerProgress extends StatelessWidget {
                   letterSpacing: 2,
                 ),
               ),
-              
+
               // State indicator
               if (stateIndicator != null) ...[
                 SizedBox(height: size * 0.04),
@@ -115,27 +112,27 @@ class _CircularProgressPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = (size.width - strokeWidth) / 2;
-    
+
     // Draw background circle
     final backgroundPaint = Paint()
       ..color = backgroundColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
-    
+
     canvas.drawCircle(center, radius, backgroundPaint);
-    
+
     // Draw progress arc
     final progressPaint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
-    
+
     // Start from top (-90 degrees = -π/2 radians)
     const startAngle = -math.pi / 2;
     final sweepAngle = 2 * math.pi * progress;
-    
+
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
       startAngle,

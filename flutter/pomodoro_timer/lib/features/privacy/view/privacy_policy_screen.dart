@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Screen displaying the app's privacy policy.
-/// 
+///
 /// Explains how user data is handled and stored.
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
@@ -9,23 +9,17 @@ class PrivacyPolicyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Privacy Policy'),
-      ),
+      appBar: AppBar(title: const Text('Privacy Policy')),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
-          const Icon(
-            Icons.privacy_tip_outlined,
-            size: 64,
-            color: Colors.blue,
-          ),
+          const Icon(Icons.privacy_tip_outlined, size: 64, color: Colors.blue),
           const SizedBox(height: 24),
           Text(
             'Your Privacy Matters',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
@@ -35,16 +29,16 @@ class PrivacyPolicyScreen extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
-          
+
           _buildSection(
             context,
             title: 'Data Collection',
             content:
                 'This app stores all data locally on your device. We do not collect, transmit, or store any of your personal information on external servers.',
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           _buildSection(
             context,
             title: 'What We Store Locally',
@@ -54,9 +48,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 '• App preferences (theme, notifications)\n\n'
                 'All this data remains on your device and is never shared.',
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           _buildSection(
             context,
             title: 'Permissions',
@@ -66,18 +60,18 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 '• Vibration: For haptic feedback on interactions\n\n'
                 'These permissions are only used for app functionality and never for tracking.',
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           _buildSection(
             context,
             title: 'Third-Party Services',
             content:
                 'This app does not use any third-party analytics, advertising, or tracking services. Your usage data stays private.',
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           _buildSection(
             context,
             title: 'Data Deletion',
@@ -87,27 +81,27 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 '• Resetting settings to defaults in the Settings screen\n'
                 '• Uninstalling the app',
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           _buildSection(
             context,
             title: 'Children\'s Privacy',
             content:
                 'This app does not knowingly collect data from anyone, including children under 13. All data stays on the device.',
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           _buildSection(
             context,
             title: 'Changes to This Policy',
             content:
                 'We may update this privacy policy from time to time. Any changes will be reflected in the app with an updated date.',
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           Card(
             color: Theme.of(context).colorScheme.primaryContainer,
             child: Padding(
@@ -123,8 +117,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
                     child: Text(
                       'Your data never leaves your device',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -146,15 +140,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
-        Text(
-          content,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        Text(content, style: Theme.of(context).textTheme.bodyLarge),
       ],
     );
   }

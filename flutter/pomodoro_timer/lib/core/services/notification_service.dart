@@ -1,7 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 /// Service for managing local notifications.
-/// 
+///
 /// Handles the initialization and display of notifications when
 /// timer sessions complete. Uses flutter_local_notifications for
 /// cross-platform notification support.
@@ -12,11 +12,13 @@ class NotificationService {
   bool _isInitialized = false;
 
   /// Initializes the notification service.
-  /// 
+  ///
   /// Must be called before any notifications can be shown.
   /// Sets up platform-specific notification settings.
   Future<void> initialize() async {
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,

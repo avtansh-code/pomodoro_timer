@@ -14,7 +14,7 @@ import 'widgets/timer_controls.dart';
 import 'widgets/timer_display.dart';
 
 /// Main screen for the Pomodoro timer.
-/// 
+///
 /// This screen displays the timer and provides controls to start,
 /// pause, resume, and reset the timer. It uses BlocProvider to
 /// manage the TimerBloc lifecycle and loads settings from SettingsCubit.
@@ -48,10 +48,7 @@ class _MainTimerScreenState extends State<MainTimerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _timerBloc,
-      child: const _MainTimerView(),
-    );
+    return BlocProvider.value(value: _timerBloc, child: const _MainTimerView());
   }
 }
 
@@ -65,12 +62,15 @@ class _MainTimerView extends StatelessWidget {
         BlocListener<SettingsCubit, SettingsState>(
           listener: (context, settingsState) {
             // When settings change, update the timer bloc
-            context.read<TimerBloc>().add(event.TimerSettingsUpdated(
-              workDuration: settingsState.settings.workDuration,
-              shortBreakDuration: settingsState.settings.shortBreakDuration,
-              longBreakDuration: settingsState.settings.longBreakDuration,
-              sessionsBeforeLongBreak: settingsState.settings.sessionsBeforeLongBreak,
-            ));
+            context.read<TimerBloc>().add(
+              event.TimerSettingsUpdated(
+                workDuration: settingsState.settings.workDuration,
+                shortBreakDuration: settingsState.settings.shortBreakDuration,
+                longBreakDuration: settingsState.settings.longBreakDuration,
+                sessionsBeforeLongBreak:
+                    settingsState.settings.sessionsBeforeLongBreak,
+              ),
+            );
           },
         ),
         BlocListener<TimerBloc, state.TimerState>(
@@ -84,75 +84,83 @@ class _MainTimerView extends StatelessWidget {
       ],
       child: BlocBuilder<TimerBloc, state.TimerState>(
         builder: (context, timerState) {
-        final sessionColor = _getSessionColor(context, timerState.sessionType);
-        
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Focus Timer'),
-            centerTitle: true,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-          ),
-          body: AnimatedContainer(
-            duration: const Duration(milliseconds: 600),
-            curve: Curves.easeInOut,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  sessionColor.withValues(alpha: _getBackgroundOpacity(timerState.sessionType)),
-                  Theme.of(context).scaffoldBackgroundColor,
-                  Theme.of(context).scaffoldBackgroundColor,
-                ],
-                stops: const [0.0, 0.3, 1.0],
-              ),
+          final sessionColor = _getSessionColor(
+            context,
+            timerState.sessionType,
+          );
+
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Focus Timer'),
+              centerTitle: true,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
             ),
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  children: [
-                    // Session header with emoji and info
-                    _buildSessionHeader(context, timerState, sessionColor),
-                    
-                    const SizedBox(height: 40),
-                    
-                    // Timer display
-                    Expanded(
-                      child: Center(
-                        child: TimerDisplay(
-                          duration: timerState.duration,
-                          totalDuration: _getTotalDuration(context, timerState),
-                          sessionType: timerState.sessionType,
-                          timerState: timerState,
+            body: AnimatedContainer(
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeInOut,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    sessionColor.withValues(
+                      alpha: _getBackgroundOpacity(timerState.sessionType),
+                    ),
+                    Theme.of(context).scaffoldBackgroundColor,
+                    Theme.of(context).scaffoldBackgroundColor,
+                  ],
+                  stops: const [0.0, 0.3, 1.0],
+                ),
+              ),
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    children: [
+                      // Session header with emoji and info
+                      _buildSessionHeader(context, timerState, sessionColor),
+
+                      const SizedBox(height: 40),
+
+                      // Timer display
+                      Expanded(
+                        child: Center(
+                          child: TimerDisplay(
+                            duration: timerState.duration,
+                            totalDuration: _getTotalDuration(
+                              context,
+                              timerState,
+                            ),
+                            sessionType: timerState.sessionType,
+                            timerState: timerState,
+                          ),
                         ),
                       ),
-                    ),
-                    
-                    const SizedBox(height: 40),
-                    
-                    // Timer controls
-                    TimerControls(
-                      timerState: timerState,
-                      onEventAdded: (event) {
-                        context.read<TimerBloc>().add(event);
-                      },
-                    ),
-                    
-                    const SizedBox(height: 24),
-                    
-                    // Skip button
-                    _buildSkipButton(context, timerState, sessionColor),
-                    
-                    const SizedBox(height: 24),
-                  ],
+
+                      const SizedBox(height: 40),
+
+                      // Timer controls
+                      TimerControls(
+                        timerState: timerState,
+                        onEventAdded: (event) {
+                          context.read<TimerBloc>().add(event);
+                        },
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Skip button
+                      _buildSkipButton(context, timerState, sessionColor),
+
+                      const SizedBox(height: 24),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
       ),
     );
   }
@@ -219,10 +227,7 @@ class _MainTimerView extends StatelessWidget {
       child: Row(
         children: [
           // Emoji
-          Text(
-            emoji,
-            style: const TextStyle(fontSize: 32),
-          ),
+          Text(emoji, style: const TextStyle(fontSize: 32)),
           const SizedBox(width: 16),
           // Title and subtitle
           Expanded(
@@ -232,16 +237,16 @@ class _MainTimerView extends StatelessWidget {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: color,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: color,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),
@@ -251,10 +256,7 @@ class _MainTimerView extends StatelessWidget {
             Container(
               width: 48,
               height: 48,
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
               alignment: Alignment.center,
               child: Text(
                 '${timerState.completedSessions + 1}',
@@ -291,9 +293,10 @@ class _MainTimerView extends StatelessWidget {
   ) {
     final settings = context.read<SettingsCubit>().state.settings;
     String nextSessionName;
-    
+
     if (timerState.sessionType == SessionType.work) {
-      if ((timerState.completedSessions + 1) >= settings.sessionsBeforeLongBreak) {
+      if ((timerState.completedSessions + 1) >=
+          settings.sessionsBeforeLongBreak) {
         nextSessionName = 'Long Break';
       } else {
         nextSessionName = 'Short Break';
@@ -306,11 +309,7 @@ class _MainTimerView extends StatelessWidget {
       onPressed: () {
         context.read<TimerBloc>().add(const event.TimerSkipped());
       },
-      icon: Icon(
-        Icons.fast_forward,
-        size: 18,
-        color: sessionColor,
-      ),
+      icon: Icon(Icons.fast_forward, size: 18, color: sessionColor),
       label: Text(
         'Skip to $nextSessionName',
         style: TextStyle(
@@ -321,10 +320,10 @@ class _MainTimerView extends StatelessWidget {
       ),
       style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        backgroundColor: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
   }
@@ -336,7 +335,7 @@ class _MainTimerView extends StatelessWidget {
   ) {
     String message;
     String emoji;
-    
+
     switch (completedState.completedSessionType) {
       case SessionType.work:
         emoji = '🎉';
@@ -371,9 +370,7 @@ class _MainTimerView extends StatelessWidget {
         ),
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 4),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
       ),
     );

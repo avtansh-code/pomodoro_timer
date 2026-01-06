@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 /// Glass morphism effect widgets for iOS/macOS liquid glass display theme.
-/// 
+///
 /// Provides reusable widgets that implement Apple's vibrancy and
 /// translucency design principles with blur effects.
 
@@ -15,7 +15,7 @@ bool get _isApplePlatform {
 }
 
 /// A card with glass morphism effect.
-/// 
+///
 /// Creates a frosted glass appearance with blur and subtle borders.
 /// Only applies effect on iOS/macOS platforms.
 class GlassCard extends StatelessWidget {
@@ -52,29 +52,29 @@ class GlassCard extends StatelessWidget {
     }
 
     final theme = Theme.of(context);
-    final defaultColor = color ?? 
-      theme.colorScheme.surface.withValues(alpha: 
-        theme.brightness == Brightness.dark ? 0.5 : 0.7
-      );
+    final defaultColor =
+        color ??
+        theme.colorScheme.surface.withValues(
+          alpha: theme.brightness == Brightness.dark ? 0.5 : 0.7,
+        );
 
     return Container(
       margin: margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        border: border ?? Border.all(
-          color: Colors.white.withValues(alpha: 
-            theme.brightness == Brightness.dark ? 0.1 : 0.2
-          ),
-          width: 1,
-        ),
+        border:
+            border ??
+            Border.all(
+              color: Colors.white.withValues(
+                alpha: theme.brightness == Brightness.dark ? 0.1 : 0.2,
+              ),
+              width: 1,
+            ),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(borderRadius),
         child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: blurAmount,
-            sigmaY: blurAmount,
-          ),
+          filter: ImageFilter.blur(sigmaX: blurAmount, sigmaY: blurAmount),
           child: Container(
             padding: padding ?? const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
@@ -90,7 +90,7 @@ class GlassCard extends StatelessWidget {
 }
 
 /// A container with glass morphism effect.
-/// 
+///
 /// Creates a frosted glass appearance with blur effect.
 /// Only applies effect on iOS/macOS platforms.
 class GlassContainer extends StatelessWidget {
@@ -135,10 +135,11 @@ class GlassContainer extends StatelessWidget {
     }
 
     final theme = Theme.of(context);
-    final defaultColor = color ?? 
-      theme.colorScheme.surface.withValues(alpha: 
-        theme.brightness == Brightness.dark ? 0.5 : 0.7
-      );
+    final defaultColor =
+        color ??
+        theme.colorScheme.surface.withValues(
+          alpha: theme.brightness == Brightness.dark ? 0.5 : 0.7,
+        );
 
     return Container(
       width: width,
@@ -146,20 +147,19 @@ class GlassContainer extends StatelessWidget {
       margin: margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        border: border ?? Border.all(
-          color: Colors.white.withValues(alpha: 
-            theme.brightness == Brightness.dark ? 0.1 : 0.2
-          ),
-          width: 1,
-        ),
+        border:
+            border ??
+            Border.all(
+              color: Colors.white.withValues(
+                alpha: theme.brightness == Brightness.dark ? 0.1 : 0.2,
+              ),
+              width: 1,
+            ),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(borderRadius),
         child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: blurAmount,
-            sigmaY: blurAmount,
-          ),
+          filter: ImageFilter.blur(sigmaX: blurAmount, sigmaY: blurAmount),
           child: Container(
             padding: padding,
             decoration: BoxDecoration(
@@ -175,7 +175,7 @@ class GlassContainer extends StatelessWidget {
 }
 
 /// An app bar with glass morphism effect.
-/// 
+///
 /// Creates a translucent app bar with blur effect.
 /// Only applies effect on iOS/macOS platforms.
 class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -209,15 +209,12 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
 
     final theme = Theme.of(context);
-    final defaultColor = backgroundColor ?? 
-      theme.colorScheme.surface.withValues(alpha: 0.8);
+    final defaultColor =
+        backgroundColor ?? theme.colorScheme.surface.withValues(alpha: 0.8);
 
     return ClipRect(
       child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: blurAmount,
-          sigmaY: blurAmount,
-        ),
+        filter: ImageFilter.blur(sigmaX: blurAmount, sigmaY: blurAmount),
         child: AppBar(
           title: title,
           actions: actions,
@@ -235,7 +232,7 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 /// A bottom navigation bar with glass morphism effect.
-/// 
+///
 /// Creates a translucent navigation bar with blur effect.
 /// Only applies effect on iOS/macOS platforms.
 class GlassNavigationBar extends StatelessWidget {
@@ -266,15 +263,12 @@ class GlassNavigationBar extends StatelessWidget {
     }
 
     final theme = Theme.of(context);
-    final defaultColor = backgroundColor ?? 
-      theme.colorScheme.surface.withValues(alpha: 0.8);
+    final defaultColor =
+        backgroundColor ?? theme.colorScheme.surface.withValues(alpha: 0.8);
 
     return ClipRect(
       child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: blurAmount,
-          sigmaY: blurAmount,
-        ),
+        filter: ImageFilter.blur(sigmaX: blurAmount, sigmaY: blurAmount),
         child: NavigationBar(
           selectedIndex: selectedIndex,
           onDestinationSelected: onDestinationSelected,
@@ -288,7 +282,7 @@ class GlassNavigationBar extends StatelessWidget {
 }
 
 /// A dialog with glass morphism effect.
-/// 
+///
 /// Creates a translucent dialog with blur effect.
 /// Only applies effect on iOS/macOS platforms.
 class GlassDialog extends StatelessWidget {
@@ -313,16 +307,12 @@ class GlassDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     // Only apply glass effect on Apple platforms
     if (!_isApplePlatform) {
-      return AlertDialog(
-        title: title,
-        content: content,
-        actions: actions,
-      );
+      return AlertDialog(title: title, content: content, actions: actions);
     }
 
     final theme = Theme.of(context);
-    final defaultColor = backgroundColor ?? 
-      theme.colorScheme.surface.withValues(alpha: 0.95);
+    final defaultColor =
+        backgroundColor ?? theme.colorScheme.surface.withValues(alpha: 0.95);
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -330,17 +320,14 @@ class GlassDialog extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(borderRadius),
         child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: blurAmount,
-            sigmaY: blurAmount,
-          ),
+          filter: ImageFilter.blur(sigmaX: blurAmount, sigmaY: blurAmount),
           child: Container(
             decoration: BoxDecoration(
               color: defaultColor,
               borderRadius: BorderRadius.circular(borderRadius),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 
-                  theme.brightness == Brightness.dark ? 0.1 : 0.2
+                color: Colors.white.withValues(
+                  alpha: theme.brightness == Brightness.dark ? 0.1 : 0.2,
                 ),
                 width: 1,
               ),
@@ -360,7 +347,7 @@ class GlassDialog extends StatelessWidget {
 }
 
 /// A bottom sheet with glass morphism effect.
-/// 
+///
 /// Creates a translucent bottom sheet with blur effect.
 /// Only applies effect on iOS/macOS platforms.
 class GlassBottomSheet extends StatelessWidget {
@@ -385,18 +372,13 @@ class GlassBottomSheet extends StatelessWidget {
     }
 
     final theme = Theme.of(context);
-    final defaultColor = backgroundColor ?? 
-      theme.colorScheme.surface.withValues(alpha: 0.95);
+    final defaultColor =
+        backgroundColor ?? theme.colorScheme.surface.withValues(alpha: 0.95);
 
     return ClipRRect(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(borderRadius),
-      ),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(borderRadius)),
       child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: blurAmount,
-          sigmaY: blurAmount,
-        ),
+        filter: ImageFilter.blur(sigmaX: blurAmount, sigmaY: blurAmount),
         child: Container(
           decoration: BoxDecoration(
             color: defaultColor,
@@ -405,8 +387,8 @@ class GlassBottomSheet extends StatelessWidget {
             ),
             border: Border(
               top: BorderSide(
-                color: Colors.white.withValues(alpha: 
-                  theme.brightness == Brightness.dark ? 0.1 : 0.2
+                color: Colors.white.withValues(
+                  alpha: theme.brightness == Brightness.dark ? 0.1 : 0.2,
                 ),
                 width: 1,
               ),

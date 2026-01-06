@@ -1,40 +1,40 @@
 import 'package:equatable/equatable.dart';
 
 /// Model representing user-configurable timer settings.
-/// 
+///
 /// This class stores the durations for work sessions, breaks, and the
 /// number of work sessions before a long break. Uses [Equatable] for
 /// value-based equality comparison.
 class TimerSettings extends Equatable {
   /// Duration of a work/focus session in minutes
   final int workDuration;
-  
+
   /// Duration of a short break in minutes
   final int shortBreakDuration;
-  
+
   /// Duration of a long break in minutes
   final int longBreakDuration;
-  
+
   /// Number of work sessions before a long break
   final int sessionsBeforeLongBreak;
-  
+
   /// Whether to automatically start breaks after work sessions
   final bool autoStartBreaks;
-  
+
   /// Whether to automatically start focus sessions after breaks
   final bool autoStartFocus;
-  
+
   /// Whether notifications are enabled
   final bool notificationsEnabled;
-  
+
   /// Whether sound is enabled
   final bool soundEnabled;
-  
+
   /// Whether haptic feedback is enabled
   final bool hapticEnabled;
 
   /// Creates a [TimerSettings] instance with the given parameters.
-  /// 
+  ///
   /// Defaults follow the traditional Pomodoro Technique:
   /// - 25 minutes of focused work
   /// - 5 minutes short break
@@ -68,7 +68,8 @@ class TimerSettings extends Equatable {
       workDuration: workDuration ?? this.workDuration,
       shortBreakDuration: shortBreakDuration ?? this.shortBreakDuration,
       longBreakDuration: longBreakDuration ?? this.longBreakDuration,
-      sessionsBeforeLongBreak: sessionsBeforeLongBreak ?? this.sessionsBeforeLongBreak,
+      sessionsBeforeLongBreak:
+          sessionsBeforeLongBreak ?? this.sessionsBeforeLongBreak,
       autoStartBreaks: autoStartBreaks ?? this.autoStartBreaks,
       autoStartFocus: autoStartFocus ?? this.autoStartFocus,
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
@@ -109,16 +110,16 @@ class TimerSettings extends Equatable {
 
   @override
   List<Object?> get props => [
-        workDuration,
-        shortBreakDuration,
-        longBreakDuration,
-        sessionsBeforeLongBreak,
-        autoStartBreaks,
-        autoStartFocus,
-        notificationsEnabled,
-        soundEnabled,
-        hapticEnabled,
-      ];
+    workDuration,
+    shortBreakDuration,
+    longBreakDuration,
+    sessionsBeforeLongBreak,
+    autoStartBreaks,
+    autoStartFocus,
+    notificationsEnabled,
+    soundEnabled,
+    hapticEnabled,
+  ];
 
   @override
   String toString() {

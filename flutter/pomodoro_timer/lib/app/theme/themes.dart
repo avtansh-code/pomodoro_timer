@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 /// Defines the application themes.
-/// 
+///
 /// Provides platform-specific theme configurations:
 /// - Material Design 3 for Android/Web
 /// - Liquid Glass Display theme for iOS/macOS
@@ -13,7 +13,7 @@ class AppThemes {
 
   /// Primary color seed for generating color schemes
   static const Color _primarySeed = Colors.deepOrange;
-  
+
   /// Check if running on Apple platform
   static bool get _isApplePlatform {
     if (kIsWeb) return false;
@@ -33,7 +33,7 @@ class AppThemes {
   // ============================================================================
   // MATERIAL DESIGN 3 THEMES (Android/Web)
   // ============================================================================
-  
+
   /// Material Design 3 Light Theme
   static ThemeData get _materialLightTheme {
     final colorScheme = ColorScheme.fromSeed(
@@ -44,7 +44,7 @@ class AppThemes {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      
+
       // App Bar Theme - Material 3
       appBarTheme: AppBarTheme(
         centerTitle: true,
@@ -54,16 +54,14 @@ class AppThemes {
         foregroundColor: colorScheme.onSurface,
         surfaceTintColor: colorScheme.surfaceTint,
       ),
-      
+
       // Card Theme - Material 3
       cardTheme: CardThemeData(
         elevation: 1,
         surfaceTintColor: colorScheme.surfaceTint,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      
+
       // Elevated Button Theme - Material 3
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -72,7 +70,7 @@ class AppThemes {
           shape: const StadiumBorder(),
         ),
       ),
-      
+
       // Filled Button Theme - Material 3 (new)
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -80,7 +78,7 @@ class AppThemes {
           shape: const StadiumBorder(),
         ),
       ),
-      
+
       // Outlined Button Theme - Material 3
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
@@ -88,7 +86,7 @@ class AppThemes {
           shape: const StadiumBorder(),
         ),
       ),
-      
+
       // Text Button Theme - Material 3
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
@@ -96,15 +94,13 @@ class AppThemes {
           shape: const StadiumBorder(),
         ),
       ),
-      
+
       // FAB Theme - Material 3
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      
+
       // Input Decoration Theme - Material 3
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -122,7 +118,7 @@ class AppThemes {
           vertical: 16,
         ),
       ),
-      
+
       // Navigation Bar Theme - Material 3
       navigationBarTheme: NavigationBarThemeData(
         elevation: 3,
@@ -132,7 +128,7 @@ class AppThemes {
         surfaceTintColor: colorScheme.surfaceTint,
         indicatorColor: colorScheme.secondaryContainer,
       ),
-      
+
       // Slider Theme - Material 3
       sliderTheme: SliderThemeData(
         trackHeight: 4,
@@ -145,26 +141,22 @@ class AppThemes {
           fontWeight: FontWeight.w500,
         ),
       ),
-      
+
       // Chip Theme - Material 3
       chipTheme: ChipThemeData(
         elevation: 0,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         side: BorderSide(color: colorScheme.outline),
       ),
-      
+
       // Dialog Theme - Material 3
       dialogTheme: DialogThemeData(
         elevation: 3,
         surfaceTintColor: colorScheme.surfaceTint,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(28),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
-      
+
       // Bottom Sheet Theme - Material 3
       bottomSheetTheme: BottomSheetThemeData(
         elevation: 1,
@@ -173,13 +165,11 @@ class AppThemes {
           borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
       ),
-      
+
       // Snack Bar Theme - Material 3
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 3,
       ),
     );
@@ -195,7 +185,7 @@ class AppThemes {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      
+
       // App Bar Theme - Material 3
       appBarTheme: AppBarTheme(
         centerTitle: true,
@@ -205,16 +195,14 @@ class AppThemes {
         foregroundColor: colorScheme.onSurface,
         surfaceTintColor: colorScheme.surfaceTint,
       ),
-      
+
       // Card Theme - Material 3
       cardTheme: CardThemeData(
         elevation: 1,
         surfaceTintColor: colorScheme.surfaceTint,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      
+
       // Elevated Button Theme - Material 3
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -223,7 +211,7 @@ class AppThemes {
           shape: const StadiumBorder(),
         ),
       ),
-      
+
       // Filled Button Theme - Material 3 (new)
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -231,7 +219,7 @@ class AppThemes {
           shape: const StadiumBorder(),
         ),
       ),
-      
+
       // Outlined Button Theme - Material 3
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
@@ -239,7 +227,7 @@ class AppThemes {
           shape: const StadiumBorder(),
         ),
       ),
-      
+
       // Text Button Theme - Material 3
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
@@ -247,15 +235,13 @@ class AppThemes {
           shape: const StadiumBorder(),
         ),
       ),
-      
+
       // FAB Theme - Material 3
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      
+
       // Input Decoration Theme - Material 3
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -273,7 +259,7 @@ class AppThemes {
           vertical: 16,
         ),
       ),
-      
+
       // Navigation Bar Theme - Material 3
       navigationBarTheme: NavigationBarThemeData(
         elevation: 3,
@@ -283,7 +269,7 @@ class AppThemes {
         surfaceTintColor: colorScheme.surfaceTint,
         indicatorColor: colorScheme.secondaryContainer,
       ),
-      
+
       // Slider Theme - Material 3
       sliderTheme: SliderThemeData(
         trackHeight: 4,
@@ -296,26 +282,22 @@ class AppThemes {
           fontWeight: FontWeight.w500,
         ),
       ),
-      
+
       // Chip Theme - Material 3
       chipTheme: ChipThemeData(
         elevation: 0,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         side: BorderSide(color: colorScheme.outline),
       ),
-      
+
       // Dialog Theme - Material 3
       dialogTheme: DialogThemeData(
         elevation: 3,
         surfaceTintColor: colorScheme.surfaceTint,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(28),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
-      
+
       // Bottom Sheet Theme - Material 3
       bottomSheetTheme: BottomSheetThemeData(
         elevation: 1,
@@ -324,13 +306,11 @@ class AppThemes {
           borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
       ),
-      
+
       // Snack Bar Theme - Material 3
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 3,
       ),
     );
@@ -340,7 +320,7 @@ class AppThemes {
   // LIQUID GLASS DISPLAY THEMES (iOS/macOS)
   // Based on Apple's vibrancy and translucency design principles
   // ============================================================================
-  
+
   /// iOS/macOS Liquid Glass Light Theme
   static ThemeData get _iosLightTheme {
     final colorScheme = ColorScheme.fromSeed(
@@ -351,7 +331,7 @@ class AppThemes {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      
+
       // App Bar Theme - Glass morphism
       appBarTheme: AppBarTheme(
         centerTitle: true,
@@ -359,7 +339,7 @@ class AppThemes {
         backgroundColor: colorScheme.surface.withValues(alpha: 0.8),
         foregroundColor: colorScheme.onSurface,
       ),
-      
+
       // Card Theme - Frosted glass effect
       cardTheme: CardThemeData(
         elevation: 0,
@@ -372,7 +352,7 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // Elevated Button Theme - iOS style
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -385,7 +365,7 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // Filled Button Theme - iOS style
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -396,7 +376,7 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // Outlined Button Theme - iOS style
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
@@ -410,7 +390,7 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // Text Button Theme - iOS style
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
@@ -420,16 +400,14 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // FAB Theme - iOS style
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         elevation: 0,
         backgroundColor: colorScheme.primary.withValues(alpha: 0.9),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       ),
-      
+
       // Input Decoration Theme - iOS style
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -457,7 +435,7 @@ class AppThemes {
           vertical: 14,
         ),
       ),
-      
+
       // Navigation Bar Theme - iOS style
       navigationBarTheme: NavigationBarThemeData(
         elevation: 0,
@@ -466,7 +444,7 @@ class AppThemes {
         indicatorColor: colorScheme.primary.withValues(alpha: 0.15),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
-      
+
       // Slider Theme - iOS style
       sliderTheme: SliderThemeData(
         trackHeight: 3,
@@ -482,7 +460,7 @@ class AppThemes {
           fontWeight: FontWeight.w600,
         ),
       ),
-      
+
       // Chip Theme - iOS style
       chipTheme: ChipThemeData(
         elevation: 0,
@@ -496,7 +474,7 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // Dialog Theme - iOS style with blur
       dialogTheme: DialogThemeData(
         elevation: 0,
@@ -509,7 +487,7 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // Bottom Sheet Theme - iOS style
       bottomSheetTheme: BottomSheetThemeData(
         elevation: 0,
@@ -518,14 +496,12 @@ class AppThemes {
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
       ),
-      
+
       // Snack Bar Theme - iOS style
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: colorScheme.inverseSurface.withValues(alpha: 0.9),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         elevation: 0,
       ),
     );
@@ -541,7 +517,7 @@ class AppThemes {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      
+
       // App Bar Theme - Glass morphism
       appBarTheme: AppBarTheme(
         centerTitle: true,
@@ -549,7 +525,7 @@ class AppThemes {
         backgroundColor: colorScheme.surface.withValues(alpha: 0.8),
         foregroundColor: colorScheme.onSurface,
       ),
-      
+
       // Card Theme - Frosted glass effect
       cardTheme: CardThemeData(
         elevation: 0,
@@ -562,7 +538,7 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // Elevated Button Theme - iOS style
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -575,7 +551,7 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // Filled Button Theme - iOS style
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -586,7 +562,7 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // Outlined Button Theme - iOS style
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
@@ -600,7 +576,7 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // Text Button Theme - iOS style
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
@@ -610,16 +586,14 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // FAB Theme - iOS style
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         elevation: 0,
         backgroundColor: colorScheme.primary.withValues(alpha: 0.9),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       ),
-      
+
       // Input Decoration Theme - iOS style
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -647,7 +621,7 @@ class AppThemes {
           vertical: 14,
         ),
       ),
-      
+
       // Navigation Bar Theme - iOS style
       navigationBarTheme: NavigationBarThemeData(
         elevation: 0,
@@ -656,7 +630,7 @@ class AppThemes {
         indicatorColor: colorScheme.primary.withValues(alpha: 0.2),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
-      
+
       // Slider Theme - iOS style
       sliderTheme: SliderThemeData(
         trackHeight: 3,
@@ -672,7 +646,7 @@ class AppThemes {
           fontWeight: FontWeight.w600,
         ),
       ),
-      
+
       // Chip Theme - iOS style
       chipTheme: ChipThemeData(
         elevation: 0,
@@ -686,7 +660,7 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // Dialog Theme - iOS style with blur
       dialogTheme: DialogThemeData(
         elevation: 0,
@@ -699,7 +673,7 @@ class AppThemes {
           ),
         ),
       ),
-      
+
       // Bottom Sheet Theme - iOS style
       bottomSheetTheme: BottomSheetThemeData(
         elevation: 0,
@@ -708,14 +682,12 @@ class AppThemes {
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
       ),
-      
+
       // Snack Bar Theme - iOS style
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: colorScheme.inverseSurface.withValues(alpha: 0.9),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         elevation: 0,
       ),
     );

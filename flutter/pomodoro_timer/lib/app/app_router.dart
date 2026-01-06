@@ -5,7 +5,7 @@ import '../features/onboarding/view/pomodoro_benefits_screen.dart';
 import '../features/privacy/view/privacy_policy_screen.dart';
 
 /// Application router configuration using go_router.
-/// 
+///
 /// Defines all routes and navigation structure for the app.
 /// Uses bottom tab navigation for main screens (Timer, Stats, Settings).
 class AppRouter {
@@ -34,9 +34,7 @@ class AppRouter {
     ],
     errorBuilder: (context, state) => Scaffold(
       appBar: AppBar(title: const Text('Error')),
-      body: Center(
-        child: Text('Page not found: ${state.uri}'),
-      ),
+      body: Center(child: Text('Page not found: ${state.uri}')),
     ),
   );
 }

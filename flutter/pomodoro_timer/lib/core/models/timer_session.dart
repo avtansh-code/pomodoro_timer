@@ -15,7 +15,7 @@ enum SessionType {
 }
 
 /// Model representing a completed timer session for statistics tracking.
-/// 
+///
 /// This class records the details of each completed Pomodoro session,
 /// including when it started, ended, and what type of session it was.
 /// Uses Hive for local database persistence and Equatable for value equality.
@@ -24,19 +24,19 @@ class TimerSession extends Equatable {
   /// Unique identifier for the session
   @HiveField(0)
   final String id;
-  
+
   /// Type of session (work, short break, or long break)
   @HiveField(1)
   final SessionType sessionType;
-  
+
   /// When the session started
   @HiveField(2)
   final DateTime startTime;
-  
+
   /// When the session ended
   @HiveField(3)
   final DateTime endTime;
-  
+
   /// Actual duration of the session in minutes
   @HiveField(4)
   final int durationInMinutes;
@@ -112,12 +112,12 @@ class TimerSession extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        sessionType,
-        startTime,
-        endTime,
-        durationInMinutes,
-      ];
+    id,
+    sessionType,
+    startTime,
+    endTime,
+    durationInMinutes,
+  ];
 
   @override
   String toString() {

@@ -1,5 +1,5 @@
 name: pomodoro_timer
-description: "A new Flutter project."
+description: "A beautiful, production-ready Pomodoro Timer application with Clean Architecture and BLoC pattern."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

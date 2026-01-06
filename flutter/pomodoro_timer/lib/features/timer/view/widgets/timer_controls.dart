@@ -5,17 +5,17 @@ import '../../bloc/timer_event.dart' as event;
 import '../../bloc/timer_state.dart' as state;
 
 /// Widget that provides control buttons for the timer.
-/// 
+///
 /// Shows different buttons based on the current timer state:
 /// - Start button when timer is initial
 /// - Pause/Resume buttons when timer is running/paused
 /// - Reset and Skip buttons as secondary actions
-/// 
+///
 /// Enhanced with scale animations and improved styling matching legacy apps.
 class TimerControls extends StatelessWidget {
   /// Current timer state
   final state.TimerState timerState;
-  
+
   /// Callback to add events to the TimerBloc
   final void Function(event.TimerEvent) onEventAdded;
 
@@ -39,16 +39,14 @@ class TimerControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sessionColor = _getSessionColor(context);
-    
+
     return Row(
       children: [
         // Primary action button (Start/Pause/Resume)
-        Expanded(
-          child: _buildPrimaryButton(context, sessionColor),
-        ),
-        
+        Expanded(child: _buildPrimaryButton(context, sessionColor)),
+
         const SizedBox(width: 16),
-        
+
         // Reset button (always visible)
         _buildResetButton(context, sessionColor),
       ],
@@ -60,8 +58,9 @@ class TimerControls extends StatelessWidget {
     String label;
     IconData icon;
     Color backgroundColor;
-    
-    if (timerState is state.TimerInitial || timerState is state.TimerCompleted) {
+
+    if (timerState is state.TimerInitial ||
+        timerState is state.TimerCompleted) {
       label = 'Start';
       icon = Icons.play_arrow;
       backgroundColor = sessionColor;
@@ -74,11 +73,12 @@ class TimerControls extends StatelessWidget {
       icon = Icons.play_arrow;
       backgroundColor = sessionColor;
     }
-    
+
     return _ScaleButton(
       onPressed: () {
         Vibration.vibrate(duration: 50);
-        if (timerState is state.TimerInitial || timerState is state.TimerCompleted) {
+        if (timerState is state.TimerInitial ||
+            timerState is state.TimerCompleted) {
           onEventAdded(event.TimerStarted(timerState.duration));
         } else if (timerState is state.TimerRunning) {
           onEventAdded(const event.TimerPaused());
@@ -132,11 +132,7 @@ class TimerControls extends StatelessWidget {
           color: sessionColor.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(16),
         ),
-        child: Icon(
-          Icons.refresh,
-          color: sessionColor,
-          size: 28,
-        ),
+        child: Icon(Icons.refresh, color: sessionColor, size: 28),
       ),
     );
   }
@@ -147,10 +143,7 @@ class _ScaleButton extends StatefulWidget {
   final VoidCallback onPressed;
   final Widget child;
 
-  const _ScaleButton({
-    required this.onPressed,
-    required this.child,
-  });
+  const _ScaleButton({required this.onPressed, required this.child});
 
   @override
   State<_ScaleButton> createState() => _ScaleButtonState();
@@ -168,9 +161,10 @@ class _ScaleButtonState extends State<_ScaleButton>
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -188,10 +182,7 @@ class _ScaleButtonState extends State<_ScaleButton>
         widget.onPressed();
       },
       onTapCancel: () => _controller.reverse(),
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: widget.child,
-      ),
+      child: ScaleTransition(scale: _scaleAnimation, child: widget.child),
     );
   }
 }
