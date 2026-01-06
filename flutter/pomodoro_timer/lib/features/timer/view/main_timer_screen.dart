@@ -63,7 +63,6 @@ class _MainTimerView extends StatelessWidget {
     return BlocListener<SettingsCubit, SettingsState>(
       listener: (context, settingsState) {
         // When settings change, update the timer bloc
-        print('Settings changed - updating timer');
         context.read<TimerBloc>().add(event.TimerSettingsUpdated(
           workDuration: settingsState.settings.workDuration,
           shortBreakDuration: settingsState.settings.shortBreakDuration,

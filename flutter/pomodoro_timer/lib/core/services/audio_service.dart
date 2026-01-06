@@ -26,7 +26,6 @@ class AudioService {
       await SystemSound.play(SystemSoundType.alert);
     } catch (e) {
       // Silently fail if sound cannot be played
-      print('AudioService: Failed to play completion sound - $e');
     }
   }
 
@@ -39,7 +38,6 @@ class AudioService {
       await SystemSound.play(SystemSoundType.alert);
     } catch (e) {
       // Silently fail if sound cannot be played
-      print('AudioService: Failed to play break sound - $e');
     }
   }
 

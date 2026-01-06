@@ -39,7 +39,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     
     // Refresh statistics when navigating to Stats tab
     if (index == 1) {
-      print('Navigating to Stats tab - refreshing statistics');
       _statisticsCubit.refresh();
     }
   }

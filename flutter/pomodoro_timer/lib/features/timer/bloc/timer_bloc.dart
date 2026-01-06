@@ -283,7 +283,6 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
     
     if (this.state is state.TimerInitial) {
       // Timer is idle - update duration immediately
-      print('Settings updated - Timer Initial state updated to $newTotalDuration seconds');
       
       emit(state.TimerInitial(
         duration: newTotalDuration,
@@ -300,12 +299,9 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
       // Calculate new remaining duration
       final newRemainingDuration = newTotalDuration - elapsedSeconds;
       
-      print('Settings updated - Timer running, adjusting from $oldTotalDuration to $newTotalDuration seconds');
-      print('Elapsed: $elapsedSeconds seconds, new remaining: $newRemainingDuration seconds');
       
       // If elapsed time >= new duration, complete the session immediately
       if (newRemainingDuration <= 0) {
-        print('Elapsed time >= new duration, completing session immediately');
         _tickerSubscription?.cancel();
         add(const event.TimerCompleted());
         return;
@@ -335,8 +331,6 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
       // Calculate new remaining duration
       final newRemainingDuration = newTotalDuration - elapsedSeconds;
       
-      print('Settings updated - Timer paused, adjusting from $oldTotalDuration to $newTotalDuration seconds');
-      print('Elapsed: $elapsedSeconds seconds, new remaining: $newRemainingDuration seconds');
       
       // If elapsed time >= new duration, set remaining to 0 (will complete when resumed/started)
       final adjustedDuration = newRemainingDuration <= 0 ? 0 : newRemainingDuration;

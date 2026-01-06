@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../core/di/service_locator.dart';
 import '../../../core/models/timer_session.dart';
 import '../bloc/statistics_cubit.dart';
 import '../bloc/statistics_state.dart';
-import '../data/statistics_repository.dart';
 import 'dart:math' as math;
 
 /// Statistics screen matching iOS design with charts and analytics.

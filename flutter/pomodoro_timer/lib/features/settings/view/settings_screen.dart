@@ -64,8 +64,8 @@ class _SettingsView extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  theme.colorScheme.primary.withOpacity(0.05),
-                  theme.colorScheme.secondary.withOpacity(0.05),
+                  theme.colorScheme.primary.withValues(alpha: 0.05),
+                  theme.colorScheme.secondary.withValues(alpha: 0.05),
                 ],
               ),
             ),
