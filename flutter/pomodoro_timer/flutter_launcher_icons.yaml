@@ -1,0 +1,48 @@
+# Flutter Launcher Icons Configuration
+# Run: flutter pub run flutter_launcher_icons
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png"
+  min_sdk_android: 21
+  
+  # Android adaptive icon
+  adaptive_icon_background: "#FF5722"  # Deep Orange
+  adaptive_icon_foreground: "assets/icon/app_icon_foreground.png"
+  
+  # iOS settings
+  remove_alpha_ios: true
+  
+  # Web (optional)
+  web:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
+    background_color: "#FF5722"
+    theme_color: "#FF5722"
+  
+  # Windows (optional)
+  windows:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
+    icon_size: 48
+  
+  # macOS (optional)
+  macos:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
+
+# Required icon files (create these in assets/icon/):
+# - app_icon.png (1024x1024 - main icon)
+# - app_icon_foreground.png (1024x1024 - Android adaptive foreground)
+# 
+# Design Guidelines:
+# - Use a simple, recognizable symbol (timer/tomato)
+# - Center important elements (avoid edges)
+# - Use brand color (#FF5722 - Deep Orange)
+# - Ensure good contrast
+# - Test on both light and dark backgrounds
+#
+# After creating icons, run:
+# flutter pub get
+# flutter pub run flutter_launcher_icons

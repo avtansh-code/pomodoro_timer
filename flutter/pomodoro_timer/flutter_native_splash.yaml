@@ -1,0 +1,65 @@
+# Flutter Native Splash Configuration
+# Run: flutter pub run flutter_native_splash:create
+
+flutter_native_splash:
+  # Background color
+  color: "#FF5722"  # Deep Orange - brand color
+  
+  # Splash image
+  image: assets/splash/splash_logo.png
+  
+  # Android 12+ specific settings
+  android_12:
+    image: assets/splash/splash_logo_android12.png
+    icon_background_color: "#FF5722"
+    image_dark: assets/splash/splash_logo_android12_dark.png
+    icon_background_color_dark: "#212121"
+  
+  # Dark mode support
+  color_dark: "#212121"  # Dark background
+  image_dark: assets/splash/splash_logo_dark.png
+  
+  # Platform configuration
+  android: true
+  ios: true
+  web: true
+  
+  # iOS specific
+  ios_content_mode: center
+  
+  # Web specific
+  web_image_mode: center
+  
+  # Full screen (Android)
+  fullscreen: true
+  
+  # Info plist (iOS)
+  info_plist_files:
+    - 'ios/Runner/Info.plist'
+
+# Required splash assets (create these in assets/splash/):
+# 
+# Light Mode:
+# - splash_logo.png (512x512 - main splash logo)
+# - branding.png (optional - bottom branding)
+# 
+# Dark Mode:
+# - splash_logo_dark.png (512x512 - dark mode logo)
+#
+# Android 12+:
+# - splash_logo_android12.png (512x512)
+# - splash_logo_android12_dark.png (512x512)
+#
+# Design Guidelines:
+# - Use simple, centered design
+# - Logo should work on colored background
+# - Ensure good contrast for both light/dark
+# - Keep file sizes small for fast loading
+# - Use PNG format with transparency
+#
+# After creating splash assets, run:
+# flutter pub get
+# flutter pub run flutter_native_splash:create
+#
+# To remove splash (if needed):
+# flutter pub run flutter_native_splash:remove
