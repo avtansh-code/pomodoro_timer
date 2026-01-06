@@ -144,7 +144,7 @@ class _SettingsView extends StatelessWidget {
               
               // Info card
               Card(
-                color: Theme.of(context).colorScheme.surfaceVariant,
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(

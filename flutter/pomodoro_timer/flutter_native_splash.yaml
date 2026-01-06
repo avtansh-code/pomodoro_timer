@@ -1,22 +1,27 @@
 # Flutter Native Splash Configuration
 # Run: flutter pub run flutter_native_splash:create
+#
+# Design matches iOS LaunchScreen.storyboard:
+# - Light background (#F9F9F9)
+# - Centered tomato logo
+# - Clean, elegant presentation
 
 flutter_native_splash:
-  # Background color
-  color: "#FF5722"  # Deep Orange - brand color
+  # Background color - matches iOS (#F9F9F9)
+  color: "#F9F9F9"  # Light gray background
   
-  # Splash image
+  # Splash image - tomato logo
   image: assets/splash/splash_logo.png
   
   # Android 12+ specific settings
   android_12:
     image: assets/splash/splash_logo_android12.png
-    icon_background_color: "#FF5722"
+    icon_background_color: "#F9F9F9"
     image_dark: assets/splash/splash_logo_android12_dark.png
-    icon_background_color_dark: "#212121"
+    icon_background_color_dark: "#1C1C1E"
   
   # Dark mode support
-  color_dark: "#212121"  # Dark background
+  color_dark: "#1C1C1E"  # iOS dark background
   image_dark: assets/splash/splash_logo_dark.png
   
   # Platform configuration
