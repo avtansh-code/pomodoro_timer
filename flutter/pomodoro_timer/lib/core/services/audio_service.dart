@@ -1,12 +1,10 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/services.dart';
 
 /// Service for managing audio playback.
 /// 
 /// Handles playing notification sounds when timer sessions complete.
-/// Uses the audioplayers package for cross-platform audio support.
+/// Uses system sounds instead of custom audio files for better compatibility.
 class AudioService {
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  
   bool _isSoundEnabled = true;
 
   /// Sets whether sounds should be played.
@@ -17,61 +15,56 @@ class AudioService {
   /// Gets the current sound enabled state.
   bool get isSoundEnabled => _isSoundEnabled;
 
-  /// Plays a completion sound.
+  /// Plays a completion sound using system audio.
   /// 
-  /// This will play a simple notification sound when a timer completes.
-  /// In production, you would load actual audio files from assets.
+  /// This uses the system's notification sound for timer completion.
   Future<void> playCompletionSound() async {
     if (!_isSoundEnabled) return;
 
     try {
-      // For now, we'll use a system sound
-      // In production, you would load from assets like:
-      // await _audioPlayer.play(AssetSource('sounds/completion.mp3'));
-      
-      // Using a simple beep/notification sound
-      // This is a placeholder - actual implementation would use asset files
-      await _audioPlayer.play(AssetSource('sounds/notification.mp3'));
+      // Use system feedback for notifications
+      await SystemSound.play(SystemSoundType.alert);
     } catch (e) {
       // Silently fail if sound cannot be played
-      // In production, log this error
+      print('AudioService: Failed to play completion sound - $e');
     }
   }
 
-  /// Plays a break completion sound.
+  /// Plays a break completion sound using system audio.
   Future<void> playBreakSound() async {
     if (!_isSoundEnabled) return;
 
     try {
-      await _audioPlayer.play(AssetSource('sounds/break_complete.mp3'));
+      // Use system feedback for break completion
+      await SystemSound.play(SystemSoundType.alert);
     } catch (e) {
       // Silently fail if sound cannot be played
+      print('AudioService: Failed to play break sound - $e');
     }
   }
 
   /// Plays a subtle tick sound (optional feature for timer running).
+  /// 
+  /// Note: System sounds don't provide tick sounds, so this is a no-op.
+  /// If needed, consider using haptic feedback instead via HapticFeedback.lightImpact().
   Future<void> playTickSound() async {
     if (!_isSoundEnabled) return;
-
-    try {
-      await _audioPlayer.play(
-        AssetSource('sounds/tick.mp3'),
-        volume: 0.3, // Lower volume for tick sounds
-      );
-    } catch (e) {
-      // Silently fail if sound cannot be played
-    }
+    
+    // System sounds don't provide tick sounds
+    // Consider using haptic feedback instead if needed
   }
 
   /// Stops any currently playing audio.
+  /// 
+  /// Note: System sounds cannot be stopped once started.
   Future<void> stop() async {
-    await _audioPlayer.stop();
+    // System sounds cannot be stopped
   }
 
   /// Disposes of the audio player resources.
   /// 
-  /// Should be called when the service is no longer needed.
+  /// Note: No resources to dispose when using system sounds.
   Future<void> dispose() async {
-    await _audioPlayer.dispose();
+    // No resources to dispose
   }
 }

@@ -17,15 +17,14 @@ import 'dart:math' as math;
 /// - Line chart for focus time trend
 /// - Pie chart for session distribution
 /// - Detailed statistics sections
+/// 
+/// NOTE: This screen expects a StatisticsCubit to be provided by an ancestor.
 class StatisticsScreen extends StatelessWidget {
   const StatisticsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => StatisticsCubit(getIt<StatisticsRepository>()),
-      child: const _StatisticsView(),
-    );
+    return const _StatisticsView();
   }
 }
 
