@@ -16,7 +16,7 @@ import 'timer_state.dart' as state;
 /// - Countdown logic with accurate time tracking
 /// - Integration with notification and audio services
 class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
-  final TimerSettings settings;
+  TimerSettings settings;
   final NotificationService notificationService;
   final AudioService audioService;
   final StatisticsRepository statisticsRepository;
@@ -98,16 +98,35 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
   }
 
   /// Handles the timer reset event.
+  /// 
+  /// Resets the current session's timer while preserving the session type
+  /// and completed sessions count.
   Future<void> _onReset(
     event.TimerReset resetEvent,
     Emitter<state.TimerState> emit,
   ) async {
     _tickerSubscription?.cancel();
     _sessionStartTime = null;
+    
+    // Determine duration based on current session type
+    int duration;
+    switch (this.state.sessionType) {
+      case SessionType.work:
+        duration = settings.workDuration * 60;
+        break;
+      case SessionType.shortBreak:
+        duration = settings.shortBreakDuration * 60;
+        break;
+      case SessionType.longBreak:
+        duration = settings.longBreakDuration * 60;
+        break;
+    }
+    
+    // Reset to initial state but keep current session type and completed sessions
     emit(state.TimerInitial(
-      duration: settings.workDuration * 60,
-      sessionType: SessionType.work,
-      completedSessions: 0,
+      duration: duration,
+      sessionType: this.state.sessionType,
+      completedSessions: this.state.completedSessions,
     ));
   }
 
@@ -221,43 +240,112 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
   /// 
   /// Updates the timer duration based on current state:
   /// - Initial: Updates duration immediately
-  /// - Running/Paused: Keeps current countdown but updates for display purposes
+  /// - Running/Paused: Adjusts duration proportionally to maintain progress percentage
   Future<void> _onSettingsUpdated(
     event.TimerSettingsUpdated settingsEvent,
     Emitter<state.TimerState> emit,
   ) async {
+    // Calculate old total duration for the current session type
+    int oldTotalDuration;
+    switch (this.state.sessionType) {
+      case SessionType.work:
+        oldTotalDuration = settings.workDuration * 60;
+        break;
+      case SessionType.shortBreak:
+        oldTotalDuration = settings.shortBreakDuration * 60;
+        break;
+      case SessionType.longBreak:
+        oldTotalDuration = settings.longBreakDuration * 60;
+        break;
+    }
+    
+    // Update the internal settings object to be used in future session transitions
+    settings = TimerSettings(
+      workDuration: settingsEvent.workDuration,
+      shortBreakDuration: settingsEvent.shortBreakDuration,
+      longBreakDuration: settingsEvent.longBreakDuration,
+      sessionsBeforeLongBreak: settingsEvent.sessionsBeforeLongBreak,
+    );
+    
+    // Calculate new total duration for the current session type
+    int newTotalDuration;
+    switch (this.state.sessionType) {
+      case SessionType.work:
+        newTotalDuration = settingsEvent.workDuration * 60;
+        break;
+      case SessionType.shortBreak:
+        newTotalDuration = settingsEvent.shortBreakDuration * 60;
+        break;
+      case SessionType.longBreak:
+        newTotalDuration = settingsEvent.longBreakDuration * 60;
+        break;
+    }
+    
     if (this.state is state.TimerInitial) {
       // Timer is idle - update duration immediately
-      final currentState = this.state as state.TimerInitial;
-      int newDuration;
-      
-      switch (currentState.sessionType) {
-        case SessionType.work:
-          newDuration = settingsEvent.workDuration * 60;
-          break;
-        case SessionType.shortBreak:
-          newDuration = settingsEvent.shortBreakDuration * 60;
-          break;
-        case SessionType.longBreak:
-          newDuration = settingsEvent.longBreakDuration * 60;
-          break;
-      }
-      
-      print('Settings updated - Timer Initial state updated to $newDuration seconds');
+      print('Settings updated - Timer Initial state updated to $newTotalDuration seconds');
       
       emit(state.TimerInitial(
-        duration: newDuration,
+        duration: newTotalDuration,
+        sessionType: this.state.sessionType,
+        completedSessions: this.state.completedSessions,
+      ));
+    } else if (this.state is state.TimerRunning) {
+      // Timer is running - use absolute elapsed time
+      final currentState = this.state as state.TimerRunning;
+      
+      // Calculate elapsed time in seconds
+      final elapsedSeconds = oldTotalDuration - currentState.duration;
+      
+      // Calculate new remaining duration
+      final newRemainingDuration = newTotalDuration - elapsedSeconds;
+      
+      print('Settings updated - Timer running, adjusting from $oldTotalDuration to $newTotalDuration seconds');
+      print('Elapsed: $elapsedSeconds seconds, new remaining: $newRemainingDuration seconds');
+      
+      // If elapsed time >= new duration, complete the session immediately
+      if (newRemainingDuration <= 0) {
+        print('Elapsed time >= new duration, completing session immediately');
+        _tickerSubscription?.cancel();
+        add(const event.TimerCompleted());
+        return;
+      }
+      
+      // Cancel current ticker and start new one with adjusted duration
+      _tickerSubscription?.cancel();
+      
+      emit(state.TimerRunning(
+        duration: newRemainingDuration,
+        sessionType: currentState.sessionType,
+        startTime: currentState.startTime,
+        completedSessions: currentState.completedSessions,
+      ));
+      
+      // Restart ticker with new duration
+      _tickerSubscription = _ticker(newRemainingDuration).listen(
+        (duration) => add(event.TimerTicked(duration)),
+      );
+    } else if (this.state is state.TimerPaused) {
+      // Timer is paused - use absolute elapsed time
+      final currentState = this.state as state.TimerPaused;
+      
+      // Calculate elapsed time in seconds
+      final elapsedSeconds = oldTotalDuration - currentState.duration;
+      
+      // Calculate new remaining duration
+      final newRemainingDuration = newTotalDuration - elapsedSeconds;
+      
+      print('Settings updated - Timer paused, adjusting from $oldTotalDuration to $newTotalDuration seconds');
+      print('Elapsed: $elapsedSeconds seconds, new remaining: $newRemainingDuration seconds');
+      
+      // If elapsed time >= new duration, set remaining to 0 (will complete when resumed/started)
+      final adjustedDuration = newRemainingDuration <= 0 ? 0 : newRemainingDuration;
+      
+      emit(state.TimerPaused(
+        duration: adjustedDuration,
         sessionType: currentState.sessionType,
         completedSessions: currentState.completedSessions,
       ));
-    } else if (this.state is state.TimerRunning) {
-      // Timer is running - keep countdown going, settings visible via _getTotalDuration
-      print('Settings updated - Timer running, total duration updated for display');
-      // No need to emit new state - the UI will read new settings via context.read
-    } else if (this.state is state.TimerPaused) {
-      // Timer is paused - keep current pause state, settings visible via _getTotalDuration  
-      print('Settings updated - Timer paused, total duration updated for display');
-      // No need to emit new state - the UI will read new settings via context.read
     }
   }
 
