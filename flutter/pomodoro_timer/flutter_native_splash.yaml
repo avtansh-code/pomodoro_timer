@@ -8,10 +8,6 @@ flutter_native_splash:
   # Splash image
   image: assets/splash/splash_logo.png
   
-  # Brand logo image (centered)
-  branding: assets/splash/branding.png
-  branding_mode: bottom
-  
   # Android 12+ specific settings
   android_12:
     image: assets/splash/splash_logo_android12.png
