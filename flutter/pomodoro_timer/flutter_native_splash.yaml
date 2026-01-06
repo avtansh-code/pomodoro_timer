@@ -13,6 +13,10 @@ flutter_native_splash:
   # Splash image - tomato logo
   image: assets/splash/splash_logo.png
   
+  # Branding/tagline at bottom (matches iOS LaunchScreen)
+  branding: assets/splash/branding.png
+  branding_mode: bottom
+  
   # Android 12+ specific settings
   android_12:
     image: assets/splash/splash_logo_android12.png
@@ -23,6 +27,7 @@ flutter_native_splash:
   # Dark mode support
   color_dark: "#1C1C1E"  # iOS dark background
   image_dark: assets/splash/splash_logo_dark.png
+  branding_dark: assets/splash/branding_dark.png
   
   # Platform configuration
   android: true

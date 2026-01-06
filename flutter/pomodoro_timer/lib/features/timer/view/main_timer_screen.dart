@@ -60,16 +60,28 @@ class _MainTimerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SettingsCubit, SettingsState>(
-      listener: (context, settingsState) {
-        // When settings change, update the timer bloc
-        context.read<TimerBloc>().add(event.TimerSettingsUpdated(
-          workDuration: settingsState.settings.workDuration,
-          shortBreakDuration: settingsState.settings.shortBreakDuration,
-          longBreakDuration: settingsState.settings.longBreakDuration,
-          sessionsBeforeLongBreak: settingsState.settings.sessionsBeforeLongBreak,
-        ));
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SettingsCubit, SettingsState>(
+          listener: (context, settingsState) {
+            // When settings change, update the timer bloc
+            context.read<TimerBloc>().add(event.TimerSettingsUpdated(
+              workDuration: settingsState.settings.workDuration,
+              shortBreakDuration: settingsState.settings.shortBreakDuration,
+              longBreakDuration: settingsState.settings.longBreakDuration,
+              sessionsBeforeLongBreak: settingsState.settings.sessionsBeforeLongBreak,
+            ));
+          },
+        ),
+        BlocListener<TimerBloc, state.TimerState>(
+          listener: (context, timerState) {
+            // Show toast when timer completes
+            if (timerState is state.TimerCompleted) {
+              _showCompletionToast(context, timerState);
+            }
+          },
+        ),
+      ],
       child: BlocBuilder<TimerBloc, state.TimerState>(
         builder: (context, timerState) {
         final sessionColor = _getSessionColor(context, timerState.sessionType);
@@ -134,12 +146,6 @@ class _MainTimerView extends StatelessWidget {
                     _buildSkipButton(context, timerState, sessionColor),
                     
                     const SizedBox(height: 24),
-                    
-                    // Completion message
-                    if (timerState is state.TimerCompleted)
-                      _buildCompletionMessage(context, timerState),
-                    
-                    const SizedBox(height: 8),
                   ],
                 ),
               ),
@@ -323,35 +329,52 @@ class _MainTimerView extends StatelessWidget {
     );
   }
 
-  /// Builds the completion message
-  Widget _buildCompletionMessage(
+  /// Shows a toast message when the timer completes
+  void _showCompletionToast(
     BuildContext context,
     state.TimerCompleted completedState,
   ) {
     String message;
+    String emoji;
+    
     switch (completedState.completedSessionType) {
       case SessionType.work:
-        message = '🎉 Great work! Time for a break.';
+        emoji = '🎉';
+        message = 'Great work! Time for a break.';
         break;
       case SessionType.shortBreak:
-        message = '💪 Break over! Ready to focus?';
+        emoji = '💪';
+        message = 'Break over! Ready to focus?';
         break;
       case SessionType.longBreak:
-        message = '🌟 Long break complete! Let\'s get back to it.';
+        emoji = '🌟';
+        message = 'Long break complete! Let\'s get back to it.';
         break;
     }
 
-    return Card(
-      color: Theme.of(context).colorScheme.primaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(
-          message,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w500,
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 20)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-          textAlign: TextAlign.center,
+            ),
+          ],
         ),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 4),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        margin: const EdgeInsets.all(16),
       ),
     );
   }
