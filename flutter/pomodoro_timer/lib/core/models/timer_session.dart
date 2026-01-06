@@ -4,9 +4,13 @@ import 'package:hive/hive.dart';
 part 'timer_session.g.dart';
 
 /// Enum representing the type of timer session
+@HiveType(typeId: 1)
 enum SessionType {
+  @HiveField(0)
   work,
+  @HiveField(1)
   shortBreak,
+  @HiveField(2)
   longBreak,
 }
 

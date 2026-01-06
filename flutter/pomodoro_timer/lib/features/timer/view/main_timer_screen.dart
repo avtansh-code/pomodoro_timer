@@ -7,6 +7,8 @@ import '../../../core/services/notification_service.dart';
 import '../../settings/bloc/settings_cubit.dart';
 import '../../settings/bloc/settings_state.dart';
 import '../../settings/view/settings_screen.dart';
+import '../../statistics/data/statistics_repository.dart';
+import '../../statistics/view/statistics_screen.dart';
 import '../bloc/timer_bloc.dart';
 import '../bloc/timer_state.dart' as state;
 import 'widgets/timer_controls.dart';
@@ -29,6 +31,7 @@ class MainTimerScreen extends StatelessWidget {
             settings: settingsState.settings,
             notificationService: getIt<NotificationService>(),
             audioService: getIt<AudioService>(),
+            statisticsRepository: getIt<StatisticsRepository>(),
           ),
           child: const _MainTimerView(),
         );
@@ -63,7 +66,11 @@ class _MainTimerView extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.bar_chart),
             onPressed: () {
-              // TODO: Navigate to statistics
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const StatisticsScreen(),
+                ),
+              );
             },
           ),
         ],

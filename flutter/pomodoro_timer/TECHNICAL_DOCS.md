@@ -448,11 +448,53 @@ flutter build apk && flutter build ios
 ---
 
 #### Phase 4: Statistics
-**Status:** Not Started  
-**Planned Approach:**
-- Hive will store sessions with timestamp-based keys
-- Repository pattern for data access abstraction
-- Support for date-range queries
+**Status:** ✅ Complete  
+**Completed:** January 6, 2026
+
+**Implementation Summary:**
+1. ✅ Initialized Hive with type adapters for TimerSession and SessionType
+2. ✅ Created StatisticsRepository with comprehensive data access methods
+3. ✅ Built StatisticsCubit with filtering and state management
+4. ✅ Created feature-rich StatisticsScreen with data visualization
+5. ✅ Integrated automatic session saving in TimerBloc
+
+**Key Implementations:**
+- **Hive Setup**: Initialized in main.dart with registered adapters (TimerSessionAdapter, SessionTypeAdapter), @HiveType annotations on models with unique typeIds
+- **StatisticsRepository (133 lines)**: Comprehensive data access layer with methods for adding sessions, retrieving all/filtered sessions (today/week/month), date-range queries with proper start/end handling, aggregate statistics (total sessions, work count, focus time), bulk operations (clear all, delete specific)
+- **StatisticsState (103 lines)**: Immutable state with sessions list and filter enum, computed properties for workSessionCount, totalFocusTime, totalBreakTime, sessionsByDate grouping for UI display, copyWith with clearError flag
+- **StatisticsCubit (73 lines)**: Simple cubit for loading and filtering statistics, switch expression for filter handling (today/week/month/all), refresh functionality, clear all with confirmation, error handling
+- **StatisticsScreen (429 lines)**: Material 3 UI with comprehensive features - Filter chips (Today/Week/Month/All Time) at top, Three summary stat cards (Sessions/Focus Time/Break Time), Pull-to-refresh support, Grouped session list by date (Today/Yesterday/Date format), Session tiles with type-specific icons and colors, Empty state messages per filter, Clear all data with confirmation dialog, Error snackbar with dismiss action
+- **TimerBloc Integration**: Auto-saves completed sessions to repository, Creates TimerSession with proper start/end times, Calculates duration based on session type, Repository injected via GetIt service locator
+
+**Technical Decisions Made:**
+- Hive over sqflite: Better performance, no native dependencies, type-safe
+- Repository pattern: Clean separation of data access from business logic  
+- Filter enum: Type-safe filtering with switch expressions
+- Computed properties in state: Aggregate stats calculated on-demand from session list
+- intl package: Professional date/time formatting (DateFormat)
+- Grouped by date: Better UX showing sessions organized by day
+- Type-specific colors: Visual distinction (orange work, green short break, blue long break)
+- Pull-to-refresh: Natural mobile UX pattern for data reload
+- SessionType as HiveType: Proper enum serialization in Hive
+
+**Files Created:**
+- `lib/features/statistics/data/statistics_repository.dart` (133 lines)
+- `lib/features/statistics/bloc/statistics_state.dart` (103 lines)
+- `lib/features/statistics/bloc/statistics_cubit.dart` (73 lines)
+- `lib/features/statistics/view/statistics_screen.dart` (429 lines)
+- Updated `lib/main.dart` - Hive initialization and adapter registration
+- Updated `lib/core/models/timer_session.dart` - Added @HiveType annotations
+- Updated `lib/core/di/service_locator.dart` - Registered StatisticsRepository
+- Updated `lib/features/timer/bloc/timer_bloc.dart` - Session auto-save on completion
+- Updated `lib/features/timer/view/main_timer_screen.dart` - Navigation to statistics
+- Updated `pubspec.yaml` - Added intl package
+
+**Architecture Notes:**
+- Clean data flow: TimerBloc → StatisticsRepository → Hive
+- Repository handles all Hive operations, BLoC/Cubit never touches Hive directly
+- StatisticsScreen gets its own StatisticsCubit instance for independent lifecycle
+- Sessions saved automatically when timer completes, no manual save needed
+- Filter changes reload data from repository, maintaining single source of truth
 
 ---
 

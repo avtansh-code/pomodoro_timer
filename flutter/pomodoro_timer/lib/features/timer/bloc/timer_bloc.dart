@@ -4,6 +4,7 @@ import '../../../core/models/timer_session.dart';
 import '../../../core/models/timer_settings.dart';
 import '../../../core/services/notification_service.dart';
 import '../../../core/services/audio_service.dart';
+import '../../statistics/data/statistics_repository.dart';
 import 'timer_event.dart' as event;
 import 'timer_state.dart' as state;
 
@@ -18,6 +19,7 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
   final TimerSettings settings;
   final NotificationService notificationService;
   final AudioService audioService;
+  final StatisticsRepository statisticsRepository;
 
   StreamSubscription<int>? _tickerSubscription;
   DateTime? _sessionStartTime;
@@ -26,6 +28,7 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
     required this.settings,
     required this.notificationService,
     required this.audioService,
+    required this.statisticsRepository,
   }) : super(
           state.TimerInitial(
             duration: settings.workDuration * 60,
@@ -133,9 +136,25 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
     _tickerSubscription?.cancel();
     
     final completedType = this.state.sessionType;
+    final sessionEndTime = DateTime.now();
     int newCompletedSessions = this.state.completedSessions;
     SessionType nextSessionType;
     int nextDuration;
+
+    // Save completed session to statistics
+    if (_sessionStartTime != null) {
+      final session = TimerSession.create(
+        sessionType: completedType,
+        startTime: _sessionStartTime!,
+        endTime: sessionEndTime,
+        durationInMinutes: completedType == SessionType.work
+            ? settings.workDuration
+            : completedType == SessionType.shortBreak
+                ? settings.shortBreakDuration
+                : settings.longBreakDuration,
+      );
+      await statisticsRepository.addSession(session);
+    }
 
     // Determine next session type based on current session
     if (completedType == SessionType.work) {

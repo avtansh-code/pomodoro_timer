@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../features/statistics/data/statistics_repository.dart';
 import '../services/persistence_service.dart';
 import '../services/notification_service.dart';
 import '../services/audio_service.dart';
@@ -38,6 +39,12 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<AudioService>(
     () => AudioService(),
   );
+
+  // Register StatisticsRepository
+  // Handles storage and retrieval of timer sessions
+  final statisticsRepository = StatisticsRepository();
+  await statisticsRepository.initialize();
+  getIt.registerSingleton<StatisticsRepository>(statisticsRepository);
 
   // Initialize services that require async setup
   await getIt<NotificationService>().initialize();
