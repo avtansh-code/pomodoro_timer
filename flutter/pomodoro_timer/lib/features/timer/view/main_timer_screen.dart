@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/di/service_locator.dart';
-import '../../../core/models/timer_settings.dart';
 import '../../../core/models/timer_session.dart';
 import '../../../core/services/audio_service.dart';
 import '../../../core/services/notification_service.dart';
+import '../../settings/bloc/settings_cubit.dart';
+import '../../settings/bloc/settings_state.dart';
+import '../../settings/view/settings_screen.dart';
 import '../bloc/timer_bloc.dart';
 import '../bloc/timer_state.dart' as state;
 import 'widgets/timer_controls.dart';
@@ -14,19 +16,23 @@ import 'widgets/timer_display.dart';
 /// 
 /// This screen displays the timer and provides controls to start,
 /// pause, resume, and reset the timer. It uses BlocProvider to
-/// manage the TimerBloc lifecycle.
+/// manage the TimerBloc lifecycle and loads settings from SettingsCubit.
 class MainTimerScreen extends StatelessWidget {
   const MainTimerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => TimerBloc(
-        settings: const TimerSettings(), // TODO: Load from settings
-        notificationService: getIt<NotificationService>(),
-        audioService: getIt<AudioService>(),
-      ),
-      child: const _MainTimerView(),
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, settingsState) {
+        return BlocProvider(
+          create: (context) => TimerBloc(
+            settings: settingsState.settings,
+            notificationService: getIt<NotificationService>(),
+            audioService: getIt<AudioService>(),
+          ),
+          child: const _MainTimerView(),
+        );
+      },
     );
   }
 }
@@ -45,7 +51,11 @@ class _MainTimerView extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              // TODO: Navigate to settings
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
             },
           ),
           
