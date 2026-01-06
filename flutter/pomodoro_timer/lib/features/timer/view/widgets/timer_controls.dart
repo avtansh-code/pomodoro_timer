@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
 import '../../bloc/timer_bloc.dart';
 import '../../bloc/timer_event.dart' as event;
 import '../../bloc/timer_state.dart' as state;
@@ -43,9 +44,10 @@ class TimerControls extends StatelessWidget {
     if (timerState is state.TimerInitial || timerState is state.TimerCompleted) {
       // Show Start button
       return ElevatedButton.icon(
-        onPressed: () => onEventAdded(
-          event.TimerStarted(timerState.duration),
-        ),
+        onPressed: () {
+          Vibration.vibrate(duration: 50);
+          onEventAdded(event.TimerStarted(timerState.duration));
+        },
         icon: const Icon(Icons.play_arrow, size: 32),
         label: const Text('Start'),
         style: ElevatedButton.styleFrom(
@@ -59,7 +61,10 @@ class TimerControls extends StatelessWidget {
     } else if (timerState is state.TimerRunning) {
       // Show Pause button
       return ElevatedButton.icon(
-        onPressed: () => onEventAdded(const event.TimerPaused()),
+        onPressed: () {
+          Vibration.vibrate(duration: 50);
+          onEventAdded(const event.TimerPaused());
+        },
         icon: const Icon(Icons.pause, size: 32),
         label: const Text('Pause'),
         style: ElevatedButton.styleFrom(
@@ -73,7 +78,10 @@ class TimerControls extends StatelessWidget {
     } else if (timerState is state.TimerPaused) {
       // Show Resume button
       return ElevatedButton.icon(
-        onPressed: () => onEventAdded(const event.TimerResumed()),
+        onPressed: () {
+          Vibration.vibrate(duration: 50);
+          onEventAdded(const event.TimerResumed());
+        },
         icon: const Icon(Icons.play_arrow, size: 32),
         label: const Text('Resume'),
         style: ElevatedButton.styleFrom(
@@ -96,7 +104,10 @@ class TimerControls extends StatelessWidget {
       children: [
         // Reset button
         OutlinedButton.icon(
-          onPressed: () => onEventAdded(const event.TimerReset()),
+          onPressed: () {
+            Vibration.vibrate(duration: 30);
+            onEventAdded(const event.TimerReset());
+          },
           icon: const Icon(Icons.refresh),
           label: const Text('Reset'),
           style: OutlinedButton.styleFrom(
@@ -108,7 +119,10 @@ class TimerControls extends StatelessWidget {
         
         // Skip button
         OutlinedButton.icon(
-          onPressed: () => onEventAdded(const event.TimerSkipped()),
+          onPressed: () {
+            Vibration.vibrate(duration: 30);
+            onEventAdded(const event.TimerSkipped());
+          },
           icon: const Icon(Icons.skip_next),
           label: const Text('Skip'),
           style: OutlinedButton.styleFrom(
