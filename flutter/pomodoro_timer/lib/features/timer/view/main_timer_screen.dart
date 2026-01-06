@@ -6,9 +6,7 @@ import '../../../core/services/audio_service.dart';
 import '../../../core/services/notification_service.dart';
 import '../../settings/bloc/settings_cubit.dart';
 import '../../settings/bloc/settings_state.dart';
-import '../../settings/view/settings_screen.dart';
 import '../../statistics/data/statistics_repository.dart';
-import '../../statistics/view/statistics_screen.dart';
 import '../bloc/timer_bloc.dart';
 import '../bloc/timer_event.dart' as event;
 import '../bloc/timer_state.dart' as state;
@@ -20,23 +18,39 @@ import 'widgets/timer_display.dart';
 /// This screen displays the timer and provides controls to start,
 /// pause, resume, and reset the timer. It uses BlocProvider to
 /// manage the TimerBloc lifecycle and loads settings from SettingsCubit.
-class MainTimerScreen extends StatelessWidget {
+class MainTimerScreen extends StatefulWidget {
   const MainTimerScreen({super.key});
 
   @override
+  State<MainTimerScreen> createState() => _MainTimerScreenState();
+}
+
+class _MainTimerScreenState extends State<MainTimerScreen> {
+  late final TimerBloc _timerBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    final settings = context.read<SettingsCubit>().state.settings;
+    _timerBloc = TimerBloc(
+      settings: settings,
+      notificationService: getIt<NotificationService>(),
+      audioService: getIt<AudioService>(),
+      statisticsRepository: getIt<StatisticsRepository>(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _timerBloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SettingsCubit, SettingsState>(
-      builder: (context, settingsState) {
-        return BlocProvider(
-          create: (context) => TimerBloc(
-            settings: settingsState.settings,
-            notificationService: getIt<NotificationService>(),
-            audioService: getIt<AudioService>(),
-            statisticsRepository: getIt<StatisticsRepository>(),
-          ),
-          child: const _MainTimerView(),
-        );
-      },
+    return BlocProvider.value(
+      value: _timerBloc,
+      child: const _MainTimerView(),
     );
   }
 }
@@ -46,41 +60,27 @@ class _MainTimerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TimerBloc, state.TimerState>(
-      builder: (context, timerState) {
+    return BlocListener<SettingsCubit, SettingsState>(
+      listener: (context, settingsState) {
+        // When settings change, update the timer bloc
+        print('Settings changed - updating timer');
+        context.read<TimerBloc>().add(event.TimerSettingsUpdated(
+          workDuration: settingsState.settings.workDuration,
+          shortBreakDuration: settingsState.settings.shortBreakDuration,
+          longBreakDuration: settingsState.settings.longBreakDuration,
+          sessionsBeforeLongBreak: settingsState.settings.sessionsBeforeLongBreak,
+        ));
+      },
+      child: BlocBuilder<TimerBloc, state.TimerState>(
+        builder: (context, timerState) {
         final sessionColor = _getSessionColor(context, timerState.sessionType);
         
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Pomodoro Timer'),
+            title: const Text('Focus Timer'),
             centerTitle: true,
             backgroundColor: Colors.transparent,
             elevation: 0,
-            actions: [
-              // Settings button
-              IconButton(
-                icon: const Icon(Icons.settings),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const SettingsScreen(),
-                    ),
-                  );
-                },
-              ),
-              
-              // Statistics button
-              IconButton(
-                icon: const Icon(Icons.bar_chart),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const StatisticsScreen(),
-                    ),
-                  );
-                },
-              ),
-            ],
           ),
           body: AnimatedContainer(
             duration: const Duration(milliseconds: 600),
@@ -148,6 +148,7 @@ class _MainTimerView extends StatelessWidget {
           ),
         );
       },
+      ),
     );
   }
 

@@ -91,6 +91,41 @@ class SettingsCubit extends Cubit<SettingsState> {
     );
   }
 
+  /// Updates the auto-start breaks setting.
+  Future<void> updateAutoStartBreaks(bool enabled) async {
+    await _updateSettings(
+      state.settings.copyWith(autoStartBreaks: enabled),
+    );
+  }
+
+  /// Updates the auto-start focus setting.
+  Future<void> updateAutoStartFocus(bool enabled) async {
+    await _updateSettings(
+      state.settings.copyWith(autoStartFocus: enabled),
+    );
+  }
+
+  /// Updates the notifications enabled setting.
+  Future<void> updateNotificationsEnabled(bool enabled) async {
+    await _updateSettings(
+      state.settings.copyWith(notificationsEnabled: enabled),
+    );
+  }
+
+  /// Updates the sound enabled setting.
+  Future<void> updateSoundEnabled(bool enabled) async {
+    await _updateSettings(
+      state.settings.copyWith(soundEnabled: enabled),
+    );
+  }
+
+  /// Updates the haptic feedback enabled setting.
+  Future<void> updateHapticEnabled(bool enabled) async {
+    await _updateSettings(
+      state.settings.copyWith(hapticEnabled: enabled),
+    );
+  }
+
   /// Resets settings to defaults.
   Future<void> resetToDefaults() async {
     await _updateSettings(const TimerSettings());

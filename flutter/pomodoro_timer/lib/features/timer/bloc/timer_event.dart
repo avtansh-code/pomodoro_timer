@@ -64,3 +64,28 @@ class TimerSkipped extends TimerEvent {
 class TimerCompleted extends TimerEvent {
   const TimerCompleted();
 }
+
+/// Event to update timer settings.
+/// 
+/// This allows updating settings (like durations) without losing timer state.
+class TimerSettingsUpdated extends TimerEvent {
+  final int workDuration;
+  final int shortBreakDuration;
+  final int longBreakDuration;
+  final int sessionsBeforeLongBreak;
+
+  const TimerSettingsUpdated({
+    required this.workDuration,
+    required this.shortBreakDuration,
+    required this.longBreakDuration,
+    required this.sessionsBeforeLongBreak,
+  });
+
+  @override
+  List<Object?> get props => [
+    workDuration,
+    shortBreakDuration,
+    longBreakDuration,
+    sessionsBeforeLongBreak,
+  ];
+}
