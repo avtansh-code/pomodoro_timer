@@ -357,9 +357,9 @@ class _StatisticsViewState extends State<_StatisticsView> {
     if (dailyData.every((data) => data.count == 0)) {
       return _buildEmptyChart(
         context,
-        'Sessions per Day',
+        'Focus Sessions per Day',
         Icons.bar_chart,
-        'No sessions yet',
+        'No focus sessions yet',
       );
     }
 
@@ -399,7 +399,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
               Icon(Icons.bar_chart, color: theme.colorScheme.primary),
               const SizedBox(width: 8),
               Text(
-                'Sessions per Day',
+                'Focus Sessions per Day',
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -426,10 +426,6 @@ class _StatisticsViewState extends State<_StatisticsView> {
                       getTitlesWidget: (value, meta) {
                         final index = value.toInt();
                         if (index >= 0 && index < dailyData.length) {
-                          // Skip first and last if they're too close to avoid overlap
-                          if (meta.min == value || meta.max == value) {
-                            return const SizedBox.shrink();
-                          }
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
@@ -589,10 +585,6 @@ class _StatisticsViewState extends State<_StatisticsView> {
                       getTitlesWidget: (value, meta) {
                         final index = value.toInt();
                         if (index >= 0 && index < trendData.length) {
-                          // Skip first and last if they're too close to avoid overlap
-                          if (meta.min == value || meta.max == value) {
-                            return const SizedBox.shrink();
-                          }
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
