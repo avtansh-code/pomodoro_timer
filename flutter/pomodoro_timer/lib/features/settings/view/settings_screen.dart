@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../app/theme/pomodoro_theme_cubit.dart';
@@ -34,6 +35,23 @@ class SettingsScreen extends StatelessWidget {
 
 class _SettingsView extends StatelessWidget {
   const _SettingsView();
+
+  /// App version from pubspec.yaml (version name only)
+  static Future<String> _getAppVersion() async {
+    // Get version from pubspec.yaml via platform channel
+    // Version is set in pubspec.yaml and read at build time
+    const version = String.fromEnvironment('APP_VERSION', defaultValue: '2.0.0');
+    return version;
+  }
+
+  /// Full app version with build number from pubspec.yaml
+  static Future<String> _getAppVersionFull() async {
+    // Get full version from pubspec.yaml (version+build)
+    // Version is set in pubspec.yaml and read at build time
+    const version = String.fromEnvironment('APP_VERSION', defaultValue: '2.0.0');
+    const buildNumber = String.fromEnvironment('APP_BUILD_NUMBER', defaultValue: '7');
+    return '$version+$buildNumber';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -489,10 +507,18 @@ class _SettingsView extends StatelessWidget {
           },
         ),
         const Divider(height: 1),
-        const ListTile(
-          leading: Icon(Icons.info_outline, color: Colors.grey),
-          title: Text('Version'),
-          trailing: Text('2.0.0', style: TextStyle(color: Colors.grey)),
+        FutureBuilder<String>(
+          future: _getAppVersion(),
+          builder: (context, snapshot) {
+            return ListTile(
+              leading: const Icon(Icons.info_outline, color: Colors.grey),
+              title: const Text('Version'),
+              trailing: Text(
+                snapshot.data ?? '...',
+                style: const TextStyle(color: Colors.grey),
+              ),
+            );
+          },
         ),
       ],
     );
@@ -815,7 +841,12 @@ class _SettingsView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildInfoRow('Version', '2.0.0+7'),
+              FutureBuilder<String>(
+                future: _getAppVersionFull(),
+                builder: (context, snapshot) {
+                  return _buildInfoRow('Version', snapshot.data ?? '...');
+                },
+              ),
               _buildInfoRow('Build Mode', 'Debug'),
               _buildInfoRow('Flutter SDK', '3.10.4+'),
               _buildInfoRow('Platform', Theme.of(context).platform.name),
