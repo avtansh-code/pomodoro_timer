@@ -143,13 +143,21 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
     event.TimerTicked tickEvent,
     Emitter<state.TimerState> emit,
   ) async {
+    // Only process tick events if the timer is currently running
+    // This prevents type casting errors when ticks arrive after reset/pause
+    if (this.state is! state.TimerRunning) {
+      return;
+    }
+
+    final currentState = this.state as state.TimerRunning;
+
     if (tickEvent.duration > 0) {
       emit(
         state.TimerRunning(
           duration: tickEvent.duration,
-          sessionType: this.state.sessionType,
-          startTime: (this.state as state.TimerRunning).startTime,
-          completedSessions: this.state.completedSessions,
+          sessionType: currentState.sessionType,
+          startTime: currentState.startTime,
+          completedSessions: currentState.completedSessions,
         ),
       );
     } else {
