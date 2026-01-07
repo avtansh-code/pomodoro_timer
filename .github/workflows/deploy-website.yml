@@ -47,4 +47,5 @@ jobs:
           # Commit and push changes
           git add .
           git commit -m "Deploy website from pomodoro_timer - $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git pull --rebase origin ${TARGET_BRANCH}
           git push origin ${TARGET_BRANCH}
