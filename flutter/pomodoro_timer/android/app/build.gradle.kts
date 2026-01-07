@@ -28,6 +28,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        
+        // Set the archive name for APK/AAB files
+        setProperty("archivesBaseName", "PomodoroTimer")
     }
 
     buildTypes {
