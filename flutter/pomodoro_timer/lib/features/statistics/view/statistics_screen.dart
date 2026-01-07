@@ -187,8 +187,11 @@ class _StatisticsViewState extends State<_StatisticsView> {
     int streak = 0;
     final now = DateTime.now();
     // Start from yesterday - streak only counts completed days
-    var checkDate = DateTime(now.year, now.month, now.day)
-        .subtract(const Duration(days: 1));
+    var checkDate = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(const Duration(days: 1));
 
     while (true) {
       final hasSessions = state.sessions.any((session) {

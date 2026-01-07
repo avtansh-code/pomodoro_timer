@@ -949,7 +949,21 @@ class _SettingsView extends StatelessWidget {
                   baseHour = 8 + random.nextInt(10); // 8 AM to 6 PM
                 } else {
                   // Weight towards morning/afternoon work hours
-                  final hourOptions = [7, 8, 9, 9, 10, 10, 11, 14, 15, 16, 17, 19, 20];
+                  final hourOptions = [
+                    7,
+                    8,
+                    9,
+                    9,
+                    10,
+                    10,
+                    11,
+                    14,
+                    15,
+                    16,
+                    17,
+                    19,
+                    20,
+                  ];
                   baseHour = hourOptions[random.nextInt(hourOptions.length)];
                 }
 
@@ -961,14 +975,29 @@ class _SettingsView extends StatelessWidget {
                   if (currentHour >= 23) break;
 
                   // Random focus duration (15-50 minutes, weighted towards 25)
-                  final focusDurations = [15, 20, 25, 25, 25, 25, 30, 30, 35, 40, 45, 50];
+                  final focusDurations = [
+                    15,
+                    20,
+                    25,
+                    25,
+                    25,
+                    25,
+                    30,
+                    30,
+                    35,
+                    40,
+                    45,
+                    50,
+                  ];
                   final focusDuration =
                       focusDurations[random.nextInt(focusDurations.length)];
 
                   final startTime = date.add(
                     Duration(hours: currentHour, minutes: currentMinute),
                   );
-                  final endTime = startTime.add(Duration(minutes: focusDuration));
+                  final endTime = startTime.add(
+                    Duration(minutes: focusDuration),
+                  );
 
                   // Add focus session
                   await repository.addSession(
@@ -993,7 +1022,8 @@ class _SettingsView extends StatelessWidget {
                     // Long break after 4 consecutive work sessions, or random chance
                     final shouldLongBreak =
                         consecutiveWorkSessions >= 4 ||
-                        (consecutiveWorkSessions >= 3 && random.nextDouble() < 0.3);
+                        (consecutiveWorkSessions >= 3 &&
+                            random.nextDouble() < 0.3);
 
                     if (shouldLongBreak) {
                       // Long break (10-20 minutes)
