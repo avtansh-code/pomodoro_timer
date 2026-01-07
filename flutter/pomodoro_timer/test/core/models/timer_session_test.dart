@@ -36,20 +36,23 @@ void main() {
       expect(session.durationInMinutes, 25);
     });
 
-    test('creates instance using factory constructor with auto-generated ID', () {
-      final session = TimerSession.create(
-        sessionType: SessionType.work,
-        startTime: startTime,
-        endTime: endTime,
-        durationInMinutes: 25,
-      );
+    test(
+      'creates instance using factory constructor with auto-generated ID',
+      () {
+        final session = TimerSession.create(
+          sessionType: SessionType.work,
+          startTime: startTime,
+          endTime: endTime,
+          durationInMinutes: 25,
+        );
 
-      expect(session.id, isNotEmpty);
-      expect(session.sessionType, SessionType.work);
-      expect(session.startTime, startTime);
-      expect(session.endTime, endTime);
-      expect(session.durationInMinutes, 25);
-    });
+        expect(session.id, isNotEmpty);
+        expect(session.sessionType, SessionType.work);
+        expect(session.startTime, startTime);
+        expect(session.endTime, endTime);
+        expect(session.durationInMinutes, 25);
+      },
+    );
 
     test('actualDuration calculates correct duration', () {
       final session = TimerSession.create(
@@ -231,4 +234,3 @@ void main() {
     });
   });
 }
-

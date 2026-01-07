@@ -119,7 +119,12 @@ class _MainTimerView extends StatelessWidget {
                       child: Column(
                         children: [
                           // Session header with session info
-                          _buildSessionHeader(context, timerState, primaryColor, sessionAccentColor),
+                          _buildSessionHeader(
+                            context,
+                            timerState,
+                            primaryColor,
+                            sessionAccentColor,
+                          ),
 
                           const SizedBox(height: 40),
 
@@ -209,7 +214,7 @@ class _MainTimerView extends StatelessWidget {
   /// All sessions use variations of the primary color to maintain theme consistency
   Color _getSessionAccentColor(SessionType sessionType, dynamic appTheme) {
     final Color primaryColor = appTheme.primaryColor;
-    
+
     switch (sessionType) {
       case SessionType.work:
         // Full primary color for focus
@@ -218,7 +223,7 @@ class _MainTimerView extends StatelessWidget {
         // Lighter tint of primary for short break
         return Color.lerp(primaryColor, Colors.white, 0.2) ?? primaryColor;
       case SessionType.longBreak:
-        // Slightly darker shade of primary for long break  
+        // Slightly darker shade of primary for long break
         return Color.lerp(primaryColor, Colors.black, 0.15) ?? primaryColor;
     }
   }
@@ -262,7 +267,7 @@ class _MainTimerView extends StatelessWidget {
 
     // Use accent color for session-specific elements, primary for base
     final displayColor = accentColor;
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -318,7 +323,10 @@ class _MainTimerView extends StatelessWidget {
             Container(
               width: 48,
               height: 48,
-              decoration: BoxDecoration(color: primaryColor, shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                color: primaryColor,
+                shape: BoxShape.circle,
+              ),
               alignment: Alignment.center,
               child: Text(
                 '${timerState.completedSessions + 1}',
@@ -369,7 +377,7 @@ class _MainTimerView extends StatelessWidget {
 
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
@@ -405,7 +413,7 @@ class _MainTimerView extends StatelessWidget {
           backgroundColor: theme.cardColor,
           shape: StadiumBorder(
             side: BorderSide(
-              color: isDark 
+              color: isDark
                   ? theme.dividerColor.withValues(alpha: 0.3)
                   : Colors.black.withValues(alpha: 0.1),
               width: 1,
@@ -439,10 +447,7 @@ class _MainTimerView extends StatelessWidget {
       SnackBar(
         content: Text(
           message,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-          ),
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
         ),
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 4),

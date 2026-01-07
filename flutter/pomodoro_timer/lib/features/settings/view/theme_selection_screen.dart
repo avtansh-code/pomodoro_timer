@@ -10,7 +10,7 @@ import '../../../core/models/app_theme_model.dart';
 /// Allows users to:
 /// - Switch between light/dark/system theme modes
 /// - Select different color schemes (Classic Red, Ocean Blue, etc.)
-/// 
+///
 /// Enhanced with animated background gradient matching iOS design.
 class ThemeSelectionScreen extends StatelessWidget {
   const ThemeSelectionScreen({super.key});
@@ -31,7 +31,7 @@ class _ThemeSelectionView extends StatelessWidget {
     return BlocBuilder<PomodoroThemeCubit, PomodoroThemeState>(
       builder: (context, pomodoroState) {
         final currentTheme = pomodoroState.currentTheme;
-        
+
         return Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBar(
@@ -82,11 +82,7 @@ class _ThemeSelectionView extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
           child: Row(
             children: [
-              Icon(
-                Icons.palette,
-                size: 20,
-                color: theme.colorScheme.primary,
-              ),
+              Icon(Icons.palette, size: 20, color: theme.colorScheme.primary),
               const SizedBox(width: 8),
               Text(
                 'COLOR SCHEME',
@@ -114,8 +110,7 @@ class _ThemeSelectionView extends StatelessWidget {
             builder: (context, state) {
               return Column(
                 children: PomodoroThemes.allThemes.map((appTheme) {
-                  final isLast =
-                      appTheme == PomodoroThemes.allThemes.last;
+                  final isLast = appTheme == PomodoroThemes.allThemes.last;
                   return Column(
                     children: [
                       _buildColorSchemeOption(
@@ -167,11 +162,7 @@ class _ThemeSelectionView extends StatelessWidget {
                 color: appTheme.primaryColor,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.check,
-                color: Colors.white,
-                size: 18,
-              ),
+              child: const Icon(Icons.check, color: Colors.white, size: 18),
             )
           : null,
       onTap: () {
@@ -187,9 +178,12 @@ class _ThemeSelectionView extends StatelessWidget {
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        border: isSelected 
-          ? Border.all(color: appTheme.primaryColor.withValues(alpha: 0.5), width: 2)
-          : null,
+        border: isSelected
+            ? Border.all(
+                color: appTheme.primaryColor.withValues(alpha: 0.5),
+                width: 2,
+              )
+            : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -338,11 +332,7 @@ class _ThemeSelectionView extends StatelessWidget {
                 color: Theme.of(context).colorScheme.primary,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.check,
-                color: Colors.white,
-                size: 18,
-              ),
+              child: const Icon(Icons.check, color: Colors.white, size: 18),
             )
           : null,
       onTap: () {
@@ -368,18 +358,11 @@ class _ThemeSelectionView extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.blue.withValues(alpha: 0.2),
-          width: 1,
-        ),
+        border: Border.all(color: Colors.blue.withValues(alpha: 0.2), width: 1),
       ),
       child: Row(
         children: [
-          const Icon(
-            Icons.info_outline,
-            color: Colors.blue,
-            size: 24,
-          ),
+          const Icon(Icons.info_outline, color: Colors.blue, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Text(

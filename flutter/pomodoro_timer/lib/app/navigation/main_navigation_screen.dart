@@ -23,11 +23,12 @@ class MainNavigationScreen extends StatefulWidget {
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
 }
 
-class _MainNavigationScreenState extends State<MainNavigationScreen> with SingleTickerProviderStateMixin {
+class _MainNavigationScreenState extends State<MainNavigationScreen>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   double _dragOffset = 0.0;
   bool _isDragging = false;
-  
+
   late final StatisticsCubit _statisticsCubit;
   late final AnimationController _animationController;
 
@@ -37,7 +38,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> with Single
 
     // Create StatisticsCubit
     _statisticsCubit = StatisticsCubit(getIt<StatisticsRepository>());
-    
+
     // Animation controller for smooth transitions
     _animationController = AnimationController(
       vsync: this,
@@ -93,16 +94,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> with Single
 
   Widget _buildModernNavigationBar(BuildContext context) {
     final theme = Theme.of(context);
-    final primaryColor = context.watch<PomodoroThemeCubit>().state.currentTheme.primaryColor;
+    final primaryColor = context
+        .watch<PomodoroThemeCubit>()
+        .state
+        .currentTheme
+        .primaryColor;
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return Container(
-      margin: EdgeInsets.fromLTRB(
-        40,
-        0,
-        40,
-        Platform.isIOS ? 28 : 20,
-      ),
+      margin: EdgeInsets.fromLTRB(40, 0, 40, Platform.isIOS ? 28 : 20),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(28),
         child: BackdropFilter(
@@ -110,7 +110,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> with Single
           child: Container(
             height: 56,
             decoration: BoxDecoration(
-              color: isDark 
+              color: isDark
                   ? Colors.black.withValues(alpha: 0.65)
                   : Colors.white.withValues(alpha: 0.92),
               borderRadius: BorderRadius.circular(28),
@@ -131,7 +131,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> with Single
             child: LayoutBuilder(
               builder: (context, constraints) {
                 final itemWidth = constraints.maxWidth / 3;
-                
+
                 return GestureDetector(
                   onHorizontalDragStart: (details) {
                     setState(() => _isDragging = true);
@@ -143,9 +143,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> with Single
                   },
                   onHorizontalDragEnd: (details) {
                     // Calculate which tab to snap to
-                    final totalOffset = _selectedIndex * itemWidth + _dragOffset;
-                    final newIndex = (totalOffset / itemWidth).round().clamp(0, 2);
-                    
+                    final totalOffset =
+                        _selectedIndex * itemWidth + _dragOffset;
+                    final newIndex = (totalOffset / itemWidth).round().clamp(
+                      0,
+                      2,
+                    );
+
                     setState(() {
                       _isDragging = false;
                       _dragOffset = 0;
@@ -161,18 +165,22 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> with Single
                     children: [
                       // Simple sliding indicator
                       AnimatedPositioned(
-                        duration: _isDragging 
-                            ? Duration.zero 
+                        duration: _isDragging
+                            ? Duration.zero
                             : const Duration(milliseconds: 250),
                         curve: Curves.easeOutCubic,
-                        left: (_selectedIndex * itemWidth) + _dragOffset.clamp(-itemWidth, itemWidth * 2),
+                        left:
+                            (_selectedIndex * itemWidth) +
+                            _dragOffset.clamp(-itemWidth, itemWidth * 2),
                         top: 6,
                         bottom: 6,
                         width: itemWidth,
                         child: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 6),
                           decoration: BoxDecoration(
-                            color: primaryColor.withValues(alpha: isDark ? 0.25 : 0.15),
+                            color: primaryColor.withValues(
+                              alpha: isDark ? 0.25 : 0.15,
+                            ),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                               color: primaryColor.withValues(alpha: 0.3),
@@ -236,7 +244,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> with Single
     final isSelected = _selectedIndex == index;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return GestureDetector(
       onTap: () => _onItemTapped(index),
       behavior: HitTestBehavior.opaque,
@@ -250,8 +258,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> with Single
               child: Icon(
                 isSelected ? selectedIcon : icon,
                 key: ValueKey('$index-$isSelected'),
-                color: isSelected 
-                    ? primaryColor 
+                color: isSelected
+                    ? primaryColor
                     : (isDark ? Colors.white54 : Colors.black45),
                 size: 22,
               ),
@@ -262,8 +270,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> with Single
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected 
-                    ? primaryColor 
+                color: isSelected
+                    ? primaryColor
                     : (isDark ? Colors.white54 : Colors.black45),
               ),
               child: Text(label),

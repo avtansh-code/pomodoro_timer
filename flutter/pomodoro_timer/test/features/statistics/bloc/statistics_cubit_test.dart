@@ -58,10 +58,10 @@ void main() {
     test('initial state has today filter and loads immediately', () {
       when(() => mockRepository.getTodaySessions()).thenReturn([]);
       final cubit = StatisticsCubit(mockRepository);
-      
+
       expect(cubit.state.filter, StatisticsFilter.today);
       expect(cubit.state.sessions, isEmpty);
-      
+
       cubit.close();
     });
 
@@ -73,8 +73,7 @@ void main() {
       },
       act: (cubit) => cubit.loadStatistics(),
       expect: () => [
-        isA<StatisticsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<StatisticsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<StatisticsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having((s) => s.sessions, 'sessions', testSessions),
@@ -89,10 +88,12 @@ void main() {
       },
       act: (cubit) => cubit.changeFilter(StatisticsFilter.week),
       expect: () => [
-        isA<StatisticsState>()
-            .having((s) => s.filter, 'filter', StatisticsFilter.week),
-        isA<StatisticsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<StatisticsState>().having(
+          (s) => s.filter,
+          'filter',
+          StatisticsFilter.week,
+        ),
+        isA<StatisticsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<StatisticsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having((s) => s.sessions, 'sessions', testSessions),
@@ -107,10 +108,12 @@ void main() {
       },
       act: (cubit) => cubit.changeFilter(StatisticsFilter.month),
       expect: () => [
-        isA<StatisticsState>()
-            .having((s) => s.filter, 'filter', StatisticsFilter.month),
-        isA<StatisticsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<StatisticsState>().having(
+          (s) => s.filter,
+          'filter',
+          StatisticsFilter.month,
+        ),
+        isA<StatisticsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<StatisticsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having((s) => s.sessions, 'sessions', testSessions),
@@ -125,10 +128,12 @@ void main() {
       },
       act: (cubit) => cubit.changeFilter(StatisticsFilter.all),
       expect: () => [
-        isA<StatisticsState>()
-            .having((s) => s.filter, 'filter', StatisticsFilter.all),
-        isA<StatisticsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<StatisticsState>().having(
+          (s) => s.filter,
+          'filter',
+          StatisticsFilter.all,
+        ),
+        isA<StatisticsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<StatisticsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having((s) => s.sessions, 'sessions', testSessions),
@@ -150,8 +155,7 @@ void main() {
       build: () => StatisticsCubit(mockRepository),
       act: (cubit) => cubit.clearAllStatistics(),
       expect: () => [
-        isA<StatisticsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<StatisticsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<StatisticsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having((s) => s.sessions, 'sessions', isEmpty),
@@ -161,14 +165,14 @@ void main() {
     blocTest<StatisticsCubit, StatisticsState>(
       'handles error when loading statistics fails',
       build: () {
-        when(() => mockRepository.getTodaySessions())
-            .thenThrow(Exception('Database error'));
+        when(
+          () => mockRepository.getTodaySessions(),
+        ).thenThrow(Exception('Database error'));
         return StatisticsCubit(mockRepository);
       },
       act: (cubit) => cubit.loadStatistics(),
       expect: () => [
-        isA<StatisticsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<StatisticsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<StatisticsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having(
@@ -189,8 +193,11 @@ void main() {
       ),
       act: (cubit) => cubit.clearError(),
       expect: () => [
-        isA<StatisticsState>()
-            .having((s) => s.errorMessage, 'errorMessage', null),
+        isA<StatisticsState>().having(
+          (s) => s.errorMessage,
+          'errorMessage',
+          null,
+        ),
       ],
     );
   });

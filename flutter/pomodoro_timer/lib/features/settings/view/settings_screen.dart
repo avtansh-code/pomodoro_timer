@@ -40,7 +40,10 @@ class _SettingsView extends StatelessWidget {
   static Future<String> _getAppVersion() async {
     // Get version from pubspec.yaml via platform channel
     // Version is set in pubspec.yaml and read at build time
-    const version = String.fromEnvironment('APP_VERSION', defaultValue: '2.0.0');
+    const version = String.fromEnvironment(
+      'APP_VERSION',
+      defaultValue: '2.0.0',
+    );
     return version;
   }
 
@@ -48,8 +51,14 @@ class _SettingsView extends StatelessWidget {
   static Future<String> _getAppVersionFull() async {
     // Get full version from pubspec.yaml (version+build)
     // Version is set in pubspec.yaml and read at build time
-    const version = String.fromEnvironment('APP_VERSION', defaultValue: '2.0.0');
-    const buildNumber = String.fromEnvironment('APP_BUILD_NUMBER', defaultValue: '7');
+    const version = String.fromEnvironment(
+      'APP_VERSION',
+      defaultValue: '2.0.0',
+    );
+    const buildNumber = String.fromEnvironment(
+      'APP_BUILD_NUMBER',
+      defaultValue: '7',
+    );
     return '$version+$buildNumber';
   }
 
@@ -92,7 +101,7 @@ class _SettingsView extends StatelessWidget {
           return BlocBuilder<PomodoroThemeCubit, PomodoroThemeState>(
             builder: (context, pomodoroState) {
               final primaryColor = pomodoroState.currentTheme.primaryColor;
-              
+
               return Container(
                 color: Color.lerp(
                   theme.scaffoldBackgroundColor,
@@ -103,45 +112,47 @@ class _SettingsView extends StatelessWidget {
                   child: ListView(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                     children: [
-                // Learn Section - Featured at top
-                _buildLearnSection(context),
+                      // Learn Section - Featured at top
+                      _buildLearnSection(context),
 
-                const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                // Theme Section
-                _buildThemeSection(context),
+                      // Theme Section
+                      _buildThemeSection(context),
 
-                const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                // Duration Settings
-                _buildDurationSection(context, state),
+                      // Duration Settings
+                      _buildDurationSection(context, state),
 
-                const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                // Auto-start Settings
-                _buildAutoStartSection(context, state),
+                      // Auto-start Settings
+                      _buildAutoStartSection(context, state),
 
-                const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                // Notifications & Feedback
-                _buildNotificationSection(context, state),
+                      // Notifications & Feedback
+                      _buildNotificationSection(context, state),
 
-                const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                // Developer Tools (Debug mode only)
-                if (const bool.fromEnvironment('dart.vm.product') == false)
-                  _buildDeveloperSection(context),
+                      // Developer Tools (Debug mode only)
+                      if (const bool.fromEnvironment('dart.vm.product') ==
+                          false)
+                        _buildDeveloperSection(context),
 
-                if (const bool.fromEnvironment('dart.vm.product') == false)
-                  const SizedBox(height: 8),
+                      if (const bool.fromEnvironment('dart.vm.product') ==
+                          false)
+                        const SizedBox(height: 8),
 
-                // Data Management
-                _buildDataSection(context),
+                      // Data Management
+                      _buildDataSection(context),
 
-                const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                // About Section
-                _buildAboutSection(context),
+                      // About Section
+                      _buildAboutSection(context),
 
                       const SizedBox(height: 24),
                     ],
@@ -203,13 +214,14 @@ class _SettingsView extends StatelessWidget {
                     themeModeName = 'System';
                     break;
                 }
-                
+
                 return ListTile(
                   leading: Container(
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: pomodoroThemeState.currentTheme.primaryColor.withValues(alpha: 0.15),
+                      color: pomodoroThemeState.currentTheme.primaryColor
+                          .withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
@@ -219,7 +231,9 @@ class _SettingsView extends StatelessWidget {
                     ),
                   ),
                   title: const Text('Theme & Colors'),
-                  subtitle: Text('${pomodoroThemeState.currentTheme.name} • $themeModeName'),
+                  subtitle: Text(
+                    '${pomodoroThemeState.currentTheme.name} • $themeModeName',
+                  ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -340,7 +354,9 @@ class _SettingsView extends StatelessWidget {
           max: 10,
           suffix: '',
           onChanged: (value) {
-            context.read<SettingsCubit>().updateSessionsBeforeLongBreak(value.round());
+            context.read<SettingsCubit>().updateSessionsBeforeLongBreak(
+              value.round(),
+            );
           },
         ),
       ],
@@ -420,8 +436,7 @@ class _SettingsView extends StatelessWidget {
       context: context,
       icon: Icons.construction,
       title: 'Developer Tools',
-      footer:
-          'Tools for debugging and testing. Only visible in debug builds.',
+      footer: 'Tools for debugging and testing. Only visible in debug builds.',
       children: [
         ListTile(
           leading: const Icon(Icons.bug_report, color: Colors.purple),
@@ -592,7 +607,7 @@ class _SettingsView extends StatelessWidget {
     required ValueChanged<double> onChanged,
   }) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
@@ -601,17 +616,14 @@ class _SettingsView extends StatelessWidget {
           Icon(icon, color: iconColor, size: 20),
           const SizedBox(width: 10),
           // Title
-          Expanded(
-            child: Text(
-              title,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
+          Expanded(child: Text(title, style: theme.textTheme.bodyMedium)),
           // Compact stepper control
           Container(
             height: 32,
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              color: theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.5,
+              ),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -619,15 +631,17 @@ class _SettingsView extends StatelessWidget {
               children: [
                 // Minus button
                 GestureDetector(
-                  onTap: value > min ? () => onChanged((value - 1).toDouble()) : null,
+                  onTap: value > min
+                      ? () => onChanged((value - 1).toDouble())
+                      : null,
                   child: Container(
                     width: 32,
                     height: 32,
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.remove,
-                      color: value > min 
-                          ? theme.colorScheme.primary 
+                      color: value > min
+                          ? theme.colorScheme.primary
                           : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       size: 18,
                     ),
@@ -648,15 +662,17 @@ class _SettingsView extends StatelessWidget {
                 ),
                 // Plus button
                 GestureDetector(
-                  onTap: value < max ? () => onChanged((value + 1).toDouble()) : null,
+                  onTap: value < max
+                      ? () => onChanged((value + 1).toDouble())
+                      : null,
                   child: Container(
                     width: 32,
                     height: 32,
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.add,
-                      color: value < max 
-                          ? theme.colorScheme.primary 
+                      color: value < max
+                          ? theme.colorScheme.primary
                           : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       size: 18,
                     ),
@@ -670,9 +686,13 @@ class _SettingsView extends StatelessWidget {
     );
   }
 
-  Widget _buildSessionCountTile(BuildContext context, SettingsState state, ThemeData theme) {
+  Widget _buildSessionCountTile(
+    BuildContext context,
+    SettingsState state,
+    ThemeData theme,
+  ) {
     final value = state.settings.sessionsBeforeLongBreak;
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
@@ -682,16 +702,15 @@ class _SettingsView extends StatelessWidget {
           const SizedBox(width: 10),
           // Title
           Expanded(
-            child: Text(
-              'Long break after',
-              style: theme.textTheme.bodyMedium,
-            ),
+            child: Text('Long break after', style: theme.textTheme.bodyMedium),
           ),
           // Compact stepper control
           Container(
             height: 32,
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              color: theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.5,
+              ),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -700,7 +719,9 @@ class _SettingsView extends StatelessWidget {
                 // Minus button
                 GestureDetector(
                   onTap: value > 2
-                      ? () => context.read<SettingsCubit>().updateSessionsBeforeLongBreak(value - 1)
+                      ? () => context
+                            .read<SettingsCubit>()
+                            .updateSessionsBeforeLongBreak(value - 1)
                       : null,
                   child: Container(
                     width: 32,
@@ -708,8 +729,8 @@ class _SettingsView extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.remove,
-                      color: value > 2 
-                          ? theme.colorScheme.primary 
+                      color: value > 2
+                          ? theme.colorScheme.primary
                           : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       size: 18,
                     ),
@@ -731,7 +752,9 @@ class _SettingsView extends StatelessWidget {
                 // Plus button
                 GestureDetector(
                   onTap: value < 10
-                      ? () => context.read<SettingsCubit>().updateSessionsBeforeLongBreak(value + 1)
+                      ? () => context
+                            .read<SettingsCubit>()
+                            .updateSessionsBeforeLongBreak(value + 1)
                       : null,
                   child: Container(
                     width: 32,
@@ -739,8 +762,8 @@ class _SettingsView extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.add,
-                      color: value < 10 
-                          ? theme.colorScheme.primary 
+                      color: value < 10
+                          ? theme.colorScheme.primary
                           : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       size: 18,
                     ),
@@ -825,7 +848,7 @@ class _SettingsView extends StatelessWidget {
 
   void _showAppInfoDialog(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -870,10 +893,7 @@ class _SettingsView extends StatelessWidget {
               ),
               BlocBuilder<ThemeCubit, ThemeState>(
                 builder: (context, state) {
-                  return _buildInfoRow(
-                    'Brightness',
-                    state.themeMode.name,
-                  );
+                  return _buildInfoRow('Brightness', state.themeMode.name);
                 },
               ),
             ],
@@ -897,19 +917,13 @@ class _SettingsView extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 13,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
           ),
           const SizedBox(width: 16),
           Flexible(
             child: Text(
               value,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 13,
-              ),
+              style: const TextStyle(color: Colors.grey, fontSize: 13),
               textAlign: TextAlign.end,
             ),
           ),
@@ -920,7 +934,7 @@ class _SettingsView extends StatelessWidget {
 
   void _showThemeTestDialog(BuildContext context) {
     final allThemes = PomodoroThemes.allThemes;
-    
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -936,7 +950,10 @@ class _SettingsView extends StatelessWidget {
               return ListTile(
                 leading: _buildThemePreview(theme),
                 title: Text(theme.name),
-                subtitle: Text('#${(theme.primaryColor.r * 255).round().toRadixString(16).padLeft(2, '0')}${(theme.primaryColor.g * 255).round().toRadixString(16).padLeft(2, '0')}${(theme.primaryColor.b * 255).round().toRadixString(16).padLeft(2, '0')}'.toUpperCase()),
+                subtitle: Text(
+                  '#${(theme.primaryColor.r * 255).round().toRadixString(16).padLeft(2, '0')}${(theme.primaryColor.g * 255).round().toRadixString(16).padLeft(2, '0')}${(theme.primaryColor.b * 255).round().toRadixString(16).padLeft(2, '0')}'
+                      .toUpperCase(),
+                ),
                 onTap: () {
                   context.read<PomodoroThemeCubit>().setTheme(theme);
                   Navigator.of(dialogContext).pop();
@@ -978,18 +995,20 @@ class _SettingsView extends StatelessWidget {
             onPressed: () async {
               // Generate sample data
               final repository = getIt<StatisticsRepository>();
-              
+
               // Add sessions for the past 30 days
               final now = DateTime.now();
               for (int i = 0; i < 30; i++) {
                 final date = now.subtract(Duration(days: i));
-                
+
                 // Add 2-4 sessions per day
                 final sessionsCount = 2 + (i % 3);
                 for (int j = 0; j < sessionsCount; j++) {
                   final startTime = date.subtract(Duration(hours: j * 2));
-                  final breakStartTime = date.subtract(Duration(hours: j * 2, minutes: 25));
-                  
+                  final breakStartTime = date.subtract(
+                    Duration(hours: j * 2, minutes: 25),
+                  );
+
                   // Add focus session
                   await repository.addSession(
                     TimerSession(
@@ -1000,7 +1019,7 @@ class _SettingsView extends StatelessWidget {
                       durationInMinutes: 25,
                     ),
                   );
-                  
+
                   // Add a short break
                   await repository.addSession(
                     TimerSession(
@@ -1013,7 +1032,7 @@ class _SettingsView extends StatelessWidget {
                   );
                 }
               }
-              
+
               if (dialogContext.mounted) {
                 Navigator.of(dialogContext).pop();
                 ScaffoldMessenger.of(context).showSnackBar(

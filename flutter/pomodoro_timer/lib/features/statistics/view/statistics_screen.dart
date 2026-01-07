@@ -56,9 +56,9 @@ class _StatisticsViewState extends State<_StatisticsView> {
 
           return BlocBuilder<StatisticsCubit, StatisticsState>(
             builder: (context, state) {
-          if (state.isLoading && state.sessions.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
+              if (state.isLoading && state.sessions.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
               final currentSessions = _getCurrentSessions(state);
               final todaySessions = _getTodaySessions(state);
@@ -74,57 +74,69 @@ class _StatisticsViewState extends State<_StatisticsView> {
                   child: ListView(
                     padding: const EdgeInsets.all(16.0),
                     children: [
-                    // Time Range Picker
-                    _buildTimeRangePicker(context),
+                      // Time Range Picker
+                      _buildTimeRangePicker(context),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Streak Card
-                    _buildStreakCard(context, streak),
+                      // Streak Card
+                      _buildStreakCard(context, streak),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Weekly Sessions Chart
-                    _buildWeeklySessionsChart(context, currentSessions, primaryColor),
+                      // Weekly Sessions Chart
+                      _buildWeeklySessionsChart(
+                        context,
+                        currentSessions,
+                        primaryColor,
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Focus Time Trend Chart
-                    _buildFocusTimeTrendChart(context, currentSessions, primaryColor),
+                      // Focus Time Trend Chart
+                      _buildFocusTimeTrendChart(
+                        context,
+                        currentSessions,
+                        primaryColor,
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Session Type Distribution
-                    _buildSessionTypeDistribution(context, currentSessions, appTheme),
+                      // Session Type Distribution
+                      _buildSessionTypeDistribution(
+                        context,
+                        currentSessions,
+                        appTheme,
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Today's Stats
-                    _buildStatsSection(
-                      context,
-                      'Today',
-                      todaySessions,
-                      Icons.calendar_today,
-                      primaryColor,
-                    ),
+                      // Today's Stats
+                      _buildStatsSection(
+                        context,
+                        'Today',
+                        todaySessions,
+                        Icons.calendar_today,
+                        primaryColor,
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Selected Range Stats
-                    _buildStatsSection(
-                      context,
-                      _selectedTimeRange == StatisticsFilter.week
-                          ? 'Week'
-                          : 'Month',
-                      currentSessions,
-                      Icons.calendar_month,
-                      primaryColor,
-                    ),
+                      // Selected Range Stats
+                      _buildStatsSection(
+                        context,
+                        _selectedTimeRange == StatisticsFilter.week
+                            ? 'Week'
+                            : 'Month',
+                        currentSessions,
+                        Icons.calendar_month,
+                        primaryColor,
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Motivational Quote
-                    _buildMotivationalQuote(context),
+                      // Motivational Quote
+                      _buildMotivationalQuote(context),
 
                       const SizedBox(height: 16),
                     ],
@@ -198,7 +210,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
   Widget _buildTimeRangePicker(BuildContext context) {
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
-    
+
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -231,7 +243,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
       ),
     );
   }
-  
+
   Widget _buildSegmentButton(
     BuildContext context,
     String label,
@@ -240,7 +252,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
   ) {
     final isSelected = _selectedTimeRange == filter;
     final theme = Theme.of(context);
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -252,12 +264,9 @@ class _StatisticsViewState extends State<_StatisticsView> {
         curve: Curves.easeInOut,
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          gradient: isSelected 
+          gradient: isSelected
               ? LinearGradient(
-                  colors: [
-                    primaryColor,
-                    primaryColor.withValues(alpha: 0.8),
-                  ],
+                  colors: [primaryColor, primaryColor.withValues(alpha: 0.8)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 )
@@ -268,9 +277,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
           label,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: isSelected 
-                ? Colors.white 
-                : theme.colorScheme.onSurface,
+            color: isSelected ? Colors.white : theme.colorScheme.onSurface,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             fontSize: 15,
           ),
@@ -360,10 +367,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            theme.cardColor,
-            primaryColor.withValues(alpha: 0.03),
-          ],
+          colors: [theme.cardColor, primaryColor.withValues(alpha: 0.03)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -502,10 +506,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            theme.cardColor,
-            primaryColor.withValues(alpha: 0.03),
-          ],
+          colors: [theme.cardColor, primaryColor.withValues(alpha: 0.03)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -647,10 +648,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            theme.cardColor,
-            primaryColor.withValues(alpha: 0.03),
-          ],
+          colors: [theme.cardColor, primaryColor.withValues(alpha: 0.03)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

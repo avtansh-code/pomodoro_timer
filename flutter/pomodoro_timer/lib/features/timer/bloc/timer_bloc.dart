@@ -232,9 +232,10 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
 
     // Check if we should auto-start the next session
     // Don't auto-start focus after a long break - user must manually start
-    final shouldAutoStart = (nextSessionType == SessionType.work && 
-                             settings.autoStartFocus && 
-                             completedType != SessionType.longBreak) ||
+    final shouldAutoStart =
+        (nextSessionType == SessionType.work &&
+            settings.autoStartFocus &&
+            completedType != SessionType.longBreak) ||
         (nextSessionType != SessionType.work && settings.autoStartBreaks);
 
     if (shouldAutoStart) {

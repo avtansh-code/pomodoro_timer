@@ -74,7 +74,9 @@ class CircularTimerProgress extends StatelessWidget {
                 painter: _CircularProgressPainter(
                   progress: value,
                   color: color,
-                  backgroundColor: color.withValues(alpha: 0.15), // Lighter track
+                  backgroundColor: color.withValues(
+                    alpha: 0.15,
+                  ), // Lighter track
                   strokeWidth: strokeWidth,
                 ),
               );

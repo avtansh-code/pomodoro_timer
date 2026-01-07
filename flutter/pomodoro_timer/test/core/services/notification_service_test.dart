@@ -14,29 +14,38 @@ void main() {
       expect(notificationService, isNotNull);
     });
 
-    test('showWorkSessionComplete does not throw before initialization', () async {
-      // Should not throw even when not initialized (gracefully handles)
-      await expectLater(
-        notificationService.showWorkSessionComplete(),
-        completes,
-      );
-    });
+    test(
+      'showWorkSessionComplete does not throw before initialization',
+      () async {
+        // Should not throw even when not initialized (gracefully handles)
+        await expectLater(
+          notificationService.showWorkSessionComplete(),
+          completes,
+        );
+      },
+    );
 
-    test('showShortBreakComplete does not throw before initialization', () async {
-      // Should not throw even when not initialized (gracefully handles)
-      await expectLater(
-        notificationService.showShortBreakComplete(),
-        completes,
-      );
-    });
+    test(
+      'showShortBreakComplete does not throw before initialization',
+      () async {
+        // Should not throw even when not initialized (gracefully handles)
+        await expectLater(
+          notificationService.showShortBreakComplete(),
+          completes,
+        );
+      },
+    );
 
-    test('showLongBreakComplete does not throw before initialization', () async {
-      // Should not throw even when not initialized (gracefully handles)
-      await expectLater(
-        notificationService.showLongBreakComplete(),
-        completes,
-      );
-    });
+    test(
+      'showLongBreakComplete does not throw before initialization',
+      () async {
+        // Should not throw even when not initialized (gracefully handles)
+        await expectLater(
+          notificationService.showLongBreakComplete(),
+          completes,
+        );
+      },
+    );
 
     // Note: cancelAll requires platform initialization which cannot be done in unit tests.
     // These methods are tested through integration tests or manual testing.

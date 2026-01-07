@@ -46,17 +46,20 @@ void main() {
     );
 
     // Setup default mock behaviors
-    when(() => mockNotificationService.showWorkSessionComplete())
-        .thenAnswer((_) async {});
-    when(() => mockNotificationService.showShortBreakComplete())
-        .thenAnswer((_) async {});
-    when(() => mockNotificationService.showLongBreakComplete())
-        .thenAnswer((_) async {});
-    when(() => mockAudioService.playCompletionSound())
-        .thenAnswer((_) async {});
+    when(
+      () => mockNotificationService.showWorkSessionComplete(),
+    ).thenAnswer((_) async {});
+    when(
+      () => mockNotificationService.showShortBreakComplete(),
+    ).thenAnswer((_) async {});
+    when(
+      () => mockNotificationService.showLongBreakComplete(),
+    ).thenAnswer((_) async {});
+    when(() => mockAudioService.playCompletionSound()).thenAnswer((_) async {});
     when(() => mockAudioService.playBreakSound()).thenAnswer((_) async {});
-    when(() => mockStatisticsRepository.addSession(any()))
-        .thenAnswer((_) async => 0);
+    when(
+      () => mockStatisticsRepository.addSession(any()),
+    ).thenAnswer((_) async => 0);
 
     timerBloc = TimerBloc(
       settings: testSettings,
@@ -104,10 +107,16 @@ void main() {
           isA<state.TimerRunning>().having((s) => s.duration, 'duration', 3),
           isA<state.TimerRunning>().having((s) => s.duration, 'duration', 2),
           isA<state.TimerRunning>().having((s) => s.duration, 'duration', 1),
-          isA<state.TimerCompleted>()
-              .having((s) => s.sessionType, 'sessionType', SessionType.shortBreak),
-          isA<state.TimerInitial>()
-              .having((s) => s.sessionType, 'sessionType', SessionType.shortBreak),
+          isA<state.TimerCompleted>().having(
+            (s) => s.sessionType,
+            'sessionType',
+            SessionType.shortBreak,
+          ),
+          isA<state.TimerInitial>().having(
+            (s) => s.sessionType,
+            'sessionType',
+            SessionType.shortBreak,
+          ),
         ],
       );
     });
@@ -227,8 +236,9 @@ void main() {
         act: (bloc) => bloc.add(const event.TimerStarted(1)),
         wait: const Duration(seconds: 4),
         verify: (_) {
-          verify(() => mockNotificationService.showWorkSessionComplete())
-              .called(1);
+          verify(
+            () => mockNotificationService.showWorkSessionComplete(),
+          ).called(1);
           verify(() => mockAudioService.playCompletionSound()).called(1);
           verify(() => mockStatisticsRepository.addSession(any())).called(1);
         },
@@ -249,10 +259,18 @@ void main() {
               .having((s) => s.sessionType, 'sessionType', SessionType.work)
               .having((s) => s.completedSessions, 'completedSessions', 3),
           isA<state.TimerCompleted>()
-              .having((s) => s.sessionType, 'sessionType', SessionType.longBreak)
+              .having(
+                (s) => s.sessionType,
+                'sessionType',
+                SessionType.longBreak,
+              )
               .having((s) => s.completedSessions, 'completedSessions', 0),
           isA<state.TimerInitial>()
-              .having((s) => s.sessionType, 'sessionType', SessionType.longBreak)
+              .having(
+                (s) => s.sessionType,
+                'sessionType',
+                SessionType.longBreak,
+              )
               .having((s) => s.duration, 'duration', 15 * 60)
               .having((s) => s.completedSessions, 'completedSessions', 0),
         ],
@@ -274,8 +292,9 @@ void main() {
         act: (bloc) => bloc.add(const event.TimerStarted(1)),
         wait: const Duration(seconds: 4),
         verify: (_) {
-          verify(() => mockNotificationService.showShortBreakComplete())
-              .called(1);
+          verify(
+            () => mockNotificationService.showShortBreakComplete(),
+          ).called(1);
           verify(() => mockAudioService.playBreakSound()).called(1);
         },
       );
@@ -296,8 +315,9 @@ void main() {
         act: (bloc) => bloc.add(const event.TimerStarted(1)),
         wait: const Duration(seconds: 4),
         verify: (_) {
-          verify(() => mockNotificationService.showLongBreakComplete())
-              .called(1);
+          verify(
+            () => mockNotificationService.showLongBreakComplete(),
+          ).called(1);
           verify(() => mockAudioService.playBreakSound()).called(1);
         },
       );
@@ -372,10 +392,7 @@ void main() {
           ),
         ),
         wait: const Duration(seconds: 3),
-        expect: () => [
-          isA<state.TimerCompleted>(),
-          isA<state.TimerInitial>(),
-        ],
+        expect: () => [isA<state.TimerCompleted>(), isA<state.TimerInitial>()],
       );
 
       blocTest<TimerBloc, state.TimerState>(
@@ -416,10 +433,7 @@ void main() {
         ),
         act: (bloc) => bloc.add(const event.TimerSkipped()),
         wait: const Duration(seconds: 3),
-        expect: () => [
-          isA<state.TimerCompleted>(),
-          isA<state.TimerInitial>(),
-        ],
+        expect: () => [isA<state.TimerCompleted>(), isA<state.TimerInitial>()],
       );
     });
 
@@ -437,8 +451,11 @@ void main() {
 
         expect(
           bloc.state,
-          isA<state.TimerInitial>()
-              .having((s) => s.completedSessions, 'completedSessions', 1),
+          isA<state.TimerInitial>().having(
+            (s) => s.completedSessions,
+            'completedSessions',
+            1,
+          ),
         );
 
         bloc.close();
@@ -467,7 +484,11 @@ void main() {
         expect(
           bloc.state,
           isA<state.TimerInitial>()
-              .having((s) => s.sessionType, 'sessionType', SessionType.longBreak)
+              .having(
+                (s) => s.sessionType,
+                'sessionType',
+                SessionType.longBreak,
+              )
               .having((s) => s.completedSessions, 'completedSessions', 0),
         );
 

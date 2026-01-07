@@ -30,8 +30,9 @@ void main() {
 
     // Setup default mock behavior
     when(() => mockPersistenceService.getSettings()).thenReturn(testSettings);
-    when(() => mockPersistenceService.saveSettings(any()))
-        .thenAnswer((_) async => true);
+    when(
+      () => mockPersistenceService.saveSettings(any()),
+    ).thenAnswer((_) async => true);
 
     settingsCubit = SettingsCubit(mockPersistenceService);
   });
@@ -53,8 +54,7 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.loadSettings(),
       expect: () => [
-        isA<SettingsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<SettingsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<SettingsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having((s) => s.settings, 'settings', testSettings),
@@ -66,8 +66,7 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.updateWorkDuration(30),
       expect: () => [
-        isA<SettingsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<SettingsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<SettingsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having((s) => s.settings.workDuration, 'workDuration', 30),
@@ -82,12 +81,11 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.updateWorkDuration(0),
       expect: () => [
-        isA<SettingsState>()
-            .having(
-              (s) => s.errorMessage,
-              'errorMessage',
-              contains('must be between 1 and 60'),
-            ),
+        isA<SettingsState>().having(
+          (s) => s.errorMessage,
+          'errorMessage',
+          contains('must be between 1 and 60'),
+        ),
       ],
       verify: (_) {
         verifyNever(() => mockPersistenceService.saveSettings(any()));
@@ -99,11 +97,14 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.updateShortBreakDuration(10),
       expect: () => [
-        isA<SettingsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<SettingsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<SettingsState>()
             .having((s) => s.isLoading, 'isLoading', false)
-            .having((s) => s.settings.shortBreakDuration, 'shortBreakDuration', 10),
+            .having(
+              (s) => s.settings.shortBreakDuration,
+              'shortBreakDuration',
+              10,
+            ),
       ],
     );
 
@@ -112,12 +113,11 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.updateShortBreakDuration(31),
       expect: () => [
-        isA<SettingsState>()
-            .having(
-              (s) => s.errorMessage,
-              'errorMessage',
-              contains('must be between 1 and 30'),
-            ),
+        isA<SettingsState>().having(
+          (s) => s.errorMessage,
+          'errorMessage',
+          contains('must be between 1 and 30'),
+        ),
       ],
     );
 
@@ -126,11 +126,14 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.updateLongBreakDuration(20),
       expect: () => [
-        isA<SettingsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<SettingsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<SettingsState>()
             .having((s) => s.isLoading, 'isLoading', false)
-            .having((s) => s.settings.longBreakDuration, 'longBreakDuration', 20),
+            .having(
+              (s) => s.settings.longBreakDuration,
+              'longBreakDuration',
+              20,
+            ),
       ],
     );
 
@@ -139,12 +142,11 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.updateLongBreakDuration(61),
       expect: () => [
-        isA<SettingsState>()
-            .having(
-              (s) => s.errorMessage,
-              'errorMessage',
-              contains('must be between 1 and 60'),
-            ),
+        isA<SettingsState>().having(
+          (s) => s.errorMessage,
+          'errorMessage',
+          contains('must be between 1 and 60'),
+        ),
       ],
     );
 
@@ -153,11 +155,14 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.updateSessionsBeforeLongBreak(3),
       expect: () => [
-        isA<SettingsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<SettingsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<SettingsState>()
             .having((s) => s.isLoading, 'isLoading', false)
-            .having((s) => s.settings.sessionsBeforeLongBreak, 'sessionsBeforeLongBreak', 3),
+            .having(
+              (s) => s.settings.sessionsBeforeLongBreak,
+              'sessionsBeforeLongBreak',
+              3,
+            ),
       ],
     );
 
@@ -166,12 +171,11 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.updateSessionsBeforeLongBreak(11),
       expect: () => [
-        isA<SettingsState>()
-            .having(
-              (s) => s.errorMessage,
-              'errorMessage',
-              contains('must be between 1 and 10'),
-            ),
+        isA<SettingsState>().having(
+          (s) => s.errorMessage,
+          'errorMessage',
+          contains('must be between 1 and 10'),
+        ),
       ],
     );
 
@@ -180,8 +184,7 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.updateAutoStartBreaks(true),
       expect: () => [
-        isA<SettingsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<SettingsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<SettingsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having((s) => s.settings.autoStartBreaks, 'autoStartBreaks', true),
@@ -193,8 +196,7 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.updateAutoStartFocus(true),
       expect: () => [
-        isA<SettingsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<SettingsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<SettingsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having((s) => s.settings.autoStartFocus, 'autoStartFocus', true),
@@ -206,11 +208,14 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.updateNotificationsEnabled(false),
       expect: () => [
-        isA<SettingsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<SettingsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<SettingsState>()
             .having((s) => s.isLoading, 'isLoading', false)
-            .having((s) => s.settings.notificationsEnabled, 'notificationsEnabled', false),
+            .having(
+              (s) => s.settings.notificationsEnabled,
+              'notificationsEnabled',
+              false,
+            ),
       ],
     );
 
@@ -219,8 +224,7 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.updateSoundEnabled(false),
       expect: () => [
-        isA<SettingsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<SettingsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<SettingsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having((s) => s.settings.soundEnabled, 'soundEnabled', false),
@@ -232,8 +236,7 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.updateHapticEnabled(false),
       expect: () => [
-        isA<SettingsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<SettingsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<SettingsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having((s) => s.settings.hapticEnabled, 'hapticEnabled', false),
@@ -245,8 +248,7 @@ void main() {
       build: () => SettingsCubit(mockPersistenceService),
       act: (cubit) => cubit.resetToDefaults(),
       expect: () => [
-        isA<SettingsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<SettingsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<SettingsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having((s) => s.settings, 'settings', const TimerSettings()),
@@ -256,14 +258,14 @@ void main() {
     blocTest<SettingsCubit, SettingsState>(
       'handles error when save fails',
       build: () {
-        when(() => mockPersistenceService.saveSettings(any()))
-            .thenAnswer((_) async => false);
+        when(
+          () => mockPersistenceService.saveSettings(any()),
+        ).thenAnswer((_) async => false);
         return SettingsCubit(mockPersistenceService);
       },
       act: (cubit) => cubit.updateWorkDuration(30),
       expect: () => [
-        isA<SettingsState>()
-            .having((s) => s.isLoading, 'isLoading', true),
+        isA<SettingsState>().having((s) => s.isLoading, 'isLoading', true),
         isA<SettingsState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having(
@@ -277,14 +279,15 @@ void main() {
     blocTest<SettingsCubit, SettingsState>(
       'clearError removes error message',
       build: () => settingsCubit,
-      seed: () => SettingsState(
-        settings: testSettings,
-        errorMessage: 'Some error',
-      ),
+      seed: () =>
+          SettingsState(settings: testSettings, errorMessage: 'Some error'),
       act: (cubit) => cubit.clearError(),
       expect: () => [
-        isA<SettingsState>()
-            .having((s) => s.errorMessage, 'errorMessage', null),
+        isA<SettingsState>().having(
+          (s) => s.errorMessage,
+          'errorMessage',
+          null,
+        ),
       ],
     );
   });
@@ -294,10 +297,7 @@ void main() {
       final state = SettingsState(settings: testSettings);
 
       final newSettings = testSettings.copyWith(workDuration: 30);
-      final updated = state.copyWith(
-        settings: newSettings,
-        isLoading: true,
-      );
+      final updated = state.copyWith(settings: newSettings, isLoading: true);
 
       expect(updated.settings.workDuration, 30);
       expect(updated.isLoading, true);
