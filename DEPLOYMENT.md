@@ -127,7 +127,7 @@ The project includes a comprehensive build script (`build.sh`) that automates th
 
 2. **Verify iOS settings** in `flutter/pomodoro_timer/ios/Runner/Info.plist`:
    - `CFBundleDisplayName`: Mr. Pomodoro
-   - `CFBundleIdentifier`: com.avtanshgupta.mr.pomodoro
+   - `CFBundleIdentifier`: avtanshgupta.PomodoroTimer
    - Permissions configured (notifications, etc.)
 
 ### Step 2: Set Up Code Signing
@@ -142,7 +142,7 @@ The project includes a comprehensive build script (`build.sh`) that automates th
 
 3. Configure signing:
    - Team: Select your Apple Developer Team
-   - Bundle Identifier: `com.avtanshgupta.mr.pomodoro`
+   - Bundle Identifier: `avtanshgupta.PomodoroTimer`
    - Signing Certificate: Distribution
    - Provisioning Profile: App Store Distribution
 
