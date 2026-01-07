@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../../../app/theme/pomodoro_theme_cubit.dart';
 import '../../../core/models/timer_session.dart';
 import '../bloc/statistics_cubit.dart';
 import '../bloc/statistics_state.dart';
@@ -38,9 +39,6 @@ class _StatisticsViewState extends State<_StatisticsView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final primaryColor = theme.colorScheme.primary;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Statistics'),
@@ -48,84 +46,94 @@ class _StatisticsViewState extends State<_StatisticsView> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: BlocBuilder<StatisticsCubit, StatisticsState>(
-        builder: (context, state) {
+      body: BlocBuilder<PomodoroThemeCubit, PomodoroThemeState>(
+        builder: (context, pomodoroThemeState) {
+          final theme = Theme.of(context);
+          final appTheme = pomodoroThemeState.currentTheme;
+          final primaryColor = appTheme.primaryColor;
+
+          return BlocBuilder<StatisticsCubit, StatisticsState>(
+            builder: (context, state) {
           if (state.isLoading && state.sessions.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final currentSessions = _getCurrentSessions(state);
-          final todaySessions = _getTodaySessions(state);
-          final streak = _calculateStreak(state);
+              final currentSessions = _getCurrentSessions(state);
+              final todaySessions = _getTodaySessions(state);
+              final streak = _calculateStreak(state);
 
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  primaryColor.withValues(alpha: 0.12),
-                  theme.scaffoldBackgroundColor,
-                ],
-                stops: const [0.0, 0.3],
-              ),
-            ),
-            child: ListView(
-              padding: const EdgeInsets.all(16.0),
-              children: [
-                // Time Range Picker
-                _buildTimeRangePicker(context),
-
-                const SizedBox(height: 24),
-
-                // Streak Card
-                _buildStreakCard(context, streak),
-
-                const SizedBox(height: 24),
-
-                // Weekly Sessions Chart
-                _buildWeeklySessionsChart(context, currentSessions),
-
-                const SizedBox(height: 24),
-
-                // Focus Time Trend Chart
-                _buildFocusTimeTrendChart(context, currentSessions),
-
-                const SizedBox(height: 24),
-
-                // Session Type Distribution
-                _buildSessionTypeDistribution(context, currentSessions),
-
-                const SizedBox(height: 24),
-
-                // Today's Stats
-                _buildStatsSection(
-                  context,
-                  'Today',
-                  todaySessions,
-                  Icons.calendar_today,
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      primaryColor.withValues(alpha: 0.12),
+                      theme.scaffoldBackgroundColor,
+                    ],
+                    stops: const [0.0, 0.3],
+                  ),
                 ),
+                child: ListView(
+                  padding: const EdgeInsets.all(16.0),
+                  children: [
+                    // Time Range Picker
+                    _buildTimeRangePicker(context),
 
-                const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
-                // Selected Range Stats
-                _buildStatsSection(
-                  context,
-                  _selectedTimeRange == StatisticsFilter.week
-                      ? 'Week'
-                      : 'Month',
-                  currentSessions,
-                  Icons.calendar_month,
+                    // Streak Card
+                    _buildStreakCard(context, streak),
+
+                    const SizedBox(height: 24),
+
+                    // Weekly Sessions Chart
+                    _buildWeeklySessionsChart(context, currentSessions, primaryColor),
+
+                    const SizedBox(height: 24),
+
+                    // Focus Time Trend Chart
+                    _buildFocusTimeTrendChart(context, currentSessions, primaryColor),
+
+                    const SizedBox(height: 24),
+
+                    // Session Type Distribution
+                    _buildSessionTypeDistribution(context, currentSessions, appTheme),
+
+                    const SizedBox(height: 24),
+
+                    // Today's Stats
+                    _buildStatsSection(
+                      context,
+                      'Today',
+                      todaySessions,
+                      Icons.calendar_today,
+                      primaryColor,
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Selected Range Stats
+                    _buildStatsSection(
+                      context,
+                      _selectedTimeRange == StatisticsFilter.week
+                          ? 'Week'
+                          : 'Month',
+                      currentSessions,
+                      Icons.calendar_month,
+                      primaryColor,
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Motivational Quote
+                    _buildMotivationalQuote(context),
+
+                    const SizedBox(height: 16),
+                  ],
                 ),
-
-                const SizedBox(height: 24),
-
-                // Motivational Quote
-                _buildMotivationalQuote(context),
-
-                const SizedBox(height: 16),
-              ],
-            ),
+              );
+            },
           );
         },
       ),
@@ -265,6 +273,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
   Widget _buildWeeklySessionsChart(
     BuildContext context,
     List<TimerSession> sessions,
+    Color primaryColor,
   ) {
     final theme = Theme.of(context);
     final dailyData = _getDailySessionData(sessions);
@@ -370,7 +379,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
                     barRods: [
                       BarChartRodData(
                         toY: dailyData[index].count.toDouble(),
-                        color: theme.colorScheme.primary,
+                        color: primaryColor,
                         width: 16,
                         borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(8),
@@ -390,6 +399,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
   Widget _buildFocusTimeTrendChart(
     BuildContext context,
     List<TimerSession> sessions,
+    Color primaryColor,
   ) {
     final theme = Theme.of(context);
     final trendData = _getFocusTimeTrendData(sessions);
@@ -497,13 +507,13 @@ class _StatisticsViewState extends State<_StatisticsView> {
                           FlSpot(index.toDouble(), trendData[index].minutes),
                     ),
                     isCurved: true,
-                    color: theme.colorScheme.primary,
+                    color: primaryColor,
                     barWidth: 3,
                     isStrokeCapRound: true,
                     dotData: const FlDotData(show: true),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                      color: primaryColor.withValues(alpha: 0.2),
                     ),
                   ),
                 ],
@@ -518,9 +528,10 @@ class _StatisticsViewState extends State<_StatisticsView> {
   Widget _buildSessionTypeDistribution(
     BuildContext context,
     List<TimerSession> sessions,
+    appTheme,
   ) {
     final theme = Theme.of(context);
-    final distributionData = _getSessionDistribution(sessions);
+    final distributionData = _getSessionDistribution(sessions, appTheme);
 
     if (distributionData.isEmpty) {
       return _buildEmptyChart(
@@ -628,6 +639,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
     String title,
     List<TimerSession> sessions,
     IconData icon,
+    Color primaryColor,
   ) {
     final theme = Theme.of(context);
 
@@ -723,7 +735,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
             'Focus Sessions',
             '$focusCount',
             Icons.psychology,
-            theme.colorScheme.primary,
+            primaryColor,
           ),
           const SizedBox(height: 12),
           _buildStatRow(
@@ -922,8 +934,8 @@ class _StatisticsViewState extends State<_StatisticsView> {
 
   List<({String type, int count, Color color})> _getSessionDistribution(
     List<TimerSession> sessions,
+    appTheme,
   ) {
-    final theme = Theme.of(context);
     final focusCount = sessions
         .where((s) => s.sessionType == SessionType.work)
         .length;
@@ -940,7 +952,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
       data.add((
         type: 'Focus',
         count: focusCount,
-        color: theme.colorScheme.primary,
+        color: appTheme.primaryColor,
       ));
     }
     if (shortBreakCount > 0) {

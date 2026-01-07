@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../app/theme/pomodoro_theme_cubit.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../core/models/timer_session.dart';
 import '../../../core/services/audio_service.dart';
@@ -82,102 +83,116 @@ class _MainTimerView extends StatelessWidget {
           },
         ),
       ],
-      child: BlocBuilder<TimerBloc, state.TimerState>(
-        builder: (context, timerState) {
-          final sessionColor = _getSessionColor(
-            context,
-            timerState.sessionType,
-          );
+      child: BlocBuilder<PomodoroThemeCubit, PomodoroThemeState>(
+        builder: (context, pomodoroThemeState) {
+          return BlocBuilder<TimerBloc, state.TimerState>(
+            builder: (context, timerState) {
+              final appTheme = pomodoroThemeState.currentTheme;
+              final sessionColor = appTheme.getColorForSession(
+                timerState.sessionType,
+              );
+              final sessionGradient = appTheme.getGradientForSession(
+                timerState.sessionType,
+              );
 
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Focus Timer'),
-              centerTitle: true,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-            ),
-            body: AnimatedContainer(
-              duration: const Duration(milliseconds: 600),
-              curve: Curves.easeInOut,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    sessionColor.withValues(
-                      alpha: _getBackgroundOpacity(timerState.sessionType),
-                    ),
-                    Theme.of(context).scaffoldBackgroundColor,
-                    Theme.of(context).scaffoldBackgroundColor,
-                  ],
-                  stops: const [0.0, 0.3, 1.0],
+              return Scaffold(
+                appBar: AppBar(
+                  title: const Text('Focus Timer'),
+                  centerTitle: true,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
                 ),
-              ),
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    children: [
-                      // Session header with emoji and info
-                      _buildSessionHeader(context, timerState, sessionColor),
+                body: AnimatedContainer(
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.easeInOut,
+                  decoration: BoxDecoration(
+                    gradient: _buildBackgroundGradient(
+                      context,
+                      sessionGradient,
+                      timerState.sessionType,
+                    ),
+                  ),
+                  child: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        children: [
+                          // Session header with emoji and info
+                          _buildSessionHeader(context, timerState, sessionColor),
 
-                      const SizedBox(height: 40),
+                          const SizedBox(height: 40),
 
-                      // Timer display
-                      Expanded(
-                        child: Center(
-                          child: TimerDisplay(
-                            duration: timerState.duration,
-                            totalDuration: _getTotalDuration(
-                              context,
-                              timerState,
+                          // Timer display
+                          Expanded(
+                            child: Center(
+                              child: TimerDisplay(
+                                duration: timerState.duration,
+                                totalDuration: _getTotalDuration(
+                                  context,
+                                  timerState,
+                                ),
+                                sessionType: timerState.sessionType,
+                                timerState: timerState,
+                              ),
                             ),
-                            sessionType: timerState.sessionType,
-                            timerState: timerState,
                           ),
-                        ),
+
+                          const SizedBox(height: 40),
+
+                          // Timer controls
+                          TimerControls(
+                            timerState: timerState,
+                            onEventAdded: (event) {
+                              context.read<TimerBloc>().add(event);
+                            },
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // Skip button
+                          _buildSkipButton(context, timerState, sessionColor),
+
+                          const SizedBox(height: 24),
+                        ],
                       ),
-
-                      const SizedBox(height: 40),
-
-                      // Timer controls
-                      TimerControls(
-                        timerState: timerState,
-                        onEventAdded: (event) {
-                          context.read<TimerBloc>().add(event);
-                        },
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // Skip button
-                      _buildSkipButton(context, timerState, sessionColor),
-
-                      const SizedBox(height: 24),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            },
           );
         },
       ),
     );
   }
 
-  /// Gets the color for the session type
-  Color _getSessionColor(BuildContext context, SessionType sessionType) {
-    switch (sessionType) {
-      case SessionType.work:
-        return Theme.of(context).colorScheme.primary;
-      case SessionType.shortBreak:
-        return const Color(0xFF34C759); // Green
-      case SessionType.longBreak:
-        return const Color(0xFF007AFF); // Blue
-    }
+  /// Builds the background gradient using theme colors
+  Gradient _buildBackgroundGradient(
+    BuildContext context,
+    Gradient sessionGradient,
+    SessionType sessionType,
+  ) {
+    final opacity = _getBackgroundOpacity(sessionType);
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
+
+    // Extract colors from the session gradient
+    final gradientColors = sessionGradient is LinearGradient
+        ? sessionGradient.colors
+        : [Theme.of(context).colorScheme.primary];
+
+    return LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        gradientColors.first.withValues(alpha: opacity),
+        scaffoldBg,
+        scaffoldBg,
+      ],
+      stops: const [0.0, 0.3, 1.0],
+    );
   }
 
-  /// Gets background opacity based on session type
+  /// Gets background opacity based on session type (matching iOS)
   double _getBackgroundOpacity(SessionType sessionType) {
     switch (sessionType) {
       case SessionType.work:

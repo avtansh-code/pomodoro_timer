@@ -5,6 +5,7 @@ import '../core/services/persistence_service.dart';
 import '../features/settings/bloc/settings_cubit.dart';
 import 'app_router.dart';
 import 'theme/app_theme.dart';
+import 'theme/pomodoro_theme_cubit.dart';
 import 'theme/themes.dart';
 
 /// Root application widget.
@@ -22,22 +23,32 @@ class PomodoroApp extends StatelessWidget {
         BlocProvider(
           create: (context) => SettingsCubit(getIt<PersistenceService>()),
         ),
-        // Global Theme Provider
+        // Global Theme Provider (Light/Dark mode)
         BlocProvider(create: (context) => ThemeCubit(getIt())),
+        // Global Pomodoro Theme Provider (Color schemes)
+        BlocProvider(create: (context) => PomodoroThemeCubit(getIt())),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, themeState) {
-          return MaterialApp.router(
-            title: 'Pomodoro Timer',
-            debugShowCheckedModeBanner: false,
+          return BlocBuilder<PomodoroThemeCubit, PomodoroThemeState>(
+            builder: (context, pomodoroThemeState) {
+              return MaterialApp.router(
+                title: 'Pomodoro Timer',
+                debugShowCheckedModeBanner: false,
 
-            // Theme Configuration
-            theme: AppThemes.lightTheme,
-            darkTheme: AppThemes.darkTheme,
-            themeMode: themeState.themeMode,
+                // Theme Configuration - using selected Pomodoro theme color
+                theme: AppThemes.getLightTheme(
+                  pomodoroThemeState.currentTheme.primaryColor,
+                ),
+                darkTheme: AppThemes.getDarkTheme(
+                  pomodoroThemeState.currentTheme.primaryColor,
+                ),
+                themeMode: themeState.themeMode,
 
-            // Router Configuration
-            routerConfig: AppRouter.router,
+                // Router Configuration
+                routerConfig: AppRouter.router,
+              );
+            },
           );
         },
       ),

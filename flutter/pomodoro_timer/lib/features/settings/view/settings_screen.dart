@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../app/theme/app_theme.dart';
+import '../../../app/theme/pomodoro_theme_cubit.dart';
 import '../../../core/di/service_locator.dart';
+import '../../../core/models/app_theme_model.dart';
 import '../../../core/models/timer_settings.dart';
 import '../../statistics/data/statistics_repository.dart';
 import '../bloc/settings_cubit.dart';
@@ -154,6 +156,24 @@ class _SettingsView extends StatelessWidget {
       icon: Icons.palette,
       title: 'Appearance',
       children: [
+        BlocBuilder<PomodoroThemeCubit, PomodoroThemeState>(
+          builder: (context, pomodoroThemeState) {
+            return ListTile(
+              leading: _buildThemePreview(pomodoroThemeState.currentTheme),
+              title: const Text('Color Scheme'),
+              subtitle: Text(pomodoroThemeState.currentTheme.name),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const ThemeSelectionScreen(),
+                  ),
+                );
+              },
+            );
+          },
+        ),
+        const Divider(height: 1),
         BlocBuilder<ThemeCubit, ThemeState>(
           builder: (context, themeState) {
             String themeModeName;
@@ -180,7 +200,7 @@ class _SettingsView extends StatelessWidget {
 
             return ListTile(
               leading: Icon(themeModeIcon, color: themeModeColor),
-              title: const Text('App Theme'),
+              title: const Text('Brightness'),
               subtitle: Text(themeModeName),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
@@ -194,6 +214,38 @@ class _SettingsView extends StatelessWidget {
           },
         ),
       ],
+    );
+  }
+
+  /// Builds a theme preview with 3 colored circles matching iOS design
+  Widget _buildThemePreview(AppThemeModel appTheme) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildPreviewCircle(appTheme.primaryColor, 12),
+        const SizedBox(width: 4),
+        _buildPreviewCircle(appTheme.secondaryColor, 12),
+        const SizedBox(width: 4),
+        _buildPreviewCircle(appTheme.accentColor, 12),
+      ],
+    );
+  }
+
+  Widget _buildPreviewCircle(Color color, double size) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.3),
+            blurRadius: 2,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
     );
   }
 
