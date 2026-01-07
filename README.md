@@ -11,38 +11,13 @@ A beautiful, privacy-first Pomodoro timer for iOS and Android. Stay focused, tra
 
 ---
 
-## 🆕 What's New
-
-### Flutter Cross-Platform App ✨
-
-We've introduced a **Flutter implementation** of Mr. Pomodoro! This cross-platform version brings all the features you love to multiple platforms with a single codebase:
-
-- **🏗️ Clean Architecture** - Scalable, testable, and maintainable code structure
-- **📦 BLoC State Management** - Predictable state handling with `flutter_bloc`
-- **🧪 129 Comprehensive Tests** - Full test coverage for models, services, and UI
-- **🎨 Material Design 3** - Modern, beautiful UI following latest design guidelines
-- **💾 Local Storage** - Hive + SharedPreferences for fast, reliable persistence
-- **🔔 Notifications** - Local notifications for session completion
-- **🎵 Audio & Haptics** - Sound effects and haptic feedback support
-
-**Quick Start:**
-```bash
-cd flutter/pomodoro_timer
-flutter pub get
-flutter run
-```
-
----
-
 ## ✨ Features
 
 - **Customizable Timer** - Adjust focus and break durations (1-120 minutes)
 - **Smart Statistics** - Track productivity with daily, weekly, and monthly insights
 - **5 Beautiful Themes** - Choose from Classic Red, Ocean Blue, Forest Green, Midnight Dark, and Sunset Orange
-- **Focus Mode Integration** - Native Do Not Disturb support to minimize distractions (iOS)
 - **Smart Notifications** - Stay on track with timely, non-intrusive alerts
-- **Siri Shortcuts (iOS)** - Control your timer with voice commands
-- **App Shortcuts (Android)** - Quick actions from your home screen
+- **Haptic Feedback** - Subtle vibrations for timer events
 - **Privacy First** - All data stays on your device, always
 
 ---
@@ -52,7 +27,7 @@ flutter run
 ### iOS
 **Requirements:** iOS 17.0 or later
 
-Coming soon to the App Store
+[Download on the App Store](https://apps.apple.com/in/app/mr-pomodoro/id6754535454)
 
 ### Android
 **Requirements:** Android 13.0 (API 33) or later
@@ -81,15 +56,14 @@ This simple approach helps improve focus, reduce mental fatigue, increase produc
 
 ```
 Mr. Pomodoro/
-├── iOS/                    # Native iOS App (SwiftUI)
-│   └── PomodoroTimer/
-├── android/                # Native Android App (Jetpack Compose)
-│   └── app/
-├── flutter/                # Flutter App (Cross-platform) ✨ NEW
+├── flutter/                # Flutter App (Cross-platform) - PRIMARY
 │   └── pomodoro_timer/
 ├── website/                # Landing Page & Privacy Policy
 │   └── www/
 ├── screenshots/            # App Screenshots
+├── native_apps/            # Legacy Native Apps (Retired)
+│   ├── iOS/               # Native iOS App (SwiftUI)
+│   └── android/           # Native Android App (Jetpack Compose)
 └── LICENSE
 ```
 
@@ -97,27 +71,8 @@ Mr. Pomodoro/
 
 ## 🛠️ Tech Stack
 
-### iOS (Native)
-| | |
-|---|---|
-| **Language** | Swift 5.0+ |
-| **Framework** | SwiftUI |
-| **Architecture** | MVVM |
-| **Min Version** | iOS 17.0 |
-| **Storage** | UserDefaults + CoreData |
-| **Special** | Focus Mode, Siri Shortcuts |
+### Flutter (Primary - Cross-Platform)
 
-### Android (Native)
-| | |
-|---|---|
-| **Language** | Kotlin 2.0+ |
-| **Framework** | Jetpack Compose |
-| **Architecture** | MVVM + Clean Architecture |
-| **Min Version** | Android 13.0 (API 33) |
-| **Storage** | DataStore + Room |
-| **Special** | App Shortcuts |
-
-### Flutter (Cross-Platform) ✨
 | | |
 |---|---|
 | **Language** | Dart 3.10+ |
@@ -125,14 +80,23 @@ Mr. Pomodoro/
 | **Architecture** | Clean Architecture + BLoC |
 | **State Management** | flutter_bloc |
 | **Storage** | SharedPreferences + Hive |
-| **Testing** | 129 comprehensive tests |
+| **Testing** | 200+ comprehensive tests |
 | **Platforms** | iOS, Android |
+
+**Key Features:**
+- **🏗️ Clean Architecture** - Scalable, testable, and maintainable code structure
+- **📦 BLoC State Management** - Predictable state handling with `flutter_bloc`
+- **🧪 200+ Comprehensive Tests** - Full test coverage for models, services, and UI
+- **🎨 Material Design 3** - Modern, beautiful UI following latest design guidelines
+- **💾 Local Storage** - Hive + SharedPreferences for fast, reliable persistence
+- **🔔 Notifications** - Local notifications for session completion
+- **🎵 Audio & Haptics** - Sound effects and haptic feedback support
 
 ---
 
 ## 🚀 Quick Start
 
-### Flutter Development (Recommended) ✨
+### Flutter Development
 
 ```bash
 # Clone the repository
@@ -148,71 +112,39 @@ cd ios && pod install && cd ..
 # Run the app
 flutter run
 
-# Run all 129 tests
+# Run all tests
 flutter test
 ```
 
 📖 **[Flutter README](flutter/pomodoro_timer/README.md)** - Complete setup and architecture guide
 
-### iOS Development
-
-```bash
-cd iOS
-open PomodoroTimer.xcodeproj
-# Build and run in Xcode (⌘+R)
-```
-
-📖 **[iOS README](iOS/README.md)** - Complete iOS setup guide
-
-### Android Development
-
-```bash
-cd android
-./gradlew build
-./gradlew installDebug
-```
-
-📖 **[Android README](android/README.md)** - Complete Android setup guide
-
 ---
 
 ## 📦 Building for Release
 
-### Flutter
-
+### Android APK
 ```bash
 cd flutter/pomodoro_timer
-
-# Android APK
 flutter build apk --release
+```
 
-# Android App Bundle (Play Store)
+### Android App Bundle (Play Store)
+```bash
+cd flutter/pomodoro_timer
 flutter build appbundle --release
+```
 
-# iOS IPA (App Store)
+### iOS IPA (App Store)
+```bash
+cd flutter/pomodoro_timer
 flutter build ipa --release
-```
-
-### Native iOS
-
-```bash
-# Archive in Xcode: Product > Archive
-# Then distribute via App Store Connect
-```
-
-### Native Android
-
-```bash
-cd android
-./gradlew assembleRelease
-./gradlew bundleRelease
 ```
 
 ---
 
 ## 🧪 Testing
 
-### Flutter (129 Tests)
+### Flutter (200+ Tests)
 
 ```bash
 cd flutter/pomodoro_timer
@@ -228,26 +160,11 @@ flutter test test/features/timer/bloc/timer_bloc_test.dart
 ```
 
 **Test Coverage:**
-- Core Models: 21 tests
-- Core Services: 21 tests  
-- Data Layer: 17 tests
-- BLoC/Cubit: 57 tests
-- Widget Tests: 13 tests
-
-### iOS
-
-```bash
-# In Xcode: ⌘+U
-# Or via command line:
-xcodebuild test -scheme PomodoroTimer -destination 'platform=iOS Simulator,name=iPhone 15'
-```
-
-### Android
-
-```bash
-cd android
-./gradlew test
-```
+- Core Models: 21+ tests
+- Core Services: 21+ tests  
+- Data Layer: 17+ tests
+- BLoC/Cubit: 57+ tests
+- Widget Tests: 13+ tests
 
 ---
 
@@ -272,6 +189,24 @@ Read our complete [Privacy Policy](https://pomodorotimer.in/privacy.html).
 The project includes a landing page with app features, download links, and privacy policy.
 
 📖 **[Website README](website/README.md)** | 🔗 **[pomodorotimer.in](https://pomodorotimer.in)**
+
+---
+
+## 📁 Legacy Native Apps
+
+The original native iOS and Android implementations have been retired and moved to the `native_apps/` folder. These are preserved for reference but are no longer actively maintained. The Flutter app is now the primary and only actively developed version.
+
+### Legacy iOS (SwiftUI)
+- **Location:** `native_apps/iOS/`
+- **Built with:** Swift 5.0+, SwiftUI
+- **Status:** Retired - Use Flutter app instead
+
+### Legacy Android (Jetpack Compose)
+- **Location:** `native_apps/android/`
+- **Built with:** Kotlin 2.0+, Jetpack Compose
+- **Status:** Retired - Use Flutter app instead
+
+📖 **[Legacy iOS README](native_apps/iOS/README.md)** | 📖 **[Legacy Android README](native_apps/android/README.md)**
 
 ---
 
@@ -312,6 +247,6 @@ Created by **[Avtansh Gupta](https://github.com/avtansh-code)**
 
 <div align="center">
 
-**Made with ❤️ using SwiftUI, Jetpack Compose & Flutter**
+**Made with ❤️ using Flutter**
 
 </div>

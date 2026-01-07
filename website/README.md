@@ -1,12 +1,12 @@
 # Mr. Pomodoro Website
 
-Static marketing website for the Mr. Pomodoro app (iOS & Android).
+Static marketing website for the Mr. Pomodoro Flutter app (iOS & Android).
 
 ---
 
 ## Overview
 
-A modern, responsive static website showcasing the Mr. Pomodoro timer app. The site features clean design, fast loading, and excellent SEO optimization.
+A modern, responsive static website showcasing the Mr. Pomodoro timer app built with Flutter. The site features clean design, fast loading, and excellent SEO optimization.
 
 **Live Site**: [pomodorotimer.in](https://pomodorotimer.in)
 
@@ -48,7 +48,7 @@ website/
 
 ### Landing Page (`index.html`)
 - Hero section with app tagline
-- Key features showcase
+- Key features showcase (Flutter-focused)
 - App screenshots
 - Download buttons (iOS & Android)
 - Pomodoro technique explanation
@@ -66,6 +66,17 @@ website/
 - Data handling information
 - User rights
 - Contact details
+
+---
+
+## App Information
+
+The website promotes the **Flutter-based** Mr. Pomodoro app:
+
+- **Framework**: Flutter (Cross-platform)
+- **Platforms**: iOS 17.0+, Android 13.0+
+- **Features**: Customizable timers, statistics, 5 themes, notifications, haptic feedback
+- **Privacy**: 100% offline, no tracking, local storage only
 
 ---
 
@@ -124,14 +135,14 @@ gcloud app browse
 
 ### Update Store Links
 
-Replace placeholder links in `index.html`:
+Store links in `index.html`:
 
 ```html
 <!-- iOS App Store -->
-<a href="YOUR_APP_STORE_URL">Download on the App Store</a>
+<a href="https://apps.apple.com/in/app/mr-pomodoro/id6754535454">Download on the App Store</a>
 
 <!-- Google Play Store -->
-<a href="YOUR_PLAY_STORE_URL">Get it on Google Play</a>
+<a href="https://play.google.com/store/apps/details?id=com.avtanshgupta.mr.pomodoro">Get it on Google Play</a>
 ```
 
 ### Update Contact Information
@@ -234,9 +245,7 @@ npx http-server www -p 8000
 ## Related Documentation
 
 - **[Main README](../README.md)** - Project overview
-- **[Privacy Policy](../PrivacyPolicy.md)** - Complete privacy information
-- **[iOS App](../iOS/README.md)** - iOS development guide
-- **[Android App](../android/README.md)** - Android development guide
+- **[Flutter App](../flutter/pomodoro_timer/README.md)** - Flutter development guide
 
 ---
 

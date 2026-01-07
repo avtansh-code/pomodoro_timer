@@ -1,14 +1,31 @@
-# Mr. Pomodoro - Android
+# Mr. Pomodoro - Android (Legacy)
+
+> ⚠️ **RETIRED**: This native Android implementation has been retired. Please use the [Flutter app](../../flutter/pomodoro_timer/README.md) instead, which provides the same features with cross-platform support.
 
 Native Android implementation of the Mr. Pomodoro timer app built with Jetpack Compose and modern Android development practices.
 
 [![Android](https://img.shields.io/badge/Android-13.0+-green.svg)](https://www.android.com/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0+-purple.svg)](https://kotlinlang.org/)
 [![Compose](https://img.shields.io/badge/Compose-2024.12-blue.svg)](https://developer.android.com/jetpack/compose)
+[![Status](https://img.shields.io/badge/Status-Retired-red.svg)]()
 
 ---
 
-## Features
+## ⚠️ Deprecation Notice
+
+**This native Android app is no longer actively maintained.** 
+
+The project has transitioned to a **Flutter-based cross-platform implementation** which provides:
+- Single codebase for iOS and Android
+- Consistent UI/UX across platforms
+- Easier maintenance and updates
+- 200+ comprehensive tests
+
+**➡️ Please use the [Flutter app](../../flutter/pomodoro_timer/README.md) for all new development and contributions.**
+
+---
+
+## Features (Historical Reference)
 
 - **Full Pomodoro Timer** - Complete timer functionality with circular progress indicator
 - **Session Management** - Focus, short break, and long break sessions
@@ -25,9 +42,9 @@ Native Android implementation of the Mr. Pomodoro timer app built with Jetpack C
 
 <table>
   <tr>
-    <td><img src="../screenshots/android/focus_mode.png" alt="Focus Mode" width="200"/></td>
-    <td><img src="../screenshots/android/short_break_mode.png" alt="Break Mode" width="200"/></td>
-    <td><img src="../screenshots/android/stats_1.png" alt="Statistics" width="200"/></td>
+    <td><img src="../../screenshots/android/focus_mode.png" alt="Focus Mode" width="200"/></td>
+    <td><img src="../../screenshots/android/short_break_mode.png" alt="Break Mode" width="200"/></td>
+    <td><img src="../../screenshots/android/stats_1.png" alt="Statistics" width="200"/></td>
   </tr>
   <tr>
     <td align="center"><em>Focus Mode</em></td>
@@ -47,14 +64,14 @@ Native Android implementation of the Mr. Pomodoro timer app built with Jetpack C
 
 ---
 
-## Quick Start
+## Quick Start (For Reference Only)
 
 ### Clone and Build
 
 ```bash
 # Clone the repository
 git clone https://github.com/avtansh-code/pomodoro_timer.git
-cd pomodoro_timer/android
+cd pomodoro_timer/native_apps/android
 
 # Build the project
 ./gradlew build
@@ -68,7 +85,7 @@ cd pomodoro_timer/android
 
 ### Running in Android Studio
 
-1. Open the `/android` directory in Android Studio
+1. Open the `/native_apps/android` directory in Android Studio
 2. Wait for Gradle sync to complete
 3. Select a device or emulator
 4. Click Run (▶️) or press `Shift + F10`
@@ -117,74 +134,10 @@ The app follows **Clean Architecture** principles with **MVVM** pattern:
 
 ---
 
-## Testing
-
-### Run Tests
-
-```bash
-# All unit tests
-./gradlew test
-
-# Specific test suite
-./gradlew testDebugUnitTest
-
-# With coverage report
-./gradlew testDebugUnitTestCoverage
-```
-
-### Test Coverage
-
-- **Domain Layer**: 80%+
-- **Service Layer**: 85%+
-- **Overall**: ~60%
-
----
-
-## Building for Release
-
-```bash
-# Build release APK
-./gradlew assembleRelease
-
-# Build release bundle (for Play Store)
-./gradlew bundleRelease
-```
-
-### Native Debug Symbols
-
-The app is configured to generate native debug symbols automatically when building release bundles. This helps with crash analysis in Google Play Console:
-
-- **Debug symbols** are included in the AAB by default
-- **Symbol level**: FULL (complete stack traces)
-- **Location**: Build output includes native `.so` files with debug info
-- **Upload**: Symbols are automatically uploaded with the AAB to Play Console
-
-If you need to manually upload symbols:
-```bash
-# Symbols are located in:
-# app/build/intermediates/merged_native_libs/release/out/lib/
-```
-
-**Note**: After enabling debug symbols, the first build may take slightly longer and produce a larger AAB file (~2-5MB increase).
-
----
-
-## App Shortcuts
-
-The app includes 3 static shortcuts accessible via long-press on the app icon:
-
-1. **Start Focus** - Begin a 25-minute focus session
-2. **Start Short Break** - Begin a 5-minute break
-3. **View Statistics** - Open statistics screen
-
-Shortcuts use deep linking with custom URI scheme (`pomodoro://`).
-
----
-
 ## Project Structure
 
 ```
-android/
+native_apps/android/
 ├── app/
 │   ├── src/main/
 │   │   ├── java/com/pomodoro/timer/  # Source code
@@ -231,90 +184,31 @@ Major dependencies (see `gradle/libs.versions.toml`):
 
 ---
 
-## Development Guidelines
-
-### Code Style
-
-- Follow [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html)
-- Use Compose best practices
-- Maintain Clean Architecture separation
-- Write unit tests for business logic
-
-### Commit Guidelines
-
-- Write clear commit messages
-- Keep commits focused and atomic
-- Reference issues when applicable
-
----
-
-## iOS Feature Parity
-
-This Android app maintains feature parity with the iOS version:
-
-| Feature | iOS | Android | Status |
-|---------|-----|---------|--------|
-| Timer Functionality | ✅ | ✅ | Complete |
-| Statistics | ✅ | ✅ | Complete |
-| Themes | ✅ | ✅ | Complete |
-| Persistence | ✅ | ✅ | Complete |
-| Background Operation | ✅ | ✅ | Complete |
-| Notifications | ✅ | ✅ | Complete |
-| App Shortcuts | ✅ (Siri) | ✅ (Launcher) | Complete |
-
----
-
-## Troubleshooting
-
-### Build Issues
-
-**Problem**: Gradle sync fails
-```bash
-# Solution: Clean and rebuild
-./gradlew clean
-./gradlew build --refresh-dependencies
-```
-
-**Problem**: Out of memory during build
-```bash
-# Solution: Increase Gradle memory in gradle.properties
-org.gradle.jvmargs=-Xmx4096m
-```
-
-### Runtime Issues
-
-**Problem**: Timer doesn't run in background
-- **Solution**: Ensure notification permission is granted and battery optimization is disabled for the app
-
-**Problem**: Database migration error
-- **Solution**: Uninstall and reinstall the app (development only)
-
----
-
 ## Related Documentation
 
-- **[Main README](../README.md)** - Project overview
-- **[Architecture](../docs/ARCHITECTURE.md)** - Technical architecture details
-- **[iOS Setup](../iOS/README.md)** - iOS development guide
-- **[Contributing](../CONTRIBUTING.md)** - Contribution guidelines
-- **[Privacy Policy](../PrivacyPolicy.md)** - Privacy information
+- **[Main README](../../README.md)** - Project overview
+- **[Flutter App](../../flutter/pomodoro_timer/README.md)** - Active development (recommended)
+- **[Legacy iOS App](../iOS/README.md)** - Legacy iOS implementation
 
 ---
 
 ## License
 
-See [LICENSE](../LICENSE) for details.
+See [LICENSE](../../LICENSE) for details.
 
 ---
 
 ## Support
 
+For the actively maintained Flutter version:
 - **Issues**: [GitHub Issues](https://github.com/avtansh-code/pomodoro_timer/issues)
 - **Email**: support@pomodorotimer.in
 
 ---
 
+**Status**: Retired (Legacy)  
 **Version**: 1.1.1  
 **Min SDK**: 33 (Android 13.0)  
 **Target SDK**: 35  
-**Built with**: Kotlin 2.0.21 + Jetpack Compose
+**Built with**: Kotlin 2.0.21 + Jetpack Compose  
+**Successor**: [Flutter App](../../flutter/pomodoro_timer/README.md)

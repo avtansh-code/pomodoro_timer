@@ -1,14 +1,31 @@
-# Mr. Pomodoro - iOS
+# Mr. Pomodoro - iOS (Legacy)
+
+> ⚠️ **RETIRED**: This native iOS implementation has been retired. Please use the [Flutter app](../../flutter/pomodoro_timer/README.md) instead, which provides the same features with cross-platform support.
 
 Native iOS implementation of the Mr. Pomodoro timer app built with SwiftUI for modern iOS devices.
 
 [![iOS](https://img.shields.io/badge/iOS-17.0+-blue.svg)](https://www.apple.com/ios/)
 [![Swift](https://img.shields.io/badge/Swift-5.0+-orange.svg)](https://swift.org/)
 [![SwiftUI](https://img.shields.io/badge/SwiftUI-6.0-red.svg)](https://developer.apple.com/xcode/swiftui/)
+[![Status](https://img.shields.io/badge/Status-Retired-red.svg)]()
 
 ---
 
-## Features
+## ⚠️ Deprecation Notice
+
+**This native iOS app is no longer actively maintained.** 
+
+The project has transitioned to a **Flutter-based cross-platform implementation** which provides:
+- Single codebase for iOS and Android
+- Consistent UI/UX across platforms
+- Easier maintenance and updates
+- 200+ comprehensive tests
+
+**➡️ Please use the [Flutter app](../../flutter/pomodoro_timer/README.md) for all new development and contributions.**
+
+---
+
+## Features (Historical Reference)
 
 - **Full Pomodoro Timer** - Start, pause, resume, and reset functionality
 - **Session Management** - Focus, short break, and long break sessions with auto-transition
@@ -26,9 +43,9 @@ Native iOS implementation of the Mr. Pomodoro timer app built with SwiftUI for m
 
 <table>
   <tr>
-    <td><img src="../screenshots/iPhone/focus_mode.png" alt="Focus Mode" width="200"/></td>
-    <td><img src="../screenshots/iPhone/short_break_mode.png" alt="Break Mode" width="200"/></td>
-    <td><img src="../screenshots/iPhone/stats_1.png" alt="Statistics" width="200"/></td>
+    <td><img src="../../screenshots/iPhone/focus_mode.png" alt="Focus Mode" width="200"/></td>
+    <td><img src="../../screenshots/iPhone/short_break_mode.png" alt="Break Mode" width="200"/></td>
+    <td><img src="../../screenshots/iPhone/stats_1.png" alt="Statistics" width="200"/></td>
   </tr>
   <tr>
     <td align="center"><em>Focus Mode</em></td>
@@ -48,14 +65,14 @@ Native iOS implementation of the Mr. Pomodoro timer app built with SwiftUI for m
 
 ---
 
-## Quick Start
+## Quick Start (For Reference Only)
 
 ### Clone and Build
 
 ```bash
 # Clone the repository
 git clone https://github.com/avtansh-code/pomodoro_timer.git
-cd pomodoro_timer/iOS
+cd pomodoro_timer/native_apps/iOS
 
 # Open in Xcode
 open PomodoroTimer.xcodeproj
@@ -78,7 +95,7 @@ open PomodoroTimer.xcodeproj
 The app follows the **MVVM (Model-View-ViewModel)** pattern:
 
 ```
-iOS/PomodoroTimer/
+native_apps/iOS/PomodoroTimer/
 ├── Models/              # Data models
 │   ├── TimerSession.swift
 │   ├── TimerSettings.swift
@@ -121,9 +138,9 @@ iOS/PomodoroTimer/
 
 ---
 
-## Siri Shortcuts
+## Siri Shortcuts (Historical)
 
-The app supports the following Siri commands:
+The app supported the following Siri commands:
 
 1. **"Start a Pomodoro Timer"** - Begin a new focus session
 2. **"Pause Pomodoro Timer"** - Pause the current timer
@@ -131,29 +148,16 @@ The app supports the following Siri commands:
 4. **"Reset Pomodoro Timer"** - Reset to beginning
 5. **"Show my Pomodoro Timer stats"** - Open statistics
 
-### Setting Up Shortcuts
-
-1. Open Settings > Siri & Search
-2. Find "Mr. Pomodoro"
-3. Add shortcuts for quick voice access
-4. Use your chosen phrase to trigger actions
-
 ---
 
-## Focus Mode Integration
+## Focus Mode Integration (Historical)
 
-The app integrates with iOS Focus Mode:
+The app integrated with iOS Focus Mode:
 
 - **Automatic Suggestions** - App suggests enabling Focus Mode when starting work sessions
 - **User Control** - Enable/disable in Settings
 - **Privacy First** - App never automatically enables Focus Mode
 - **Seamless Integration** - Works with your existing Focus configurations
-
-### Requirements
-
-- iOS 16.1+ for bidirectional sync
-- Focus Mode configured in iOS Settings
-- Focus Mode integration enabled in app Settings
 
 ---
 
@@ -182,153 +186,47 @@ Required capabilities configured in project:
 
 ---
 
-## Development Guidelines
+## Project Structure
 
-### Code Style
-
-- Follow [Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
-- Use SwiftUI best practices
-- Maintain MVVM pattern separation
-- Write clear, self-documenting code
-
-### Commit Guidelines
-
-- Write descriptive commit messages
-- Keep commits focused and atomic
-- Reference issues when applicable
-
----
-
-## Testing
-
-### Running Tests
-
-```bash
-# Run all tests in Xcode
-⌘ + U
-
-# Or via command line
-xcodebuild test -scheme PomodoroTimer -destination 'platform=iOS Simulator,name=iPhone 15'
 ```
-
-### Test Coverage
-
-- Business logic covered by unit tests
-- UI components tested for accessibility
-- Integration tests for key user flows
-
----
-
-## Building for Release
-
-### TestFlight
-
-1. Archive the project (Product > Archive)
-2. Distribute to App Store Connect
-3. Upload to TestFlight
-4. Invite beta testers
-
-### App Store
-
-1. Complete App Store Connect information
-2. Upload build via Xcode
-3. Submit for review
-4. Monitor review status
-
-See **[App Store Submission Guide](docs/APP_STORE_SUBMISSION.md)** for detailed instructions.
-
----
-
-## Documentation
-
-### For Users
-
-- **[User Guide](docs/USER_GUIDE.md)** - Complete user documentation
-
-### For Developers
-
-- **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - Technical reference and setup
-- **[Design System](docs/DESIGN_SYSTEM.md)** - UI/UX guidelines
-
-### For App Store
-
-- **[App Store Submission](docs/APP_STORE_SUBMISSION.md)** - Submission checklist and requirements
-- **[Screenshot Preparation](docs/SCREENSHOT_PREPARATION.md)** - Screenshot generation guide
-
----
-
-## Android Feature Parity
-
-This iOS app maintains feature parity with the Android version:
-
-| Feature | iOS | Android | Status |
-|---------|-----|---------|--------|
-| Timer Functionality | ✅ | ✅ | Complete |
-| Statistics | ✅ | ✅ | Complete |
-| Themes | ✅ | ✅ | Complete |
-| Persistence | ✅ | ✅ | Complete |
-| Background Operation | ✅ | ✅ | Complete |
-| Notifications | ✅ | ✅ | Complete |
-| Shortcuts | ✅ (Siri) | ✅ (Launcher) | Complete |
-
----
-
-## Troubleshooting
-
-### Build Issues
-
-**Problem**: Code signing error
-- **Solution**: Configure your development team in Xcode project settings
-
-**Problem**: Missing dependencies
-- **Solution**: Clean build folder (⌘ + Shift + K) and rebuild
-
-### Runtime Issues
-
-**Problem**: Notifications not appearing
-- **Solution**: Check notification permissions in iOS Settings > Mr. Pomodoro
-
-**Problem**: Siri shortcuts not working
-- **Solution**: Ensure Siri permission is granted in Settings
-
-**Problem**: Focus Mode integration not working
-- **Solution**: Verify iOS version is 16.1+ and permission is granted
-
----
-
-## Privacy & Security
-
-- **Local-only storage** - No cloud sync, no data transmission
-- **No analytics** - No tracking or usage monitoring
-- **No third-party SDKs** - Minimal external dependencies
-- **Secure storage** - Uses iOS Keychain for sensitive data
-
-See **[Privacy Policy](../PrivacyPolicy.md)** for complete details.
+native_apps/iOS/
+├── PomodoroTimer/
+│   ├── Models/
+│   ├── Services/
+│   ├── Views/
+│   ├── AppIntents/
+│   └── Assets.xcassets/
+├── PomodoroTimer.xcodeproj/
+├── PomodoroTimerUITests/
+└── README.md
+```
 
 ---
 
 ## Related Documentation
 
-- **[Main README](../README.md)** - Project overview
-- **[Architecture](../docs/ARCHITECTURE.md)** - Technical architecture
-- **[Android Setup](../android/README.md)** - Android development guide
-- **[Contributing](../CONTRIBUTING.md)** - Contribution guidelines
+- **[Main README](../../README.md)** - Project overview
+- **[Flutter App](../../flutter/pomodoro_timer/README.md)** - Active development (recommended)
+- **[Legacy Android App](../android/README.md)** - Legacy Android implementation
 
 ---
 
 ## License
 
-See [LICENSE](../LICENSE) for details.
+See [LICENSE](../../LICENSE) for details.
 
 ---
 
 ## Support
 
+For the actively maintained Flutter version:
 - **Issues**: [GitHub Issues](https://github.com/avtansh-code/pomodoro_timer/issues)
 - **Email**: support@pomodorotimer.in
 
 ---
 
+**Status**: Retired (Legacy)  
 **Version**: 1.1.2 (Build 6)  
 **Min iOS**: 17.0  
-**Built with**: Xcode 26.0.1 / Swift 5.0+ / SwiftUI
+**Built with**: Xcode 26.0.1 / Swift 5.0+ / SwiftUI  
+**Successor**: [Flutter App](../../flutter/pomodoro_timer/README.md)
