@@ -23,7 +23,7 @@ class PomodoroThemeCubit extends Cubit<PomodoroThemeState> {
   static const String _themeKey = 'pomodoro_theme_id';
 
   PomodoroThemeCubit(this._prefs)
-      : super(PomodoroThemeState(PomodoroThemes.defaultTheme)) {
+    : super(PomodoroThemeState(PomodoroThemes.defaultTheme)) {
     _loadTheme();
   }
 

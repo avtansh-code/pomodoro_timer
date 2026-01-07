@@ -37,23 +37,23 @@ class PomodoroBenefitsScreen extends StatelessWidget {
             children: [
               // Header
               _buildHeader(theme),
-            const SizedBox(height: 32),
+              const SizedBox(height: 32),
 
-            // History Section
-            _buildHistorySection(theme),
-            const SizedBox(height: 32),
+              // History Section
+              _buildHistorySection(theme),
+              const SizedBox(height: 32),
 
-            // How It Works
-            _buildHowItWorksSection(theme),
-            const SizedBox(height: 32),
+              // How It Works
+              _buildHowItWorksSection(theme),
+              const SizedBox(height: 32),
 
-            // Benefits
-            _buildBenefitsSection(theme),
-            const SizedBox(height: 32),
+              // Benefits
+              _buildBenefitsSection(theme),
+              const SizedBox(height: 32),
 
-            // Considerations
-            _buildConsiderationsSection(theme),
-            const SizedBox(height: 32),
+              // Considerations
+              _buildConsiderationsSection(theme),
+              const SizedBox(height: 32),
 
               // CTA
               _buildCTA(context, theme),

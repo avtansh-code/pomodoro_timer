@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../app/theme/app_theme.dart';
@@ -34,6 +36,32 @@ class SettingsScreen extends StatelessWidget {
 
 class _SettingsView extends StatelessWidget {
   const _SettingsView();
+
+  /// App version from pubspec.yaml (version name only)
+  static Future<String> _getAppVersion() async {
+    // Get version from pubspec.yaml via platform channel
+    // Version is set in pubspec.yaml and read at build time
+    const version = String.fromEnvironment(
+      'APP_VERSION',
+      defaultValue: '2.0.0',
+    );
+    return version;
+  }
+
+  /// Full app version with build number from pubspec.yaml
+  static Future<String> _getAppVersionFull() async {
+    // Get full version from pubspec.yaml (version+build)
+    // Version is set in pubspec.yaml and read at build time
+    const version = String.fromEnvironment(
+      'APP_VERSION',
+      defaultValue: '2.0.0',
+    );
+    const buildNumber = String.fromEnvironment(
+      'APP_BUILD_NUMBER',
+      defaultValue: '7',
+    );
+    return '$version+$buildNumber';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +102,7 @@ class _SettingsView extends StatelessWidget {
           return BlocBuilder<PomodoroThemeCubit, PomodoroThemeState>(
             builder: (context, pomodoroState) {
               final primaryColor = pomodoroState.currentTheme.primaryColor;
-              
+
               return Container(
                 color: Color.lerp(
                   theme.scaffoldBackgroundColor,
@@ -85,45 +113,47 @@ class _SettingsView extends StatelessWidget {
                   child: ListView(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                     children: [
-                // Learn Section - Featured at top
-                _buildLearnSection(context),
+                      // Learn Section - Featured at top
+                      _buildLearnSection(context),
 
-                const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                // Theme Section
-                _buildThemeSection(context),
+                      // Theme Section
+                      _buildThemeSection(context),
 
-                const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                // Duration Settings
-                _buildDurationSection(context, state),
+                      // Duration Settings
+                      _buildDurationSection(context, state),
 
-                const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                // Auto-start Settings
-                _buildAutoStartSection(context, state),
+                      // Auto-start Settings
+                      _buildAutoStartSection(context, state),
 
-                const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                // Notifications & Feedback
-                _buildNotificationSection(context, state),
+                      // Notifications & Feedback
+                      _buildNotificationSection(context, state),
 
-                const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                // Developer Tools (Debug mode only)
-                if (const bool.fromEnvironment('dart.vm.product') == false)
-                  _buildDeveloperSection(context),
+                      // Developer Tools (Debug mode only)
+                      if (const bool.fromEnvironment('dart.vm.product') ==
+                          false)
+                        _buildDeveloperSection(context),
 
-                if (const bool.fromEnvironment('dart.vm.product') == false)
-                  const SizedBox(height: 8),
+                      if (const bool.fromEnvironment('dart.vm.product') ==
+                          false)
+                        const SizedBox(height: 8),
 
-                // Data Management
-                _buildDataSection(context),
+                      // Data Management
+                      _buildDataSection(context),
 
-                const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                // About Section
-                _buildAboutSection(context),
+                      // About Section
+                      _buildAboutSection(context),
 
                       const SizedBox(height: 24),
                     ],
@@ -185,13 +215,14 @@ class _SettingsView extends StatelessWidget {
                     themeModeName = 'System';
                     break;
                 }
-                
+
                 return ListTile(
                   leading: Container(
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: pomodoroThemeState.currentTheme.primaryColor.withValues(alpha: 0.15),
+                      color: pomodoroThemeState.currentTheme.primaryColor
+                          .withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
@@ -201,7 +232,9 @@ class _SettingsView extends StatelessWidget {
                     ),
                   ),
                   title: const Text('Theme & Colors'),
-                  subtitle: Text('${pomodoroThemeState.currentTheme.name} • $themeModeName'),
+                  subtitle: Text(
+                    '${pomodoroThemeState.currentTheme.name} • $themeModeName',
+                  ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -322,7 +355,9 @@ class _SettingsView extends StatelessWidget {
           max: 10,
           suffix: '',
           onChanged: (value) {
-            context.read<SettingsCubit>().updateSessionsBeforeLongBreak(value.round());
+            context.read<SettingsCubit>().updateSessionsBeforeLongBreak(
+              value.round(),
+            );
           },
         ),
       ],
@@ -402,8 +437,7 @@ class _SettingsView extends StatelessWidget {
       context: context,
       icon: Icons.construction,
       title: 'Developer Tools',
-      footer:
-          'Tools for debugging and testing. Only visible in debug builds.',
+      footer: 'Tools for debugging and testing. Only visible in debug builds.',
       children: [
         ListTile(
           leading: const Icon(Icons.bug_report, color: Colors.purple),
@@ -489,10 +523,18 @@ class _SettingsView extends StatelessWidget {
           },
         ),
         const Divider(height: 1),
-        const ListTile(
-          leading: Icon(Icons.info_outline, color: Colors.grey),
-          title: Text('Version'),
-          trailing: Text('2.0.0', style: TextStyle(color: Colors.grey)),
+        FutureBuilder<String>(
+          future: _getAppVersion(),
+          builder: (context, snapshot) {
+            return ListTile(
+              leading: const Icon(Icons.info_outline, color: Colors.grey),
+              title: const Text('Version'),
+              trailing: Text(
+                snapshot.data ?? '...',
+                style: const TextStyle(color: Colors.grey),
+              ),
+            );
+          },
         ),
       ],
     );
@@ -566,7 +608,7 @@ class _SettingsView extends StatelessWidget {
     required ValueChanged<double> onChanged,
   }) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
@@ -575,17 +617,14 @@ class _SettingsView extends StatelessWidget {
           Icon(icon, color: iconColor, size: 20),
           const SizedBox(width: 10),
           // Title
-          Expanded(
-            child: Text(
-              title,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
+          Expanded(child: Text(title, style: theme.textTheme.bodyMedium)),
           // Compact stepper control
           Container(
             height: 32,
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              color: theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.5,
+              ),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -593,15 +632,17 @@ class _SettingsView extends StatelessWidget {
               children: [
                 // Minus button
                 GestureDetector(
-                  onTap: value > min ? () => onChanged((value - 1).toDouble()) : null,
+                  onTap: value > min
+                      ? () => onChanged((value - 1).toDouble())
+                      : null,
                   child: Container(
                     width: 32,
                     height: 32,
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.remove,
-                      color: value > min 
-                          ? theme.colorScheme.primary 
+                      color: value > min
+                          ? theme.colorScheme.primary
                           : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       size: 18,
                     ),
@@ -622,90 +663,8 @@ class _SettingsView extends StatelessWidget {
                 ),
                 // Plus button
                 GestureDetector(
-                  onTap: value < max ? () => onChanged((value + 1).toDouble()) : null,
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.add,
-                      color: value < max 
-                          ? theme.colorScheme.primary 
-                          : theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                      size: 18,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSessionCountTile(BuildContext context, SettingsState state, ThemeData theme) {
-    final value = state.settings.sessionsBeforeLongBreak;
-    
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Row(
-        children: [
-          // Icon
-          Icon(Icons.repeat, color: theme.colorScheme.tertiary, size: 20),
-          const SizedBox(width: 10),
-          // Title
-          Expanded(
-            child: Text(
-              'Long break after',
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
-          // Compact stepper control
-          Container(
-            height: 32,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Minus button
-                GestureDetector(
-                  onTap: value > 2
-                      ? () => context.read<SettingsCubit>().updateSessionsBeforeLongBreak(value - 1)
-                      : null,
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.remove,
-                      color: value > 2 
-                          ? theme.colorScheme.primary 
-                          : theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                      size: 18,
-                    ),
-                  ),
-                ),
-                // Value display
-                Container(
-                  constraints: const BoxConstraints(minWidth: 54),
-                  alignment: Alignment.center,
-                  child: Text(
-                    '$value sess',
-                    style: TextStyle(
-                      color: theme.colorScheme.onSurface,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-                // Plus button
-                GestureDetector(
-                  onTap: value < 10
-                      ? () => context.read<SettingsCubit>().updateSessionsBeforeLongBreak(value + 1)
+                  onTap: value < max
+                      ? () => onChanged((value + 1).toDouble())
                       : null,
                   child: Container(
                     width: 32,
@@ -713,8 +672,8 @@ class _SettingsView extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.add,
-                      color: value < 10 
-                          ? theme.colorScheme.primary 
+                      color: value < max
+                          ? theme.colorScheme.primary
                           : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       size: 18,
                     ),
@@ -729,6 +688,9 @@ class _SettingsView extends StatelessWidget {
   }
 
   void _showClearStatsDialog(BuildContext context) {
+    // Capture ScaffoldMessenger before async gap to avoid using deactivated context
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -747,7 +709,7 @@ class _SettingsView extends StatelessWidget {
               await repository.clearAllSessions();
               if (dialogContext.mounted) {
                 Navigator.of(dialogContext).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
+                scaffoldMessenger.showSnackBar(
                   const SnackBar(content: Text('Statistics cleared')),
                 );
               }
@@ -761,6 +723,10 @@ class _SettingsView extends StatelessWidget {
   }
 
   void _showResetAppDialog(BuildContext context) {
+    // Capture references before async gap to avoid using deactivated context
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final settingsCubit = context.read<SettingsCubit>();
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -776,7 +742,7 @@ class _SettingsView extends StatelessWidget {
           FilledButton(
             onPressed: () async {
               // Reset settings
-              context.read<SettingsCubit>().resetToDefaults();
+              settingsCubit.resetToDefaults();
 
               // Clear statistics
               final repository = getIt<StatisticsRepository>();
@@ -784,7 +750,7 @@ class _SettingsView extends StatelessWidget {
 
               if (dialogContext.mounted) {
                 Navigator.of(dialogContext).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
+                scaffoldMessenger.showSnackBar(
                   const SnackBar(content: Text('App reset complete')),
                 );
               }
@@ -799,7 +765,7 @@ class _SettingsView extends StatelessWidget {
 
   void _showAppInfoDialog(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -815,7 +781,12 @@ class _SettingsView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildInfoRow('Version', '2.0.0+7'),
+              FutureBuilder<String>(
+                future: _getAppVersionFull(),
+                builder: (context, snapshot) {
+                  return _buildInfoRow('Version', snapshot.data ?? '...');
+                },
+              ),
               _buildInfoRow('Build Mode', 'Debug'),
               _buildInfoRow('Flutter SDK', '3.10.4+'),
               _buildInfoRow('Platform', Theme.of(context).platform.name),
@@ -839,10 +810,7 @@ class _SettingsView extends StatelessWidget {
               ),
               BlocBuilder<ThemeCubit, ThemeState>(
                 builder: (context, state) {
-                  return _buildInfoRow(
-                    'Brightness',
-                    state.themeMode.name,
-                  );
+                  return _buildInfoRow('Brightness', state.themeMode.name);
                 },
               ),
             ],
@@ -866,19 +834,13 @@ class _SettingsView extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 13,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
           ),
           const SizedBox(width: 16),
           Flexible(
             child: Text(
               value,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 13,
-              ),
+              style: const TextStyle(color: Colors.grey, fontSize: 13),
               textAlign: TextAlign.end,
             ),
           ),
@@ -888,8 +850,11 @@ class _SettingsView extends StatelessWidget {
   }
 
   void _showThemeTestDialog(BuildContext context) {
+    // Capture references before showing dialog to avoid using deactivated context
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final themeCubit = context.read<PomodoroThemeCubit>();
     final allThemes = PomodoroThemes.allThemes;
-    
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -905,11 +870,14 @@ class _SettingsView extends StatelessWidget {
               return ListTile(
                 leading: _buildThemePreview(theme),
                 title: Text(theme.name),
-                subtitle: Text('#${(theme.primaryColor.r * 255).round().toRadixString(16).padLeft(2, '0')}${(theme.primaryColor.g * 255).round().toRadixString(16).padLeft(2, '0')}${(theme.primaryColor.b * 255).round().toRadixString(16).padLeft(2, '0')}'.toUpperCase()),
+                subtitle: Text(
+                  '#${(theme.primaryColor.r * 255).round().toRadixString(16).padLeft(2, '0')}${(theme.primaryColor.g * 255).round().toRadixString(16).padLeft(2, '0')}${(theme.primaryColor.b * 255).round().toRadixString(16).padLeft(2, '0')}'
+                      .toUpperCase(),
+                ),
                 onTap: () {
-                  context.read<PomodoroThemeCubit>().setTheme(theme);
+                  themeCubit.setTheme(theme);
                   Navigator.of(dialogContext).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  scaffoldMessenger.showSnackBar(
                     SnackBar(
                       content: Text('Switched to ${theme.name}'),
                       duration: const Duration(seconds: 1),
@@ -931,12 +899,15 @@ class _SettingsView extends StatelessWidget {
   }
 
   void _showGenerateDataDialog(BuildContext context) {
+    // Capture ScaffoldMessenger before async gap to avoid using deactivated context
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Generate Sample Data'),
         content: const Text(
-          'This will add dummy session data for the past 30 days. Useful for testing statistics and charts.',
+          'This will add realistic dummy session data for the past 45 days with varied patterns. Useful for testing statistics and charts.',
         ),
         actions: [
           TextButton(
@@ -945,49 +916,187 @@ class _SettingsView extends StatelessWidget {
           ),
           FilledButton(
             onPressed: () async {
-              // Generate sample data
+              // Generate sample data with randomness
               final repository = getIt<StatisticsRepository>();
-              
-              // Add sessions for the past 30 days
+              final random = math.Random();
               final now = DateTime.now();
-              for (int i = 0; i < 30; i++) {
-                final date = now.subtract(Duration(days: i));
-                
-                // Add 2-4 sessions per day
-                final sessionsCount = 2 + (i % 3);
+              int consecutiveWorkSessions = 0;
+
+              // Add sessions for the past 45 days
+              for (int i = 0; i < 45; i++) {
+                final date = DateTime(
+                  now.year,
+                  now.month,
+                  now.day,
+                ).subtract(Duration(days: i));
+
+                // Weekends have fewer sessions (20% chance of no sessions)
+                final isWeekend =
+                    date.weekday == DateTime.saturday ||
+                    date.weekday == DateTime.sunday;
+
+                // Always include sessions for days 1-10 (yesterday through 10 days ago)
+                // to ensure a visible streak. Day 0 is today, day 1 is yesterday.
+                final guaranteedStreakDay = i >= 1 && i <= 10;
+
+                // Some days have no sessions (10% weekdays, 30% weekends)
+                // But never skip guaranteed streak days
+                if (!guaranteedStreakDay) {
+                  final skipDayChance = isWeekend ? 0.3 : 0.1;
+                  if (random.nextDouble() < skipDayChance) {
+                    continue;
+                  }
+                }
+
+                // Random number of sessions per day (1-8 on weekdays, 0-4 on weekends)
+                final maxSessions = isWeekend ? 4 : 8;
+                final minSessions = isWeekend ? 0 : 1;
+                final sessionsCount =
+                    minSessions + random.nextInt(maxSessions - minSessions + 1);
+
+                if (sessionsCount == 0) continue;
+
+                // Random start hour (6 AM to 10 PM range, weighted towards work hours)
+                int baseHour;
+                if (isWeekend) {
+                  baseHour = 8 + random.nextInt(10); // 8 AM to 6 PM
+                } else {
+                  // Weight towards morning/afternoon work hours
+                  final hourOptions = [
+                    7,
+                    8,
+                    9,
+                    9,
+                    10,
+                    10,
+                    11,
+                    14,
+                    15,
+                    16,
+                    17,
+                    19,
+                    20,
+                  ];
+                  baseHour = hourOptions[random.nextInt(hourOptions.length)];
+                }
+
+                var currentMinute = random.nextInt(60);
+                var currentHour = baseHour;
+
                 for (int j = 0; j < sessionsCount; j++) {
-                  final startTime = date.subtract(Duration(hours: j * 2));
-                  final breakStartTime = date.subtract(Duration(hours: j * 2, minutes: 25));
-                  
+                  // Ensure we don't go past midnight
+                  if (currentHour >= 23) break;
+
+                  // Random focus duration (15-50 minutes, weighted towards 25)
+                  final focusDurations = [
+                    15,
+                    20,
+                    25,
+                    25,
+                    25,
+                    25,
+                    30,
+                    30,
+                    35,
+                    40,
+                    45,
+                    50,
+                  ];
+                  final focusDuration =
+                      focusDurations[random.nextInt(focusDurations.length)];
+
+                  final startTime = date.add(
+                    Duration(hours: currentHour, minutes: currentMinute),
+                  );
+                  final endTime = startTime.add(
+                    Duration(minutes: focusDuration),
+                  );
+
                   // Add focus session
                   await repository.addSession(
                     TimerSession(
-                      id: '${DateTime.now().millisecondsSinceEpoch}_${i}_$j',
+                      id: 'dummy_${date.millisecondsSinceEpoch}_${random.nextInt(999999)}_$j',
                       startTime: startTime,
-                      endTime: startTime.add(const Duration(minutes: 25)),
+                      endTime: endTime,
                       sessionType: SessionType.work,
-                      durationInMinutes: 25,
+                      durationInMinutes: focusDuration,
                     ),
                   );
-                  
-                  // Add a short break
-                  await repository.addSession(
-                    TimerSession(
-                      id: '${DateTime.now().millisecondsSinceEpoch}_${i}_${j}_break',
-                      startTime: breakStartTime,
-                      endTime: breakStartTime.add(const Duration(minutes: 5)),
-                      sessionType: SessionType.shortBreak,
-                      durationInMinutes: 5,
-                    ),
-                  );
+
+                  consecutiveWorkSessions++;
+
+                  // Update time for next session
+                  currentMinute += focusDuration;
+
+                  // Add break after focus (70% chance of adding break)
+                  if (random.nextDouble() < 0.7) {
+                    final breakStartTime = endTime;
+
+                    // Long break after 4 consecutive work sessions, or random chance
+                    final shouldLongBreak =
+                        consecutiveWorkSessions >= 4 ||
+                        (consecutiveWorkSessions >= 3 &&
+                            random.nextDouble() < 0.3);
+
+                    if (shouldLongBreak) {
+                      // Long break (10-20 minutes)
+                      final longBreakDuration = 10 + random.nextInt(11);
+                      final breakEndTime = breakStartTime.add(
+                        Duration(minutes: longBreakDuration),
+                      );
+
+                      await repository.addSession(
+                        TimerSession(
+                          id: 'dummy_${date.millisecondsSinceEpoch}_${random.nextInt(999999)}_${j}_longbreak',
+                          startTime: breakStartTime,
+                          endTime: breakEndTime,
+                          sessionType: SessionType.longBreak,
+                          durationInMinutes: longBreakDuration,
+                        ),
+                      );
+
+                      currentMinute += longBreakDuration;
+                      consecutiveWorkSessions = 0;
+                    } else {
+                      // Short break (3-7 minutes)
+                      final shortBreakDuration = 3 + random.nextInt(5);
+                      final breakEndTime = breakStartTime.add(
+                        Duration(minutes: shortBreakDuration),
+                      );
+
+                      await repository.addSession(
+                        TimerSession(
+                          id: 'dummy_${date.millisecondsSinceEpoch}_${random.nextInt(999999)}_${j}_break',
+                          startTime: breakStartTime,
+                          endTime: breakEndTime,
+                          sessionType: SessionType.shortBreak,
+                          durationInMinutes: shortBreakDuration,
+                        ),
+                      );
+
+                      currentMinute += shortBreakDuration;
+                    }
+                  }
+
+                  // Add random gap between sessions (5-45 minutes)
+                  final gap = 5 + random.nextInt(41);
+                  currentMinute += gap;
+
+                  // Normalize time
+                  while (currentMinute >= 60) {
+                    currentMinute -= 60;
+                    currentHour++;
+                  }
                 }
               }
-              
+
               if (dialogContext.mounted) {
                 Navigator.of(dialogContext).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
+                scaffoldMessenger.showSnackBar(
                   const SnackBar(
-                    content: Text('Sample data generated successfully!'),
+                    content: Text(
+                      'Realistic sample data generated for 45 days!',
+                    ),
                     duration: Duration(seconds: 2),
                   ),
                 );

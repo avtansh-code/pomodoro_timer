@@ -143,13 +143,21 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
     event.TimerTicked tickEvent,
     Emitter<state.TimerState> emit,
   ) async {
+    // Only process tick events if the timer is currently running
+    // This prevents type casting errors when ticks arrive after reset/pause
+    if (this.state is! state.TimerRunning) {
+      return;
+    }
+
+    final currentState = this.state as state.TimerRunning;
+
     if (tickEvent.duration > 0) {
       emit(
         state.TimerRunning(
           duration: tickEvent.duration,
-          sessionType: this.state.sessionType,
-          startTime: (this.state as state.TimerRunning).startTime,
-          completedSessions: this.state.completedSessions,
+          sessionType: currentState.sessionType,
+          startTime: currentState.startTime,
+          completedSessions: currentState.completedSessions,
         ),
       );
     } else {
@@ -230,11 +238,18 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
     // Auto-transition to initial state for next session after a brief delay
     await Future.delayed(const Duration(seconds: 2));
 
+    // Check if the state has changed (e.g., user already started the timer)
+    // If so, don't overwrite the current state
+    if (this.state is! state.TimerCompleted) {
+      return;
+    }
+
     // Check if we should auto-start the next session
     // Don't auto-start focus after a long break - user must manually start
-    final shouldAutoStart = (nextSessionType == SessionType.work && 
-                             settings.autoStartFocus && 
-                             completedType != SessionType.longBreak) ||
+    final shouldAutoStart =
+        (nextSessionType == SessionType.work &&
+            settings.autoStartFocus &&
+            completedType != SessionType.longBreak) ||
         (nextSessionType != SessionType.work && settings.autoStartBreaks);
 
     if (shouldAutoStart) {

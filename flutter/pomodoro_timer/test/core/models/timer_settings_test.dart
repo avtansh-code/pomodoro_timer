@@ -121,9 +121,7 @@ void main() {
     });
 
     test('fromJson uses default values for missing fields', () {
-      final json = {
-        'workDuration': 30,
-      };
+      final json = {'workDuration': 30};
 
       final settings = TimerSettings.fromJson(json);
 

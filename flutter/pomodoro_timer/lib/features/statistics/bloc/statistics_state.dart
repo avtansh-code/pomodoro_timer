@@ -31,7 +31,7 @@ class StatisticsState extends Equatable {
   factory StatisticsState.initial() {
     return const StatisticsState(
       sessions: [],
-      filter: StatisticsFilter.today,
+      filter: StatisticsFilter.all,
       isLoading: true,
     );
   }

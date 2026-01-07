@@ -23,16 +23,12 @@ class AppThemes {
 
   /// Light theme configuration
   static ThemeData get lightTheme {
-    return _isApplePlatform
-        ? _iosLightTheme
-        : _materialLightTheme;
+    return _isApplePlatform ? _iosLightTheme : _materialLightTheme;
   }
 
   /// Dark theme configuration
   static ThemeData get darkTheme {
-    return _isApplePlatform
-        ? _iosDarkTheme
-        : _materialDarkTheme;
+    return _isApplePlatform ? _iosDarkTheme : _materialDarkTheme;
   }
 
   /// Get light theme with custom primary color

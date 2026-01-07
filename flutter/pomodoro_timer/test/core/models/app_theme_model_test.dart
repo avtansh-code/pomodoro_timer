@@ -31,32 +31,44 @@ void main() {
     });
 
     test('getGradientForSession returns correct gradient for work', () {
-      final gradient = PomodoroThemes.classicRed.getGradientForSession(SessionType.work);
+      final gradient = PomodoroThemes.classicRed.getGradientForSession(
+        SessionType.work,
+      );
       expect(gradient, PomodoroThemes.classicRed.focusGradient);
     });
 
     test('getGradientForSession returns correct gradient for short break', () {
-      final gradient = PomodoroThemes.classicRed.getGradientForSession(SessionType.shortBreak);
+      final gradient = PomodoroThemes.classicRed.getGradientForSession(
+        SessionType.shortBreak,
+      );
       expect(gradient, PomodoroThemes.classicRed.shortBreakGradient);
     });
 
     test('getGradientForSession returns correct gradient for long break', () {
-      final gradient = PomodoroThemes.classicRed.getGradientForSession(SessionType.longBreak);
+      final gradient = PomodoroThemes.classicRed.getGradientForSession(
+        SessionType.longBreak,
+      );
       expect(gradient, PomodoroThemes.classicRed.longBreakGradient);
     });
 
     test('getColorForSession returns primary color for work', () {
-      final color = PomodoroThemes.classicRed.getColorForSession(SessionType.work);
+      final color = PomodoroThemes.classicRed.getColorForSession(
+        SessionType.work,
+      );
       expect(color, PomodoroThemes.classicRed.primaryColor);
     });
 
     test('getColorForSession returns green for short break', () {
-      final color = PomodoroThemes.classicRed.getColorForSession(SessionType.shortBreak);
+      final color = PomodoroThemes.classicRed.getColorForSession(
+        SessionType.shortBreak,
+      );
       expect(color, const Color(0xFF34C759));
     });
 
     test('getColorForSession returns blue for long break', () {
-      final color = PomodoroThemes.classicRed.getColorForSession(SessionType.longBreak);
+      final color = PomodoroThemes.classicRed.getColorForSession(
+        SessionType.longBreak,
+      );
       expect(color, const Color(0xFF007AFF));
     });
 

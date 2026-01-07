@@ -25,7 +25,7 @@ void main() {
 
     test('getSettings returns default settings when none saved', () {
       final settings = persistenceService.getSettings();
-      
+
       expect(settings, equals(const TimerSettings()));
       expect(settings.workDuration, equals(25));
       expect(settings.shortBreakDuration, equals(5));
@@ -83,7 +83,7 @@ void main() {
     test('clearSettings removes saved settings', () async {
       const settings = TimerSettings(workDuration: 30);
       await persistenceService.saveSettings(settings);
-      
+
       expect(persistenceService.hasSettings(), true);
 
       final result = await persistenceService.clearSettings();

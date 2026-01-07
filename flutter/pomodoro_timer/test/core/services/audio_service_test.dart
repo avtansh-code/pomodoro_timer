@@ -66,7 +66,7 @@ void main() {
 
     test('all sound methods can be called in sequence', () async {
       audioService.setSoundEnabled(true);
-      
+
       await audioService.playCompletionSound();
       await audioService.playBreakSound();
       await audioService.playTickSound();

@@ -102,17 +102,20 @@ void main() {
         expect(state1, isNot(equals(state3)));
       });
 
-      test('props contain duration, sessionType, completedSessions, and startTime', () {
-        final startTime = DateTime(2024, 1, 15, 10, 0, 0);
-        final state = TimerRunning(
-          duration: 1500,
-          sessionType: SessionType.work,
-          startTime: startTime,
-          completedSessions: 2,
-        );
+      test(
+        'props contain duration, sessionType, completedSessions, and startTime',
+        () {
+          final startTime = DateTime(2024, 1, 15, 10, 0, 0);
+          final state = TimerRunning(
+            duration: 1500,
+            sessionType: SessionType.work,
+            startTime: startTime,
+            completedSessions: 2,
+          );
 
-        expect(state.props, [1500, SessionType.work, 2, startTime]);
-      });
+          expect(state.props, [1500, SessionType.work, 2, startTime]);
+        },
+      );
     });
 
     group('TimerPaused', () {
@@ -199,16 +202,24 @@ void main() {
         expect(state1, isNot(equals(state3)));
       });
 
-      test('props contain duration, sessionType, completedSessions, and completedSessionType', () {
-        const state = TimerCompleted(
-          duration: 300,
-          sessionType: SessionType.shortBreak,
-          completedSessionType: SessionType.work,
-          completedSessions: 1,
-        );
+      test(
+        'props contain duration, sessionType, completedSessions, and completedSessionType',
+        () {
+          const state = TimerCompleted(
+            duration: 300,
+            sessionType: SessionType.shortBreak,
+            completedSessionType: SessionType.work,
+            completedSessions: 1,
+          );
 
-        expect(state.props, [300, SessionType.shortBreak, 1, SessionType.work]);
-      });
+          expect(state.props, [
+            300,
+            SessionType.shortBreak,
+            1,
+            SessionType.work,
+          ]);
+        },
+      );
     });
 
     group('TimerError', () {
@@ -250,35 +261,32 @@ void main() {
         expect(state1, isNot(equals(state3)));
       });
 
-      test('props contain duration, sessionType, completedSessions, and message', () {
-        const state = TimerError(
-          duration: 1500,
-          sessionType: SessionType.work,
-          message: 'An error occurred',
-          completedSessions: 2,
-        );
+      test(
+        'props contain duration, sessionType, completedSessions, and message',
+        () {
+          const state = TimerError(
+            duration: 1500,
+            sessionType: SessionType.work,
+            message: 'An error occurred',
+            completedSessions: 2,
+          );
 
-        expect(state.props, [1500, SessionType.work, 2, 'An error occurred']);
-      });
+          expect(state.props, [1500, SessionType.work, 2, 'An error occurred']);
+        },
+      );
     });
 
     group('SessionType in states', () {
       test('all session types work with TimerInitial', () {
         for (final sessionType in SessionType.values) {
-          final state = TimerInitial(
-            duration: 1500,
-            sessionType: sessionType,
-          );
+          final state = TimerInitial(duration: 1500, sessionType: sessionType);
           expect(state.sessionType, sessionType);
         }
       });
 
       test('all session types work with TimerPaused', () {
         for (final sessionType in SessionType.values) {
-          final state = TimerPaused(
-            duration: 1500,
-            sessionType: sessionType,
-          );
+          final state = TimerPaused(duration: 1500, sessionType: sessionType);
           expect(state.sessionType, sessionType);
         }
       });

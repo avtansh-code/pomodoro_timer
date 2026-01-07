@@ -56,9 +56,9 @@ class _StatisticsViewState extends State<_StatisticsView> {
 
           return BlocBuilder<StatisticsCubit, StatisticsState>(
             builder: (context, state) {
-          if (state.isLoading && state.sessions.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
+              if (state.isLoading && state.sessions.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
               final currentSessions = _getCurrentSessions(state);
               final todaySessions = _getTodaySessions(state);
@@ -74,57 +74,69 @@ class _StatisticsViewState extends State<_StatisticsView> {
                   child: ListView(
                     padding: const EdgeInsets.all(16.0),
                     children: [
-                    // Time Range Picker
-                    _buildTimeRangePicker(context),
+                      // Time Range Picker
+                      _buildTimeRangePicker(context),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Streak Card
-                    _buildStreakCard(context, streak),
+                      // Streak Card
+                      _buildStreakCard(context, streak),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Weekly Sessions Chart
-                    _buildWeeklySessionsChart(context, currentSessions, primaryColor),
+                      // Weekly Sessions Chart
+                      _buildWeeklySessionsChart(
+                        context,
+                        currentSessions,
+                        primaryColor,
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Focus Time Trend Chart
-                    _buildFocusTimeTrendChart(context, currentSessions, primaryColor),
+                      // Focus Time Trend Chart
+                      _buildFocusTimeTrendChart(
+                        context,
+                        currentSessions,
+                        primaryColor,
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Session Type Distribution
-                    _buildSessionTypeDistribution(context, currentSessions, appTheme),
+                      // Session Type Distribution
+                      _buildSessionTypeDistribution(
+                        context,
+                        currentSessions,
+                        appTheme,
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Today's Stats
-                    _buildStatsSection(
-                      context,
-                      'Today',
-                      todaySessions,
-                      Icons.calendar_today,
-                      primaryColor,
-                    ),
+                      // Today's Stats
+                      _buildStatsSection(
+                        context,
+                        'Today',
+                        todaySessions,
+                        Icons.calendar_today,
+                        primaryColor,
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Selected Range Stats
-                    _buildStatsSection(
-                      context,
-                      _selectedTimeRange == StatisticsFilter.week
-                          ? 'Week'
-                          : 'Month',
-                      currentSessions,
-                      Icons.calendar_month,
-                      primaryColor,
-                    ),
+                      // Selected Range Stats
+                      _buildStatsSection(
+                        context,
+                        _selectedTimeRange == StatisticsFilter.week
+                            ? 'Week'
+                            : 'Month',
+                        currentSessions,
+                        Icons.calendar_month,
+                        primaryColor,
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Motivational Quote
-                    _buildMotivationalQuote(context),
+                      // Motivational Quote
+                      _buildMotivationalQuote(context),
 
                       const SizedBox(height: 16),
                     ],
@@ -174,7 +186,12 @@ class _StatisticsViewState extends State<_StatisticsView> {
 
     int streak = 0;
     final now = DateTime.now();
-    var checkDate = DateTime(now.year, now.month, now.day);
+    // Start from yesterday - streak only counts completed days
+    var checkDate = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(const Duration(days: 1));
 
     while (true) {
       final hasSessions = state.sessions.any((session) {
@@ -198,7 +215,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
   Widget _buildTimeRangePicker(BuildContext context) {
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
-    
+
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -231,7 +248,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
       ),
     );
   }
-  
+
   Widget _buildSegmentButton(
     BuildContext context,
     String label,
@@ -240,7 +257,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
   ) {
     final isSelected = _selectedTimeRange == filter;
     final theme = Theme.of(context);
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -252,12 +269,9 @@ class _StatisticsViewState extends State<_StatisticsView> {
         curve: Curves.easeInOut,
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          gradient: isSelected 
+          gradient: isSelected
               ? LinearGradient(
-                  colors: [
-                    primaryColor,
-                    primaryColor.withValues(alpha: 0.8),
-                  ],
+                  colors: [primaryColor, primaryColor.withValues(alpha: 0.8)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 )
@@ -268,9 +282,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
           label,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: isSelected 
-                ? Colors.white 
-                : theme.colorScheme.onSurface,
+            color: isSelected ? Colors.white : theme.colorScheme.onSurface,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             fontSize: 15,
           ),
@@ -348,9 +360,9 @@ class _StatisticsViewState extends State<_StatisticsView> {
     if (dailyData.every((data) => data.count == 0)) {
       return _buildEmptyChart(
         context,
-        'Sessions per Day',
+        'Focus Sessions per Day',
         Icons.bar_chart,
-        'No sessions yet',
+        'No focus sessions yet',
       );
     }
 
@@ -360,10 +372,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            theme.cardColor,
-            primaryColor.withValues(alpha: 0.03),
-          ],
+          colors: [theme.cardColor, primaryColor.withValues(alpha: 0.03)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -393,7 +402,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
               Icon(Icons.bar_chart, color: theme.colorScheme.primary),
               const SizedBox(width: 8),
               Text(
-                'Sessions per Day',
+                'Focus Sessions per Day',
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -413,29 +422,45 @@ class _StatisticsViewState extends State<_StatisticsView> {
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
+                      reservedSize: 30,
+                      interval: _selectedTimeRange == StatisticsFilter.week
+                          ? 1
+                          : 5,
                       getTitlesWidget: (value, meta) {
-                        if (value.toInt() >= 0 &&
-                            value.toInt() < dailyData.length) {
+                        final index = value.toInt();
+                        if (index >= 0 && index < dailyData.length) {
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
-                              dailyData[value.toInt()].day,
-                              style: theme.textTheme.bodySmall,
+                              dailyData[index].day,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                fontSize: 10,
+                              ),
                             ),
                           );
                         }
-                        return const Text('');
+                        return const SizedBox.shrink();
                       },
                     ),
                   ),
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 30,
+                      reservedSize: 35,
+                      interval: _calculateYAxisInterval(maxCount),
                       getTitlesWidget: (value, meta) {
-                        return Text(
-                          value.toInt().toString(),
-                          style: theme.textTheme.bodySmall,
+                        // Skip if this value equals min or max (avoid edge labels)
+                        if (value == meta.min || value == meta.max) {
+                          return const SizedBox.shrink();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: Text(
+                            value.toInt().toString(),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontSize: 11,
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -502,10 +527,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            theme.cardColor,
-            primaryColor.withValues(alpha: 0.03),
-          ],
+          colors: [theme.cardColor, primaryColor.withValues(alpha: 0.03)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -559,29 +581,45 @@ class _StatisticsViewState extends State<_StatisticsView> {
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
+                      reservedSize: 30,
+                      interval: _selectedTimeRange == StatisticsFilter.week
+                          ? 1
+                          : 5,
                       getTitlesWidget: (value, meta) {
-                        if (value.toInt() >= 0 &&
-                            value.toInt() < trendData.length) {
+                        final index = value.toInt();
+                        if (index >= 0 && index < trendData.length) {
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
-                              trendData[value.toInt()].day,
-                              style: theme.textTheme.bodySmall,
+                              trendData[index].day,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                fontSize: 10,
+                              ),
                             ),
                           );
                         }
-                        return const Text('');
+                        return const SizedBox.shrink();
                       },
                     ),
                   ),
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 40,
+                      reservedSize: 45,
+                      interval: _calculateYAxisInterval(maxMinutes),
                       getTitlesWidget: (value, meta) {
-                        return Text(
-                          '${value.toInt()}m',
-                          style: theme.textTheme.bodySmall,
+                        // Skip if this value equals min or max (avoid edge labels)
+                        if (value == meta.min || value == meta.max) {
+                          return const SizedBox.shrink();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: Text(
+                            '${value.toInt()}m',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontSize: 11,
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -647,10 +685,7 @@ class _StatisticsViewState extends State<_StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            theme.cardColor,
-            primaryColor.withValues(alpha: 0.03),
-          ],
+          colors: [theme.cardColor, primaryColor.withValues(alpha: 0.03)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -1097,5 +1132,17 @@ class _StatisticsViewState extends State<_StatisticsView> {
     final hours = minutes ~/ 60;
     final mins = minutes % 60;
     return mins > 0 ? '${hours}h ${mins}m' : '${hours}h';
+  }
+
+  /// Calculate appropriate Y-axis interval to prevent label overlap
+  double _calculateYAxisInterval(double maxValue) {
+    if (maxValue <= 5) return 1;
+    if (maxValue <= 10) return 2;
+    if (maxValue <= 25) return 5;
+    if (maxValue <= 50) return 10;
+    if (maxValue <= 100) return 20;
+    if (maxValue <= 250) return 50;
+    if (maxValue <= 500) return 100;
+    return (maxValue / 5).ceilToDouble();
   }
 }
