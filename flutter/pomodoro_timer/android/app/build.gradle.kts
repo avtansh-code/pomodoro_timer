@@ -6,11 +6,13 @@ plugins {
 }
 
 android {
-    namespace = "com.avtanshgupta.mr.pomodoro"
+    namespace = "avtanshgupta.PomodoroTimer"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        // Enable core library desugaring for flutter_local_notifications
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -20,14 +22,15 @@ android {
     }
 
     defaultConfig {
-        // Application ID matches existing published app
-        applicationId = "com.avtanshgupta.mr.pomodoro"
+        // Application ID for new app publication
+        applicationId = "avtanshgupta.PomodoroTimer"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 33
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled = true
         
         // Set the archive name for APK/AAB files
         setProperty("archivesBaseName", "PomodoroTimer")
@@ -40,6 +43,11 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+}
+
+dependencies {
+    // Core library desugaring for Java 8+ APIs support
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 
 flutter {

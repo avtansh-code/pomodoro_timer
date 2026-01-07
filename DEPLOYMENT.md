@@ -235,9 +235,9 @@ xcrun altool --upload-app \
 2. **Verify Android settings** in `flutter/pomodoro_timer/android/app/build.gradle.kts`:
    ```kotlin
    android {
-       namespace = "com.avtanshgupta.mr.pomodoro"
+       namespace = "avtanshgupta.PomodoroTimer"
        defaultConfig {
-           applicationId = "com.avtanshgupta.mr.pomodoro"
+           applicationId = "avtanshgupta.PomodoroTimer"
            minSdk = 33
            targetSdk = flutter.targetSdkVersion
            versionCode = flutter.versionCode
@@ -590,7 +590,7 @@ jobs:
       - uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT }}
-          packageName: com.avtanshgupta.mr.pomodoro
+          packageName: avtanshgupta.PomodoroTimer
           releaseFiles: flutter/pomodoro_timer/build/app/outputs/bundle/release/PomodoroTimer-release.aab
           track: production
 
