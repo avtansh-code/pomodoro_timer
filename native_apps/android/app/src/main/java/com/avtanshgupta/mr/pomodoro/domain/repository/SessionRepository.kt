@@ -1,7 +1,7 @@
-package com.avtanshgupta.mr.pomodoro.domain.repository
+package avtanshgupta.PomodoroTimer.domain.repository
 
-import com.avtanshgupta.mr.pomodoro.domain.model.SessionType
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerSession
+import avtanshgupta.PomodoroTimer.domain.model.SessionType
+import avtanshgupta.PomodoroTimer.domain.model.TimerSession
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 

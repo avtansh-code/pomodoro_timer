@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.util
+package avtanshgupta.PomodoroTimer.util
 
 import android.view.View
 import androidx.compose.runtime.Composable

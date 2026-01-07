@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.service
+package avtanshgupta.PomodoroTimer.service
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -8,9 +8,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import com.avtanshgupta.mr.pomodoro.MainActivity
-import com.avtanshgupta.mr.pomodoro.R
-import com.avtanshgupta.mr.pomodoro.domain.model.SessionType
+import avtanshgupta.PomodoroTimer.MainActivity
+import avtanshgupta.PomodoroTimer.R
+import avtanshgupta.PomodoroTimer.domain.model.SessionType
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton

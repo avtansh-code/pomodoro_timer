@@ -1,15 +1,15 @@
-package com.avtanshgupta.mr.pomodoro.presentation.viewmodel
+package avtanshgupta.PomodoroTimer.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.avtanshgupta.mr.pomodoro.domain.model.SessionType
-import com.avtanshgupta.mr.pomodoro.domain.model.Statistics
-import com.avtanshgupta.mr.pomodoro.domain.model.StatisticsPeriod
-import com.avtanshgupta.mr.pomodoro.domain.model.StreakStatistics
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerSession
-import com.avtanshgupta.mr.pomodoro.domain.repository.SessionRepository
-import com.avtanshgupta.mr.pomodoro.domain.usecase.GetStatisticsUseCase
-import com.avtanshgupta.mr.pomodoro.domain.usecase.GetStreakUseCase
+import avtanshgupta.PomodoroTimer.domain.model.SessionType
+import avtanshgupta.PomodoroTimer.domain.model.Statistics
+import avtanshgupta.PomodoroTimer.domain.model.StatisticsPeriod
+import avtanshgupta.PomodoroTimer.domain.model.StreakStatistics
+import avtanshgupta.PomodoroTimer.domain.model.TimerSession
+import avtanshgupta.PomodoroTimer.domain.repository.SessionRepository
+import avtanshgupta.PomodoroTimer.domain.usecase.GetStatisticsUseCase
+import avtanshgupta.PomodoroTimer.domain.usecase.GetStreakUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

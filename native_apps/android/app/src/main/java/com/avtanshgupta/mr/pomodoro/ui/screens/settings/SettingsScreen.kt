@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.ui.screens.settings
+package avtanshgupta.PomodoroTimer.ui.screens.settings
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -57,10 +57,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import android.widget.Toast
-import com.avtanshgupta.mr.pomodoro.BuildConfig
-import com.avtanshgupta.mr.pomodoro.domain.model.AppTheme
-import com.avtanshgupta.mr.pomodoro.presentation.viewmodel.SettingsViewModel
-import com.avtanshgupta.mr.pomodoro.ui.theme.PomodoroTheme
+import avtanshgupta.PomodoroTimer.BuildConfig
+import avtanshgupta.PomodoroTimer.domain.model.AppTheme
+import avtanshgupta.PomodoroTimer.presentation.viewmodel.SettingsViewModel
+import avtanshgupta.PomodoroTimer.ui.theme.PomodoroTheme
 
 /**
  * Settings Screen with organized sections.

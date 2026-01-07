@@ -1,8 +1,8 @@
-package com.avtanshgupta.mr.pomodoro.manager
+package avtanshgupta.PomodoroTimer.manager
 
-import com.avtanshgupta.mr.pomodoro.domain.model.SessionType
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerSession
-import com.avtanshgupta.mr.pomodoro.domain.repository.SessionRepository
+import avtanshgupta.PomodoroTimer.domain.model.SessionType
+import avtanshgupta.PomodoroTimer.domain.model.TimerSession
+import avtanshgupta.PomodoroTimer.domain.repository.SessionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.Instant

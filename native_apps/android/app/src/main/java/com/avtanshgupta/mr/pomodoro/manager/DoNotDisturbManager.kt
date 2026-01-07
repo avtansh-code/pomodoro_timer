@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.manager
+package avtanshgupta.PomodoroTimer.manager
 
 import android.app.NotificationManager
 import android.content.Context

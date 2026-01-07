@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.domain.model
+package avtanshgupta.PomodoroTimer.domain.model
 
 /**
  * Statistics data for a specific time period

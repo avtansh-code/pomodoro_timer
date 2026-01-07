@@ -1,10 +1,10 @@
-package com.avtanshgupta.mr.pomodoro.data.repository
+package avtanshgupta.PomodoroTimer.data.repository
 
-import com.avtanshgupta.mr.pomodoro.data.local.database.SessionDao
-import com.avtanshgupta.mr.pomodoro.data.local.database.entity.SessionEntity
-import com.avtanshgupta.mr.pomodoro.domain.model.SessionType
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerSession
-import com.avtanshgupta.mr.pomodoro.domain.repository.SessionRepository
+import avtanshgupta.PomodoroTimer.data.local.database.SessionDao
+import avtanshgupta.PomodoroTimer.data.local.database.entity.SessionEntity
+import avtanshgupta.PomodoroTimer.domain.model.SessionType
+import avtanshgupta.PomodoroTimer.domain.model.TimerSession
+import avtanshgupta.PomodoroTimer.domain.repository.SessionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.Instant

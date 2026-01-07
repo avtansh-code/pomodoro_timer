@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.ui.screens.theme
+package avtanshgupta.PomodoroTimer.ui.screens.theme
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -28,9 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.avtanshgupta.mr.pomodoro.domain.model.AppTheme
-import com.avtanshgupta.mr.pomodoro.presentation.viewmodel.SettingsViewModel
-import com.avtanshgupta.mr.pomodoro.ui.theme.PomodoroTheme
+import avtanshgupta.PomodoroTimer.domain.model.AppTheme
+import avtanshgupta.PomodoroTimer.presentation.viewmodel.SettingsViewModel
+import avtanshgupta.PomodoroTimer.ui.theme.PomodoroTheme
 
 /**
  * Theme Selection Screen - Visual theme picker

@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.avtanshgupta.mr.pomodoro"
+    namespace = "avtanshgupta.PomodoroTimer"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.avtanshgupta.mr.pomodoro"
+        applicationId = "avtanshgupta.PomodoroTimer"
         minSdk = 33
         targetSdk = 35
         versionCode = 4

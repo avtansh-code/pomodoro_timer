@@ -1,8 +1,8 @@
-package com.avtanshgupta.mr.pomodoro.domain.usecase
+package avtanshgupta.PomodoroTimer.domain.usecase
 
-import com.avtanshgupta.mr.pomodoro.domain.model.SessionType
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerSession
-import com.avtanshgupta.mr.pomodoro.domain.repository.SessionRepository
+import avtanshgupta.PomodoroTimer.domain.model.SessionType
+import avtanshgupta.PomodoroTimer.domain.model.TimerSession
+import avtanshgupta.PomodoroTimer.domain.repository.SessionRepository
 import java.time.Instant
 import javax.inject.Inject
 

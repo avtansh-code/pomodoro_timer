@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.ui.navigation
+package avtanshgupta.PomodoroTimer.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ShowChart
@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.avtanshgupta.mr.pomodoro.ui.theme.PomodoroTheme
+import avtanshgupta.PomodoroTimer.ui.theme.PomodoroTheme
 
 /**
  * Bottom navigation bar for app navigation.

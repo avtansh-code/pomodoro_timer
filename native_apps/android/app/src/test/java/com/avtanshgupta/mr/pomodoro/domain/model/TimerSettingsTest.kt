@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.domain.model
+package avtanshgupta.PomodoroTimer.domain.model
 
 import org.junit.Assert.*
 import org.junit.Test

@@ -1,7 +1,7 @@
-package com.avtanshgupta.mr.pomodoro.domain.usecase
+package avtanshgupta.PomodoroTimer.domain.usecase
 
-import com.avtanshgupta.mr.pomodoro.domain.model.StreakStatistics
-import com.avtanshgupta.mr.pomodoro.domain.repository.SessionRepository
+import avtanshgupta.PomodoroTimer.domain.model.StreakStatistics
+import avtanshgupta.PomodoroTimer.domain.repository.SessionRepository
 import javax.inject.Inject
 
 /**

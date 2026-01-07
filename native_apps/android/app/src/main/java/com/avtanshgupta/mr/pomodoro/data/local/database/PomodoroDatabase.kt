@@ -1,8 +1,8 @@
-package com.avtanshgupta.mr.pomodoro.data.local.database
+package avtanshgupta.PomodoroTimer.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.avtanshgupta.mr.pomodoro.data.local.database.entity.SessionEntity
+import avtanshgupta.PomodoroTimer.data.local.database.entity.SessionEntity
 
 /**
  * Room database for Pomodoro Timer app.

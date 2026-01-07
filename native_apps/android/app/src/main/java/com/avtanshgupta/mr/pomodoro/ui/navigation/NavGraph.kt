@@ -1,16 +1,16 @@
-package com.avtanshgupta.mr.pomodoro.ui.navigation
+package avtanshgupta.PomodoroTimer.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.avtanshgupta.mr.pomodoro.ui.screens.benefits.PomodoroBenefitsScreen
-import com.avtanshgupta.mr.pomodoro.ui.screens.privacy.PrivacyPolicyScreen
-import com.avtanshgupta.mr.pomodoro.ui.screens.screenshot.ScreenshotPreparationScreen
-import com.avtanshgupta.mr.pomodoro.ui.screens.settings.SettingsScreen
-import com.avtanshgupta.mr.pomodoro.ui.screens.statistics.StatisticsScreen
-import com.avtanshgupta.mr.pomodoro.ui.screens.theme.ThemeSelectionScreen
-import com.avtanshgupta.mr.pomodoro.ui.screens.timer.TimerScreen
+import avtanshgupta.PomodoroTimer.ui.screens.benefits.PomodoroBenefitsScreen
+import avtanshgupta.PomodoroTimer.ui.screens.privacy.PrivacyPolicyScreen
+import avtanshgupta.PomodoroTimer.ui.screens.screenshot.ScreenshotPreparationScreen
+import avtanshgupta.PomodoroTimer.ui.screens.settings.SettingsScreen
+import avtanshgupta.PomodoroTimer.ui.screens.statistics.StatisticsScreen
+import avtanshgupta.PomodoroTimer.ui.screens.theme.ThemeSelectionScreen
+import avtanshgupta.PomodoroTimer.ui.screens.timer.TimerScreen
 
 /**
  * Navigation graph for the app.

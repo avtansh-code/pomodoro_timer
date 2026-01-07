@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.ui.components
+package avtanshgupta.PomodoroTimer.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,8 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerState
-import com.avtanshgupta.mr.pomodoro.ui.theme.PomodoroTheme
+import avtanshgupta.PomodoroTimer.domain.model.TimerState
+import avtanshgupta.PomodoroTimer.ui.theme.PomodoroTheme
 
 /**
  * State indicator chip showing timer status (Active/Paused/Ready).

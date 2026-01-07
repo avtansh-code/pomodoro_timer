@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.domain.model
+package avtanshgupta.PomodoroTimer.domain.model
 
 /**
  * Represents the type of Pomodoro session.

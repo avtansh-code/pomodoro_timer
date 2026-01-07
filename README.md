@@ -35,7 +35,7 @@ A beautiful, privacy-first Pomodoro timer for iOS, Android, macOS, and Windows. 
 ### Android
 **Requirements:** Android 13.0 (API 33) or later
 
-[Get it on Google Play](https://play.google.com/store/apps/details?id=com.avtanshgupta.mr.pomodoro&pli=1)
+[Get it on Google Play](https://play.google.com/store/apps/details?id=avtanshgupta.PomodoroTimer&pli=1)
 
 ### Desktop
 macOS and Windows builds available via the build script.

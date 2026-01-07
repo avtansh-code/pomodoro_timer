@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro
+package avtanshgupta.PomodoroTimer
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,12 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.avtanshgupta.mr.pomodoro.domain.model.AppTheme
-import com.avtanshgupta.mr.pomodoro.presentation.viewmodel.SettingsViewModel
-import com.avtanshgupta.mr.pomodoro.ui.navigation.BottomNavBar
-import com.avtanshgupta.mr.pomodoro.ui.navigation.PomodoroNavGraph
-import com.avtanshgupta.mr.pomodoro.ui.navigation.Screen
-import com.avtanshgupta.mr.pomodoro.ui.theme.PomodoroTheme
+import avtanshgupta.PomodoroTimer.domain.model.AppTheme
+import avtanshgupta.PomodoroTimer.presentation.viewmodel.SettingsViewModel
+import avtanshgupta.PomodoroTimer.ui.navigation.BottomNavBar
+import avtanshgupta.PomodoroTimer.ui.navigation.PomodoroNavGraph
+import avtanshgupta.PomodoroTimer.ui.navigation.Screen
+import avtanshgupta.PomodoroTimer.ui.theme.PomodoroTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.ui.screens.privacy
+package avtanshgupta.PomodoroTimer.ui.screens.privacy
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,7 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.avtanshgupta.mr.pomodoro.ui.theme.PomodoroTheme
+import avtanshgupta.PomodoroTimer.ui.theme.PomodoroTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

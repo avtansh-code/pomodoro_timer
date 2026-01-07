@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.domain.model
+package avtanshgupta.PomodoroTimer.domain.model
 
 /**
  * Streak statistics for user's consistency tracking

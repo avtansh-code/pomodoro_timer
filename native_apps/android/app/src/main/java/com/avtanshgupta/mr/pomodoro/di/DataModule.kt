@@ -1,17 +1,17 @@
-package com.avtanshgupta.mr.pomodoro.di
+package avtanshgupta.PomodoroTimer.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
-import com.avtanshgupta.mr.pomodoro.data.local.database.PomodoroDatabase
-import com.avtanshgupta.mr.pomodoro.data.local.database.SessionDao
-import com.avtanshgupta.mr.pomodoro.data.local.datastore.SettingsDataStore
-import com.avtanshgupta.mr.pomodoro.data.repository.SessionRepositoryImpl
-import com.avtanshgupta.mr.pomodoro.data.repository.SettingsRepositoryImpl
-import com.avtanshgupta.mr.pomodoro.domain.repository.SessionRepository
-import com.avtanshgupta.mr.pomodoro.domain.repository.SettingsRepository
+import avtanshgupta.PomodoroTimer.data.local.database.PomodoroDatabase
+import avtanshgupta.PomodoroTimer.data.local.database.SessionDao
+import avtanshgupta.PomodoroTimer.data.local.datastore.SettingsDataStore
+import avtanshgupta.PomodoroTimer.data.repository.SessionRepositoryImpl
+import avtanshgupta.PomodoroTimer.data.repository.SettingsRepositoryImpl
+import avtanshgupta.PomodoroTimer.domain.repository.SessionRepository
+import avtanshgupta.PomodoroTimer.domain.repository.SettingsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

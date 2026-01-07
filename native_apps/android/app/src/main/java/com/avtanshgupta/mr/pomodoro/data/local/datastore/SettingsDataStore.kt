@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.data.local.datastore
+package avtanshgupta.PomodoroTimer.data.local.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -7,8 +7,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.avtanshgupta.mr.pomodoro.domain.model.AppThemeType
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerSettings
+import avtanshgupta.PomodoroTimer.domain.model.AppThemeType
+import avtanshgupta.PomodoroTimer.domain.model.TimerSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
