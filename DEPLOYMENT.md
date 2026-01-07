@@ -172,8 +172,10 @@ flutter build ipa --release
 
 The IPA file will be at:
 ```
-build/ios/ipa/pomodoro_timer.ipa
+build/ios/ipa/PomodoroTimer.ipa
 ```
+
+> **Note:** The iOS archive is configured with `PRODUCT_NAME = PomodoroTimer` in the Xcode project settings.
 
 ### Step 4: Upload to App Store Connect
 
@@ -321,15 +323,17 @@ flutter build appbundle --release
 ```
 
 Output files:
-- APK: `build/app/outputs/flutter-apk/app-release.apk`
-- AAB: `build/app/outputs/bundle/release/app-release.aab`
+- APK: `build/app/outputs/flutter-apk/PomodoroTimer-release.apk`
+- AAB: `build/app/outputs/bundle/release/PomodoroTimer-release.aab`
+
+> **Note:** The archive base name is configured with `archivesBaseName = "PomodoroTimer"` in `build.gradle.kts`.
 
 ### Step 4: Upload to Google Play Console
 
 1. Go to [Google Play Console](https://play.google.com/console)
 2. Select **Mr. Pomodoro** app
 3. Navigate to **Production** → **Create new release**
-4. Upload the `.aab` file from `build/app/outputs/bundle/release/`
+4. Upload the `.aab` file (`PomodoroTimer-release.aab`) from `build/app/outputs/bundle/release/`
 5. Fill in **Release notes**
 6. Click **Save** → **Review release** → **Start rollout**
 
@@ -590,7 +594,7 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT }}
           packageName: com.avtanshgupta.mr.pomodoro
-          releaseFiles: flutter/pomodoro_timer/build/app/outputs/bundle/release/app-release.aab
+          releaseFiles: flutter/pomodoro_timer/build/app/outputs/bundle/release/PomodoroTimer-release.aab
           track: production
 
   deploy-ios:
@@ -604,7 +608,7 @@ jobs:
         working-directory: flutter/pomodoro_timer
       - uses: apple-actions/upload-testflight-build@v1
         with:
-          app-path: flutter/pomodoro_timer/build/ios/ipa/pomodoro_timer.ipa
+          app-path: flutter/pomodoro_timer/build/ios/ipa/PomodoroTimer.ipa
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
