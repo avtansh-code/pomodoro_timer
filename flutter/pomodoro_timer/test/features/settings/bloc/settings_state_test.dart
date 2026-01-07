@@ -160,8 +160,14 @@ void main() {
       });
 
       test('states with different isLoading are not equal', () {
-        final state1 = SettingsState(settings: defaultSettings, isLoading: false);
-        final state2 = SettingsState(settings: defaultSettings, isLoading: true);
+        final state1 = SettingsState(
+          settings: defaultSettings,
+          isLoading: false,
+        );
+        final state2 = SettingsState(
+          settings: defaultSettings,
+          isLoading: true,
+        );
 
         expect(state1, isNot(equals(state2)));
       });
@@ -209,9 +215,7 @@ void main() {
           isLoading: false,
         );
 
-        final errorState = loadedState.copyWith(
-          errorMessage: 'Save failed',
-        );
+        final errorState = loadedState.copyWith(errorMessage: 'Save failed');
 
         expect(errorState.errorMessage, 'Save failed');
         expect(errorState.settings, customSettings);

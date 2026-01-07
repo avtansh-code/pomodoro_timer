@@ -283,7 +283,11 @@ void main() {
 
         final grouped = state.sessionsByDate;
         final todayDate = DateTime(now.year, now.month, now.day);
-        final yesterdayDate = DateTime(yesterday.year, yesterday.month, yesterday.day);
+        final yesterdayDate = DateTime(
+          yesterday.year,
+          yesterday.month,
+          yesterday.day,
+        );
 
         expect(grouped.keys.length, 2);
         expect(grouped[todayDate]?.length, 1);
@@ -424,7 +428,12 @@ void main() {
           errorMessage: 'Error',
         );
 
-        expect(state.props, [testSessions, StatisticsFilter.today, true, 'Error']);
+        expect(state.props, [
+          testSessions,
+          StatisticsFilter.today,
+          true,
+          'Error',
+        ]);
       });
     });
 
