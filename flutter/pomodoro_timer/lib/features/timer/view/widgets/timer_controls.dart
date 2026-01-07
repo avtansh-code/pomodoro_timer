@@ -13,7 +13,8 @@ import '../../bloc/timer_state.dart' as state;
 /// - Pause/Resume buttons when timer is running/paused
 /// - Reset and Skip buttons as secondary actions
 ///
-/// Enhanced with scale animations and improved styling matching legacy apps.
+/// Enhanced with scale animations, improved styling matching legacy apps,
+/// and responsive sizing for different screen sizes.
 class TimerControls extends StatelessWidget {
   /// Current timer state
   final state.TimerState timerState;
@@ -26,6 +27,22 @@ class TimerControls extends StatelessWidget {
     required this.timerState,
     required this.onEventAdded,
   });
+
+  /// Calculates responsive scale factor based on screen size
+  /// Returns a multiplier (1.0 for phones, up to 1.5 for large screens)
+  static double _getScaleFactor(BuildContext context) {
+    final shortestSide = MediaQuery.of(context).size.shortestSide;
+    if (shortestSide < 600) {
+      return 1.0; // Phone
+    } else if (shortestSide < 900) {
+      // Tablet - scale 1.0 to 1.25
+      return 1.0 + ((shortestSide - 600) / 300 * 0.25);
+    } else {
+      // Large screen - scale 1.25 to 1.5
+      final scale = ((shortestSide - 900) / 500).clamp(0.0, 1.0);
+      return 1.25 + (scale * 0.25);
+    }
+  }
 
   /// Gets color based on session type using theme's primary color with variations
   Color _getSessionColor(BuildContext context) {
@@ -64,6 +81,12 @@ class TimerControls extends StatelessWidget {
 
   /// Builds the main action button based on current state
   Widget _buildPrimaryButton(BuildContext context, Color sessionColor) {
+    final scale = _getScaleFactor(context);
+    final buttonHeight = 64.0 * scale;
+    final iconSize = 28.0 * scale;
+    final fontSize = 20.0 * scale;
+    final borderRadius = 16.0 * scale;
+
     String label;
     IconData icon;
     Color backgroundColor;
@@ -96,10 +119,10 @@ class TimerControls extends StatelessWidget {
         }
       },
       child: Container(
-        height: 64,
+        height: buttonHeight,
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(borderRadius),
           boxShadow: [
             BoxShadow(
               color: backgroundColor.withValues(alpha: 0.3),
@@ -111,13 +134,13 @@ class TimerControls extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: Colors.white, size: 28),
-            const SizedBox(width: 12),
+            Icon(icon, color: Colors.white, size: iconSize),
+            SizedBox(width: 12 * scale),
             Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: fontSize,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -129,19 +152,24 @@ class TimerControls extends StatelessWidget {
 
   /// Builds the reset button
   Widget _buildResetButton(BuildContext context, Color sessionColor) {
+    final scale = _getScaleFactor(context);
+    final buttonSize = 64.0 * scale;
+    final iconSize = 28.0 * scale;
+    final borderRadius = 16.0 * scale;
+
     return _ScaleButton(
       onPressed: () {
         HapticFeedback.lightImpact();
         onEventAdded(const event.TimerReset());
       },
       child: Container(
-        width: 64,
-        height: 64,
+        width: buttonSize,
+        height: buttonSize,
         decoration: BoxDecoration(
           color: sessionColor.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
-        child: Icon(Icons.refresh, color: sessionColor, size: 28),
+        child: Icon(Icons.refresh, color: sessionColor, size: iconSize),
       ),
     );
   }

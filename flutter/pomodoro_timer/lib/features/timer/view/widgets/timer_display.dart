@@ -10,6 +10,7 @@ import 'state_indicator_chip.dart';
 ///
 /// Shows minutes and seconds in MM:SS format with appropriate styling
 /// based on the current session type. Now uses circular progress indicator.
+/// Supports responsive sizing for different screen sizes.
 class TimerDisplay extends StatelessWidget {
   /// Duration to display in seconds
   final int duration;
@@ -23,13 +24,40 @@ class TimerDisplay extends StatelessWidget {
   /// Current timer state
   final state.TimerState timerState;
 
+  /// Optional custom size override (defaults to responsive calculation)
+  final double? size;
+
   const TimerDisplay({
     super.key,
     required this.duration,
     required this.totalDuration,
     required this.sessionType,
     required this.timerState,
+    this.size,
   });
+
+  /// Calculates responsive size based on screen dimensions
+  /// - Base size: 300 for phones (< 600 width)
+  /// - Medium size: scales up to 420 for tablets (600-900 width)
+  /// - Large size: scales up to 550 for large screens (> 900 width)
+  static double calculateResponsiveSize(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final shortestSide = screenSize.shortestSide;
+
+    // Use shortest side to determine device type
+    if (shortestSide < 600) {
+      // Phone - scale between 260-320 based on width
+      return (screenSize.width * 0.75).clamp(260.0, 320.0);
+    } else if (shortestSide < 900) {
+      // Tablet - scale between 350-450
+      final scale = (shortestSide - 600) / 300; // 0.0 to 1.0
+      return 350 + (scale * 100);
+    } else {
+      // Large screen / desktop - scale between 450-600
+      final scale = ((shortestSide - 900) / 500).clamp(0.0, 1.0);
+      return 450 + (scale * 150);
+    }
+  }
 
   /// Formats seconds into MM:SS format
   String _formatDuration(int totalSeconds) {
@@ -66,13 +94,16 @@ class TimerDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = _getSessionColor(context);
+    final displaySize = size ?? calculateResponsiveSize(context);
+    // Scale stroke width proportionally (base 16 at 300, scales with size)
+    final strokeWidth = (displaySize / 300.0 * 16.0).clamp(12.0, 24.0);
 
     return CircularTimerProgress(
       progress: _getProgress(),
       timeText: _formatDuration(duration),
       color: color,
-      size: 300.0,
-      strokeWidth: 16.0,
+      size: displaySize,
+      strokeWidth: strokeWidth,
       stateIndicator: StateIndicatorChip(timerState: timerState, color: color),
     );
   }

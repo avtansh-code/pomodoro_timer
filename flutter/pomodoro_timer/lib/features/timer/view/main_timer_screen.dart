@@ -56,6 +56,22 @@ class _MainTimerScreenState extends State<MainTimerScreen> {
 class _MainTimerView extends StatelessWidget {
   const _MainTimerView();
 
+  /// Calculates responsive scale factor based on screen size
+  /// Returns a multiplier (1.0 for phones, up to 1.5 for large screens)
+  static double _getScaleFactor(BuildContext context) {
+    final shortestSide = MediaQuery.of(context).size.shortestSide;
+    if (shortestSide < 600) {
+      return 1.0; // Phone
+    } else if (shortestSide < 900) {
+      // Tablet - scale 1.0 to 1.25
+      return 1.0 + ((shortestSide - 600) / 300 * 0.25);
+    } else {
+      // Large screen - scale 1.25 to 1.5
+      final scale = ((shortestSide - 900) / 500).clamp(0.0, 1.0);
+      return 1.25 + (scale * 0.25);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -114,53 +130,68 @@ class _MainTimerView extends StatelessWidget {
                     _getBackgroundOpacity(timerState.sessionType),
                   ),
                   child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        children: [
-                          // Session header with session info
-                          _buildSessionHeader(
-                            context,
-                            timerState,
-                            primaryColor,
-                            sessionAccentColor,
-                          ),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final scale = _getScaleFactor(context);
+                        final basePadding = 24.0 * scale;
+                        final baseSpacing = 40.0 * scale;
+                        final smallSpacing = 24.0 * scale;
 
-                          const SizedBox(height: 40),
-
-                          // Timer display
-                          Expanded(
-                            child: Center(
-                              child: TimerDisplay(
-                                duration: timerState.duration,
-                                totalDuration: _getTotalDuration(
-                                  context,
-                                  timerState,
-                                ),
-                                sessionType: timerState.sessionType,
-                                timerState: timerState,
+                        return Padding(
+                          padding: EdgeInsets.all(basePadding),
+                          child: Column(
+                            children: [
+                              // Session header with session info
+                              _buildSessionHeader(
+                                context,
+                                timerState,
+                                primaryColor,
+                                sessionAccentColor,
+                                scale,
                               ),
-                            ),
+
+                              SizedBox(height: baseSpacing),
+
+                              // Timer display
+                              Expanded(
+                                child: Center(
+                                  child: TimerDisplay(
+                                    duration: timerState.duration,
+                                    totalDuration: _getTotalDuration(
+                                      context,
+                                      timerState,
+                                    ),
+                                    sessionType: timerState.sessionType,
+                                    timerState: timerState,
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(height: baseSpacing),
+
+                              // Timer controls
+                              TimerControls(
+                                timerState: timerState,
+                                onEventAdded: (timerEvent) {
+                                  context.read<TimerBloc>().add(timerEvent);
+                                },
+                              ),
+
+                              SizedBox(height: smallSpacing),
+
+                              // Skip button
+                              _buildSkipButton(
+                                context,
+                                timerState,
+                                primaryColor,
+                                scale,
+                              ),
+
+                              SizedBox(height: smallSpacing),
+                            ],
                           ),
-
-                          const SizedBox(height: 40),
-
-                          // Timer controls
-                          TimerControls(
-                            timerState: timerState,
-                            onEventAdded: (timerEvent) {
-                              context.read<TimerBloc>().add(timerEvent);
-                            },
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          // Skip button
-                          _buildSkipButton(context, timerState, primaryColor),
-
-                          const SizedBox(height: 24),
-                        ],
-                      ),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -214,12 +245,13 @@ class _MainTimerView extends StatelessWidget {
     }
   }
 
-  /// Builds the session header matching iOS design
+  /// Builds the session header matching iOS design with responsive scaling
   Widget _buildSessionHeader(
     BuildContext context,
     state.TimerState timerState,
     Color primaryColor,
     Color accentColor,
+    double scale,
   ) {
     String title;
     String subtitle;
@@ -242,12 +274,22 @@ class _MainTimerView extends StatelessWidget {
     // Use accent color for session-specific elements, primary for base
     final displayColor = accentColor;
 
+    // Scaled dimensions
+    final containerPadding = 20.0 * scale;
+    final iconContainerSize = 44.0 * scale;
+    final iconSize = 24.0 * scale;
+    final iconBorderRadius = 12.0 * scale;
+    final badgeSize = 48.0 * scale;
+    final badgeFontSize = 20.0 * scale;
+    final titleFontSize = 22.0 * scale;
+    final subtitleFontSize = 14.0 * scale;
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(containerPadding),
       decoration: BoxDecoration(
         color: primaryColor.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20 * scale),
         border: Border.all(
           color: displayColor.withValues(alpha: 0.3),
           width: 1.5,
@@ -257,19 +299,19 @@ class _MainTimerView extends StatelessWidget {
         children: [
           // Session type icon
           Container(
-            width: 44,
-            height: 44,
+            width: iconContainerSize,
+            height: iconContainerSize,
             decoration: BoxDecoration(
               color: displayColor.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(iconBorderRadius),
             ),
             child: Icon(
               _getSessionIcon(timerState.sessionType),
               color: displayColor,
-              size: 24,
+              size: iconSize,
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16 * scale),
           // Title and subtitle
           Expanded(
             child: Column(
@@ -277,16 +319,18 @@ class _MainTimerView extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  style: TextStyle(
                     color: displayColor,
                     fontWeight: FontWeight.bold,
+                    fontSize: titleFontSize,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4 * scale),
                 Text(
                   subtitle,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: subtitleFontSize,
                   ),
                 ),
               ],
@@ -295,8 +339,8 @@ class _MainTimerView extends StatelessWidget {
           // Session badge for work sessions
           if (timerState.sessionType == SessionType.work)
             Container(
-              width: 48,
-              height: 48,
+              width: badgeSize,
+              height: badgeSize,
               decoration: BoxDecoration(
                 color: primaryColor,
                 shape: BoxShape.circle,
@@ -304,9 +348,9 @@ class _MainTimerView extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 '${timerState.completedSessions + 1}',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: badgeFontSize,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -329,11 +373,12 @@ class _MainTimerView extends StatelessWidget {
     }
   }
 
-  /// Builds the skip button with capsule shape (matching iOS)
+  /// Builds the skip button with capsule shape (matching iOS) and responsive scaling
   Widget _buildSkipButton(
     BuildContext context,
     state.TimerState timerState,
     Color sessionColor,
+    double scale,
   ) {
     final settings = context.read<SettingsCubit>().state.settings;
     String nextSessionName;
@@ -352,9 +397,15 @@ class _MainTimerView extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    // Scaled dimensions
+    final iconSize = 20.0 * scale;
+    final fontSize = 15.0 * scale;
+    final horizontalPadding = 20.0 * scale;
+    final verticalPadding = 10.0 * scale;
+
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(30 * scale),
         boxShadow: isDark
             ? null
             : [
@@ -371,19 +422,22 @@ class _MainTimerView extends StatelessWidget {
         },
         icon: Icon(
           Icons.skip_next_rounded,
-          size: 20,
+          size: iconSize,
           color: theme.colorScheme.onSurfaceVariant,
         ),
         label: Text(
           'Skip to $nextSessionName',
           style: TextStyle(
             color: theme.colorScheme.onSurfaceVariant,
-            fontSize: 15,
+            fontSize: fontSize,
             fontWeight: FontWeight.w500,
           ),
         ),
         style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: EdgeInsets.symmetric(
+            horizontal: horizontalPadding,
+            vertical: verticalPadding,
+          ),
           backgroundColor: theme.cardColor,
           shape: StadiumBorder(
             side: BorderSide(

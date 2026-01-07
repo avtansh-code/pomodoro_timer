@@ -688,6 +688,9 @@ class _SettingsView extends StatelessWidget {
   }
 
   void _showClearStatsDialog(BuildContext context) {
+    // Capture ScaffoldMessenger before async gap to avoid using deactivated context
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -706,7 +709,7 @@ class _SettingsView extends StatelessWidget {
               await repository.clearAllSessions();
               if (dialogContext.mounted) {
                 Navigator.of(dialogContext).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
+                scaffoldMessenger.showSnackBar(
                   const SnackBar(content: Text('Statistics cleared')),
                 );
               }
@@ -720,6 +723,10 @@ class _SettingsView extends StatelessWidget {
   }
 
   void _showResetAppDialog(BuildContext context) {
+    // Capture references before async gap to avoid using deactivated context
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final settingsCubit = context.read<SettingsCubit>();
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -735,7 +742,7 @@ class _SettingsView extends StatelessWidget {
           FilledButton(
             onPressed: () async {
               // Reset settings
-              context.read<SettingsCubit>().resetToDefaults();
+              settingsCubit.resetToDefaults();
 
               // Clear statistics
               final repository = getIt<StatisticsRepository>();
@@ -743,7 +750,7 @@ class _SettingsView extends StatelessWidget {
 
               if (dialogContext.mounted) {
                 Navigator.of(dialogContext).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
+                scaffoldMessenger.showSnackBar(
                   const SnackBar(content: Text('App reset complete')),
                 );
               }
@@ -843,6 +850,9 @@ class _SettingsView extends StatelessWidget {
   }
 
   void _showThemeTestDialog(BuildContext context) {
+    // Capture references before showing dialog to avoid using deactivated context
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final themeCubit = context.read<PomodoroThemeCubit>();
     final allThemes = PomodoroThemes.allThemes;
 
     showDialog(
@@ -865,9 +875,9 @@ class _SettingsView extends StatelessWidget {
                       .toUpperCase(),
                 ),
                 onTap: () {
-                  context.read<PomodoroThemeCubit>().setTheme(theme);
+                  themeCubit.setTheme(theme);
                   Navigator.of(dialogContext).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  scaffoldMessenger.showSnackBar(
                     SnackBar(
                       content: Text('Switched to ${theme.name}'),
                       duration: const Duration(seconds: 1),
@@ -889,6 +899,9 @@ class _SettingsView extends StatelessWidget {
   }
 
   void _showGenerateDataDialog(BuildContext context) {
+    // Capture ScaffoldMessenger before async gap to avoid using deactivated context
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -1079,7 +1092,7 @@ class _SettingsView extends StatelessWidget {
 
               if (dialogContext.mounted) {
                 Navigator.of(dialogContext).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
+                scaffoldMessenger.showSnackBar(
                   const SnackBar(
                     content: Text(
                       'Realistic sample data generated for 45 days!',

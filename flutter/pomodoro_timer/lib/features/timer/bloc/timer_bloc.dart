@@ -238,6 +238,12 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
     // Auto-transition to initial state for next session after a brief delay
     await Future.delayed(const Duration(seconds: 2));
 
+    // Check if the state has changed (e.g., user already started the timer)
+    // If so, don't overwrite the current state
+    if (this.state is! state.TimerCompleted) {
+      return;
+    }
+
     // Check if we should auto-start the next session
     // Don't auto-start focus after a long break - user must manually start
     final shouldAutoStart =
