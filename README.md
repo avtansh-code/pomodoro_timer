@@ -140,6 +140,8 @@ cd flutter/pomodoro_timer
 flutter build ipa --release
 ```
 
+📖 **[Full Deployment Guide](DEPLOYMENT.md)** - Complete instructions for publishing to App Store and Play Store
+
 ---
 
 ## 🧪 Testing
