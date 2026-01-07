@@ -1,6 +1,6 @@
 # Mr. Pomodoro Website
 
-Static marketing website for the Mr. Pomodoro Flutter app (iOS & Android).
+Static marketing website for the Mr. Pomodoro Flutter app (iOS, Android, macOS, Windows).
 
 ---
 
@@ -31,6 +31,7 @@ website/
 │   ├── index.html          # Landing page
 │   ├── contact.html        # Contact/support page
 │   ├── privacy.html        # Privacy policy
+│   ├── 404.html            # Not found page
 │   ├── css/
 │   │   └── styles.css      # Main stylesheet
 │   ├── favicon.png         # Site icon
@@ -49,8 +50,8 @@ website/
 ### Landing Page (`index.html`)
 - Hero section with app tagline
 - Key features showcase (Flutter-focused)
-- App screenshots
-- Download buttons (iOS & Android)
+- App screenshots (iOS & Android)
+- Download buttons (App Store & Play Store)
 - Pomodoro technique explanation
 - Privacy commitment
 - Footer with links
@@ -67,16 +68,23 @@ website/
 - User rights
 - Contact details
 
+### 404 Page (`404.html`)
+- Custom not found page
+- Navigation back to home
+
 ---
 
 ## App Information
 
 The website promotes the **Flutter-based** Mr. Pomodoro app:
 
-- **Framework**: Flutter (Cross-platform)
-- **Platforms**: iOS 17.0+, Android 13.0+
-- **Features**: Customizable timers, statistics, 5 themes, notifications, haptic feedback
-- **Privacy**: 100% offline, no tracking, local storage only
+| Attribute | Value |
+|-----------|-------|
+| **Framework** | Flutter (Cross-platform) |
+| **Platforms** | iOS 17.0+, Android 13.0+, macOS, Windows |
+| **Features** | Customizable timers, statistics, 5 themes, notifications, haptic feedback |
+| **Privacy** | 100% offline, no tracking, local storage only |
+| **Tests** | 200+ comprehensive tests |
 
 ---
 
@@ -139,10 +147,14 @@ Store links in `index.html`:
 
 ```html
 <!-- iOS App Store -->
-<a href="https://apps.apple.com/in/app/mr-pomodoro/id6754535454">Download on the App Store</a>
+<a href="https://apps.apple.com/in/app/mr-pomodoro/id6754535454">
+  Download on the App Store
+</a>
 
 <!-- Google Play Store -->
-<a href="https://play.google.com/store/apps/details?id=com.avtanshgupta.mr.pomodoro">Get it on Google Play</a>
+<a href="https://play.google.com/store/apps/details?id=com.avtanshgupta.mr.pomodoro">
+  Get it on Google Play
+</a>
 ```
 
 ### Update Contact Information
@@ -171,20 +183,24 @@ Add tracking code in `<head>` section:
 
 ## Browser Support
 
-- ✅ Chrome 70+
-- ✅ Firefox 65+
-- ✅ Safari 12+
-- ✅ Edge 79+
-- ✅ Mobile browsers
+| Browser | Version |
+|---------|---------|
+| Chrome | 70+ |
+| Firefox | 65+ |
+| Safari | 12+ |
+| Edge | 79+ |
+| Mobile browsers | ✅ |
 
 ---
 
 ## Performance
 
-- **Lighthouse Score**: 95+ on all metrics
-- **Page Load**: < 2 seconds on 3G
-- **Images**: Optimized and responsive
-- **CSS**: Minified and efficient
+| Metric | Target |
+|--------|--------|
+| **Lighthouse Score** | 95+ on all metrics |
+| **Page Load** | < 2 seconds on 3G |
+| **Images** | Optimized and responsive |
+| **CSS** | Minified and efficient |
 
 ---
 
@@ -234,11 +250,13 @@ npx http-server www -p 8000
 
 ## Technical Stack
 
-- **HTML5** - Semantic markup
-- **CSS3** - Modern styling with Grid and Flexbox
-- **JavaScript** - Minimal vanilla JS for interactions
-- **No Framework** - Pure static files
-- **No Build Process** - Direct deployment
+| Component | Technology |
+|-----------|------------|
+| **Markup** | HTML5 (Semantic) |
+| **Styling** | CSS3 (Grid, Flexbox) |
+| **JavaScript** | Minimal vanilla JS |
+| **Framework** | None (pure static) |
+| **Build Process** | None required |
 
 ---
 
@@ -246,6 +264,7 @@ npx http-server www -p 8000
 
 - **[Main README](../README.md)** - Project overview
 - **[Flutter App](../flutter/pomodoro_timer/README.md)** - Flutter development guide
+- **[Deployment Guide](../DEPLOYMENT.md)** - Complete deployment instructions
 
 ---
 

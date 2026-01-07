@@ -2,11 +2,13 @@
 
 > **Focus with ease. Flow with purpose.**
 
-A beautiful, privacy-first Pomodoro timer for iOS and Android. Stay focused, track your productivity, and build better work habits—all while keeping your data completely private.
+A beautiful, privacy-first Pomodoro timer for iOS, Android, macOS, and Windows. Stay focused, track your productivity, and build better work habits—all while keeping your data completely private.
 
 [![iOS](https://img.shields.io/badge/iOS-17.0+-blue.svg)](https://www.apple.com/ios/)
 [![Android](https://img.shields.io/badge/Android-13.0+-green.svg)](https://www.android.com/)
-[![Flutter](https://img.shields.io/badge/Flutter-3.10+-02569B.svg)](https://flutter.dev/)
+[![Flutter](https://img.shields.io/badge/Flutter-3.8+-02569B.svg)](https://flutter.dev/)
+[![Dart](https://img.shields.io/badge/Dart-3.8+-0175C2.svg)](https://dart.dev/)
+[![Tests](https://img.shields.io/badge/Tests-200+-brightgreen.svg)](flutter/pomodoro_timer/test/)
 [![License](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 
 ---
@@ -19,6 +21,7 @@ A beautiful, privacy-first Pomodoro timer for iOS and Android. Stay focused, tra
 - **Smart Notifications** - Stay on track with timely, non-intrusive alerts
 - **Haptic Feedback** - Subtle vibrations for timer events
 - **Privacy First** - All data stays on your device, always
+- **Cross-Platform** - Single codebase for iOS, Android, macOS, and Windows
 
 ---
 
@@ -33,6 +36,9 @@ A beautiful, privacy-first Pomodoro timer for iOS and Android. Stay focused, tra
 **Requirements:** Android 13.0 (API 33) or later
 
 [Get it on Google Play](https://play.google.com/store/apps/details?id=com.avtanshgupta.mr.pomodoro&pli=1)
+
+### Desktop
+macOS and Windows builds available via the build script.
 
 ---
 
@@ -56,14 +62,22 @@ This simple approach helps improve focus, reduce mental fatigue, increase produc
 
 ```
 Mr. Pomodoro/
-├── flutter/                # Flutter App (Cross-platform) - PRIMARY
-│   └── pomodoro_timer/
-├── website/                # Landing Page & Privacy Policy
+├── flutter/pomodoro_timer/     # Flutter App (Cross-platform) - PRIMARY
+│   ├── lib/                    # Source code
+│   ├── test/                   # 200+ tests
+│   ├── ios/                    # iOS configuration
+│   ├── android/                # Android configuration
+│   ├── macos/                  # macOS configuration
+│   └── windows/                # Windows configuration
+├── website/                    # Landing Page & Privacy Policy
 │   └── www/
-├── screenshots/            # App Screenshots
-├── native_apps/            # Legacy Native Apps (Retired)
-│   ├── iOS/               # Native iOS App (SwiftUI)
-│   └── android/           # Native Android App (Jetpack Compose)
+├── screenshots/                # App Screenshots
+├── native_apps/                # Legacy Native Apps (Retired)
+│   ├── iOS/                    # Native iOS App (SwiftUI)
+│   └── android/                # Native Android App (Jetpack Compose)
+├── .github/workflows/          # CI/CD Pipelines
+├── build.sh                    # Build Automation Script
+├── DEPLOYMENT.md               # Deployment Guide
 └── LICENSE
 ```
 
@@ -73,15 +87,19 @@ Mr. Pomodoro/
 
 ### Flutter (Primary - Cross-Platform)
 
-| | |
-|---|---|
-| **Language** | Dart 3.10+ |
-| **Framework** | Flutter 3.10+ |
+| Component | Technology |
+|-----------|------------|
+| **Language** | Dart 3.8+ |
+| **Framework** | Flutter 3.8+ |
 | **Architecture** | Clean Architecture + BLoC |
-| **State Management** | flutter_bloc |
+| **State Management** | flutter_bloc ^9.1.1 |
+| **Navigation** | go_router ^17.0.0 |
 | **Storage** | SharedPreferences + Hive |
+| **Notifications** | flutter_local_notifications ^19.5.0 |
+| **Charts** | fl_chart ^0.69.0 |
+| **DI** | get_it ^9.2.0 |
 | **Testing** | 200+ comprehensive tests |
-| **Platforms** | iOS, Android |
+| **Platforms** | iOS, Android, macOS, Windows |
 
 **Key Features:**
 - **🏗️ Clean Architecture** - Scalable, testable, and maintainable code structure
@@ -96,7 +114,25 @@ Mr. Pomodoro/
 
 ## 🚀 Quick Start
 
-### Flutter Development
+### Using Build Script (Recommended)
+
+```bash
+# Clone the repository
+git clone https://github.com/avtansh-code/pomodoro_timer.git
+cd pomodoro_timer
+
+# Interactive build (prompts for platform and mode)
+./build.sh
+
+# Or specify options directly
+./build.sh -m release -p android    # Android release
+./build.sh -m release -p ios        # iOS release
+./build.sh -m release -p macos      # macOS release
+./build.sh -m release -p windows    # Windows release
+./build.sh -m debug -p android -i   # Debug with install
+```
+
+### Manual Setup
 
 ```bash
 # Clone the repository
@@ -122,31 +158,50 @@ flutter test
 
 ## 📦 Building for Release
 
-### Android APK
+### Using Build Script
+
+```bash
+# Android (APK)
+./build.sh -m release -p android
+
+# iOS (IPA)
+./build.sh -m release -p ios
+
+# macOS
+./build.sh -m release -p macos
+
+# Windows
+./build.sh -m release -p windows
+```
+
+### Manual Build
+
 ```bash
 cd flutter/pomodoro_timer
+
+# Android APK
 flutter build apk --release
-```
 
-### Android App Bundle (Play Store)
-```bash
-cd flutter/pomodoro_timer
+# Android App Bundle (Play Store)
 flutter build appbundle --release
-```
 
-### iOS IPA (App Store)
-```bash
-cd flutter/pomodoro_timer
+# iOS IPA (App Store)
 flutter build ipa --release
+
+# macOS
+flutter build macos --release
+
+# Windows
+flutter build windows --release
 ```
 
-📖 **[Full Deployment Guide](DEPLOYMENT.md)** - Complete instructions for publishing to App Store and Play Store
+📖 **[Full Deployment Guide](DEPLOYMENT.md)** - Complete instructions for publishing to App Store, Play Store, and desktop platforms
 
 ---
 
 ## 🧪 Testing
 
-### Flutter (200+ Tests)
+### Test Coverage (200+ Tests)
 
 ```bash
 cd flutter/pomodoro_timer
@@ -161,12 +216,23 @@ flutter test --coverage
 flutter test test/features/timer/bloc/timer_bloc_test.dart
 ```
 
-**Test Coverage:**
+**Test Breakdown:**
 - Core Models: 21+ tests
 - Core Services: 21+ tests  
 - Data Layer: 17+ tests
 - BLoC/Cubit: 57+ tests
 - Widget Tests: 13+ tests
+
+### CI/CD Pipeline
+
+Tests are automatically run via GitHub Actions on:
+- Pull requests to `main`/`master`
+- Pushes to `main`/`master`
+
+The pipeline includes:
+- Code formatting verification
+- Static analysis
+- Full test suite with coverage reporting
 
 ---
 
@@ -224,9 +290,11 @@ Contributions are welcome! To get started:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Ensure code is formatted (`dart format .`)
+4. Ensure tests pass (`flutter test`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
 
 ---
 
