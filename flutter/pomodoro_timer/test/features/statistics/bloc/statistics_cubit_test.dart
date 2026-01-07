@@ -55,11 +55,11 @@ void main() {
   });
 
   group('StatisticsCubit', () {
-    test('initial state has today filter and loads immediately', () {
-      when(() => mockRepository.getTodaySessions()).thenReturn([]);
+    test('initial state has all filter and loads immediately', () {
+      when(() => mockRepository.getAllSessions()).thenReturn([]);
       final cubit = StatisticsCubit(mockRepository);
 
-      expect(cubit.state.filter, StatisticsFilter.today);
+      expect(cubit.state.filter, StatisticsFilter.all);
       expect(cubit.state.sessions, isEmpty);
 
       cubit.close();
@@ -68,7 +68,7 @@ void main() {
     blocTest<StatisticsCubit, StatisticsState>(
       'loadStatistics emits loading then loaded state',
       build: () {
-        when(() => mockRepository.getTodaySessions()).thenReturn(testSessions);
+        when(() => mockRepository.getAllSessions()).thenReturn(testSessions);
         return StatisticsCubit(mockRepository);
       },
       act: (cubit) => cubit.loadStatistics(),
@@ -124,8 +124,13 @@ void main() {
       'changeFilter to all loads all sessions',
       build: () {
         when(() => mockRepository.getAllSessions()).thenReturn(testSessions);
+        when(() => mockRepository.getTodaySessions()).thenReturn(testSessions);
         return StatisticsCubit(mockRepository);
       },
+      seed: () => StatisticsState(
+        sessions: testSessions,
+        filter: StatisticsFilter.today,
+      ),
       act: (cubit) => cubit.changeFilter(StatisticsFilter.all),
       expect: () => [
         isA<StatisticsState>().having(
@@ -166,7 +171,7 @@ void main() {
       'handles error when loading statistics fails',
       build: () {
         when(
-          () => mockRepository.getTodaySessions(),
+          () => mockRepository.getAllSessions(),
         ).thenThrow(Exception('Database error'));
         return StatisticsCubit(mockRepository);
       },

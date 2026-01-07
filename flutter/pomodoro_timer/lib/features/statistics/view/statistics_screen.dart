@@ -186,7 +186,9 @@ class _StatisticsViewState extends State<_StatisticsView> {
 
     int streak = 0;
     final now = DateTime.now();
-    var checkDate = DateTime(now.year, now.month, now.day);
+    // Start from yesterday - streak only counts completed days
+    var checkDate = DateTime(now.year, now.month, now.day)
+        .subtract(const Duration(days: 1));
 
     while (true) {
       final hasSessions = state.sessions.any((session) {
@@ -418,16 +420,16 @@ class _StatisticsViewState extends State<_StatisticsView> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       reservedSize: 30,
+                      interval: _selectedTimeRange == StatisticsFilter.week
+                          ? 1
+                          : 5,
                       getTitlesWidget: (value, meta) {
                         final index = value.toInt();
                         if (index >= 0 && index < dailyData.length) {
-                          // For month view (30 days), show every 5th label to avoid overlap
-                          // For week view (7 days), show all labels
-                          final showLabel =
-                              _selectedTimeRange == StatisticsFilter.week ||
-                              index % 5 == 0 ||
-                              index == dailyData.length - 1;
-                          if (!showLabel) return const SizedBox.shrink();
+                          // Skip first and last if they're too close to avoid overlap
+                          if (meta.min == value || meta.max == value) {
+                            return const SizedBox.shrink();
+                          }
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
@@ -445,11 +447,21 @@ class _StatisticsViewState extends State<_StatisticsView> {
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 30,
+                      reservedSize: 35,
+                      interval: _calculateYAxisInterval(maxCount),
                       getTitlesWidget: (value, meta) {
-                        return Text(
-                          value.toInt().toString(),
-                          style: theme.textTheme.bodySmall,
+                        // Skip if this value equals min or max (avoid edge labels)
+                        if (value == meta.min || value == meta.max) {
+                          return const SizedBox.shrink();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: Text(
+                            value.toInt().toString(),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontSize: 11,
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -571,16 +583,16 @@ class _StatisticsViewState extends State<_StatisticsView> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       reservedSize: 30,
+                      interval: _selectedTimeRange == StatisticsFilter.week
+                          ? 1
+                          : 5,
                       getTitlesWidget: (value, meta) {
                         final index = value.toInt();
                         if (index >= 0 && index < trendData.length) {
-                          // For month view (30 days), show every 5th label to avoid overlap
-                          // For week view (7 days), show all labels
-                          final showLabel =
-                              _selectedTimeRange == StatisticsFilter.week ||
-                              index % 5 == 0 ||
-                              index == trendData.length - 1;
-                          if (!showLabel) return const SizedBox.shrink();
+                          // Skip first and last if they're too close to avoid overlap
+                          if (meta.min == value || meta.max == value) {
+                            return const SizedBox.shrink();
+                          }
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
@@ -598,11 +610,21 @@ class _StatisticsViewState extends State<_StatisticsView> {
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 40,
+                      reservedSize: 45,
+                      interval: _calculateYAxisInterval(maxMinutes),
                       getTitlesWidget: (value, meta) {
-                        return Text(
-                          '${value.toInt()}m',
-                          style: theme.textTheme.bodySmall,
+                        // Skip if this value equals min or max (avoid edge labels)
+                        if (value == meta.min || value == meta.max) {
+                          return const SizedBox.shrink();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: Text(
+                            '${value.toInt()}m',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontSize: 11,
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -1115,5 +1137,17 @@ class _StatisticsViewState extends State<_StatisticsView> {
     final hours = minutes ~/ 60;
     final mins = minutes % 60;
     return mins > 0 ? '${hours}h ${mins}m' : '${hours}h';
+  }
+
+  /// Calculate appropriate Y-axis interval to prevent label overlap
+  double _calculateYAxisInterval(double maxValue) {
+    if (maxValue <= 5) return 1;
+    if (maxValue <= 10) return 2;
+    if (maxValue <= 25) return 5;
+    if (maxValue <= 50) return 10;
+    if (maxValue <= 100) return 20;
+    if (maxValue <= 250) return 50;
+    if (maxValue <= 500) return 100;
+    return (maxValue / 5).ceilToDouble();
   }
 }

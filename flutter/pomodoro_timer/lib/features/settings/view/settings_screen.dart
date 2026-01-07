@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../app/theme/app_theme.dart';
@@ -892,7 +894,7 @@ class _SettingsView extends StatelessWidget {
       builder: (dialogContext) => AlertDialog(
         title: const Text('Generate Sample Data'),
         content: const Text(
-          'This will add dummy session data for the past 45 days. Useful for testing statistics and charts.',
+          'This will add realistic dummy session data for the past 45 days with varied patterns. Useful for testing statistics and charts.',
         ),
         actions: [
           TextButton(
@@ -901,11 +903,13 @@ class _SettingsView extends StatelessWidget {
           ),
           FilledButton(
             onPressed: () async {
-              // Generate sample data
+              // Generate sample data with randomness
               final repository = getIt<StatisticsRepository>();
+              final random = math.Random();
+              final now = DateTime.now();
+              int consecutiveWorkSessions = 0;
 
               // Add sessions for the past 45 days
-              final now = DateTime.now();
               for (int i = 0; i < 45; i++) {
                 final date = DateTime(
                   now.year,
@@ -913,50 +917,132 @@ class _SettingsView extends StatelessWidget {
                   now.day,
                 ).subtract(Duration(days: i));
 
-                // Add 2-5 sessions per day with some variation
-                final sessionsCount = 2 + (i % 4);
+                // Weekends have fewer sessions (20% chance of no sessions)
+                final isWeekend =
+                    date.weekday == DateTime.saturday ||
+                    date.weekday == DateTime.sunday;
+
+                // Always include sessions for days 1-10 (yesterday through 10 days ago)
+                // to ensure a visible streak. Day 0 is today, day 1 is yesterday.
+                final guaranteedStreakDay = i >= 1 && i <= 10;
+
+                // Some days have no sessions (10% weekdays, 30% weekends)
+                // But never skip guaranteed streak days
+                if (!guaranteedStreakDay) {
+                  final skipDayChance = isWeekend ? 0.3 : 0.1;
+                  if (random.nextDouble() < skipDayChance) {
+                    continue;
+                  }
+                }
+
+                // Random number of sessions per day (1-8 on weekdays, 0-4 on weekends)
+                final maxSessions = isWeekend ? 4 : 8;
+                final minSessions = isWeekend ? 0 : 1;
+                final sessionsCount =
+                    minSessions + random.nextInt(maxSessions - minSessions + 1);
+
+                if (sessionsCount == 0) continue;
+
+                // Random start hour (6 AM to 10 PM range, weighted towards work hours)
+                int baseHour;
+                if (isWeekend) {
+                  baseHour = 8 + random.nextInt(10); // 8 AM to 6 PM
+                } else {
+                  // Weight towards morning/afternoon work hours
+                  final hourOptions = [7, 8, 9, 9, 10, 10, 11, 14, 15, 16, 17, 19, 20];
+                  baseHour = hourOptions[random.nextInt(hourOptions.length)];
+                }
+
+                var currentMinute = random.nextInt(60);
+                var currentHour = baseHour;
+
                 for (int j = 0; j < sessionsCount; j++) {
-                  final startTime = date.add(Duration(hours: 9 + j * 2));
-                  final breakStartTime = startTime.add(
-                    const Duration(minutes: 25),
+                  // Ensure we don't go past midnight
+                  if (currentHour >= 23) break;
+
+                  // Random focus duration (15-50 minutes, weighted towards 25)
+                  final focusDurations = [15, 20, 25, 25, 25, 25, 30, 30, 35, 40, 45, 50];
+                  final focusDuration =
+                      focusDurations[random.nextInt(focusDurations.length)];
+
+                  final startTime = date.add(
+                    Duration(hours: currentHour, minutes: currentMinute),
                   );
+                  final endTime = startTime.add(Duration(minutes: focusDuration));
 
                   // Add focus session
                   await repository.addSession(
                     TimerSession(
-                      id: 'dummy_${date.millisecondsSinceEpoch}_${i}_$j',
+                      id: 'dummy_${date.millisecondsSinceEpoch}_${random.nextInt(999999)}_$j',
                       startTime: startTime,
-                      endTime: startTime.add(const Duration(minutes: 25)),
+                      endTime: endTime,
                       sessionType: SessionType.work,
-                      durationInMinutes: 25,
+                      durationInMinutes: focusDuration,
                     ),
                   );
 
-                  // Add a short break
-                  await repository.addSession(
-                    TimerSession(
-                      id: 'dummy_${date.millisecondsSinceEpoch}_${i}_${j}_break',
-                      startTime: breakStartTime,
-                      endTime: breakStartTime.add(const Duration(minutes: 5)),
-                      sessionType: SessionType.shortBreak,
-                      durationInMinutes: 5,
-                    ),
-                  );
+                  consecutiveWorkSessions++;
 
-                  // Add a long break every 4th session
-                  if ((j + 1) % 4 == 0) {
-                    final longBreakTime = breakStartTime.add(
-                      const Duration(minutes: 5),
-                    );
-                    await repository.addSession(
-                      TimerSession(
-                        id: 'dummy_${date.millisecondsSinceEpoch}_${i}_${j}_longbreak',
-                        startTime: longBreakTime,
-                        endTime: longBreakTime.add(const Duration(minutes: 15)),
-                        sessionType: SessionType.longBreak,
-                        durationInMinutes: 15,
-                      ),
-                    );
+                  // Update time for next session
+                  currentMinute += focusDuration;
+
+                  // Add break after focus (70% chance of adding break)
+                  if (random.nextDouble() < 0.7) {
+                    final breakStartTime = endTime;
+
+                    // Long break after 4 consecutive work sessions, or random chance
+                    final shouldLongBreak =
+                        consecutiveWorkSessions >= 4 ||
+                        (consecutiveWorkSessions >= 3 && random.nextDouble() < 0.3);
+
+                    if (shouldLongBreak) {
+                      // Long break (10-20 minutes)
+                      final longBreakDuration = 10 + random.nextInt(11);
+                      final breakEndTime = breakStartTime.add(
+                        Duration(minutes: longBreakDuration),
+                      );
+
+                      await repository.addSession(
+                        TimerSession(
+                          id: 'dummy_${date.millisecondsSinceEpoch}_${random.nextInt(999999)}_${j}_longbreak',
+                          startTime: breakStartTime,
+                          endTime: breakEndTime,
+                          sessionType: SessionType.longBreak,
+                          durationInMinutes: longBreakDuration,
+                        ),
+                      );
+
+                      currentMinute += longBreakDuration;
+                      consecutiveWorkSessions = 0;
+                    } else {
+                      // Short break (3-7 minutes)
+                      final shortBreakDuration = 3 + random.nextInt(5);
+                      final breakEndTime = breakStartTime.add(
+                        Duration(minutes: shortBreakDuration),
+                      );
+
+                      await repository.addSession(
+                        TimerSession(
+                          id: 'dummy_${date.millisecondsSinceEpoch}_${random.nextInt(999999)}_${j}_break',
+                          startTime: breakStartTime,
+                          endTime: breakEndTime,
+                          sessionType: SessionType.shortBreak,
+                          durationInMinutes: shortBreakDuration,
+                        ),
+                      );
+
+                      currentMinute += shortBreakDuration;
+                    }
+                  }
+
+                  // Add random gap between sessions (5-45 minutes)
+                  final gap = 5 + random.nextInt(41);
+                  currentMinute += gap;
+
+                  // Normalize time
+                  while (currentMinute >= 60) {
+                    currentMinute -= 60;
+                    currentHour++;
                   }
                 }
               }
@@ -966,7 +1052,7 @@ class _SettingsView extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text(
-                      'Sample data generated successfully for 45 days!',
+                      'Realistic sample data generated for 45 days!',
                     ),
                     duration: Duration(seconds: 2),
                   ),
