@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../app/theme/pomodoro_theme_cubit.dart';
@@ -672,97 +671,6 @@ class _SettingsView extends StatelessWidget {
                     child: Icon(
                       Icons.add,
                       color: value < max
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                      size: 18,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSessionCountTile(
-    BuildContext context,
-    SettingsState state,
-    ThemeData theme,
-  ) {
-    final value = state.settings.sessionsBeforeLongBreak;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Row(
-        children: [
-          // Icon
-          Icon(Icons.repeat, color: theme.colorScheme.tertiary, size: 20),
-          const SizedBox(width: 10),
-          // Title
-          Expanded(
-            child: Text('Long break after', style: theme.textTheme.bodyMedium),
-          ),
-          // Compact stepper control
-          Container(
-            height: 32,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(
-                alpha: 0.5,
-              ),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Minus button
-                GestureDetector(
-                  onTap: value > 2
-                      ? () => context
-                            .read<SettingsCubit>()
-                            .updateSessionsBeforeLongBreak(value - 1)
-                      : null,
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.remove,
-                      color: value > 2
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                      size: 18,
-                    ),
-                  ),
-                ),
-                // Value display
-                Container(
-                  constraints: const BoxConstraints(minWidth: 54),
-                  alignment: Alignment.center,
-                  child: Text(
-                    '$value sess',
-                    style: TextStyle(
-                      color: theme.colorScheme.onSurface,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-                // Plus button
-                GestureDetector(
-                  onTap: value < 10
-                      ? () => context
-                            .read<SettingsCubit>()
-                            .updateSessionsBeforeLongBreak(value + 1)
-                      : null,
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.add,
-                      color: value < 10
                           ? theme.colorScheme.primary
                           : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                       size: 18,

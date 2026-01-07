@@ -148,8 +148,8 @@ class _MainTimerView extends StatelessWidget {
                           // Timer controls
                           TimerControls(
                             timerState: timerState,
-                            onEventAdded: (event) {
-                              context.read<TimerBloc>().add(event);
+                            onEventAdded: (timerEvent) {
+                              context.read<TimerBloc>().add(timerEvent);
                             },
                           ),
 
@@ -169,32 +169,6 @@ class _MainTimerView extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-
-  /// Builds the background gradient using theme colors
-  Gradient _buildBackgroundGradient(
-    BuildContext context,
-    Gradient sessionGradient,
-    SessionType sessionType,
-  ) {
-    final opacity = _getBackgroundOpacity(sessionType);
-    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
-
-    // Extract colors from the session gradient
-    final gradientColors = sessionGradient is LinearGradient
-        ? sessionGradient.colors
-        : [Theme.of(context).colorScheme.primary];
-
-    return LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        gradientColors.first.withValues(alpha: opacity * 1.2),
-        gradientColors.last.withValues(alpha: opacity * 0.8),
-        scaffoldBg.withValues(alpha: 0.95),
-      ],
-      stops: const [0.0, 0.5, 1.0],
     );
   }
 
@@ -396,7 +370,7 @@ class _MainTimerView extends StatelessWidget {
           context.read<TimerBloc>().add(const event.TimerSkipped());
         },
         icon: Icon(
-          Icons.skip_next_rounded, // Better icon for skip
+          Icons.skip_next_rounded,
           size: 20,
           color: theme.colorScheme.onSurfaceVariant,
         ),
@@ -420,39 +394,6 @@ class _MainTimerView extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  /// Shows a toast message when the timer completes
-  void _showCompletionToast(
-    BuildContext context,
-    state.TimerCompleted completedState,
-  ) {
-    String message;
-
-    switch (completedState.completedSessionType) {
-      case SessionType.work:
-        message = 'Great work! Time for a break.';
-        break;
-      case SessionType.shortBreak:
-        message = 'Break over! Ready to focus?';
-        break;
-      case SessionType.longBreak:
-        message = 'Long break complete! Let\'s get back to it.';
-        break;
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-        ),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 4),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
       ),
     );
   }
