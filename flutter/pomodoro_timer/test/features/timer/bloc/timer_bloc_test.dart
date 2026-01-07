@@ -313,6 +313,8 @@ void main() {
             shortBreakDuration: 10,
             longBreakDuration: 20,
             sessionsBeforeLongBreak: 3,
+            autoStartBreaks: false,
+            autoStartFocus: false,
           ),
         ),
         expect: () => [
@@ -339,6 +341,8 @@ void main() {
             shortBreakDuration: 5,
             longBreakDuration: 15,
             sessionsBeforeLongBreak: 4,
+            autoStartBreaks: false,
+            autoStartFocus: false,
           ),
         ),
         expect: () => [
@@ -363,6 +367,8 @@ void main() {
             shortBreakDuration: 5,
             longBreakDuration: 15,
             sessionsBeforeLongBreak: 4,
+            autoStartBreaks: false,
+            autoStartFocus: false,
           ),
         ),
         wait: const Duration(seconds: 3),
@@ -386,6 +392,8 @@ void main() {
             shortBreakDuration: 5,
             longBreakDuration: 15,
             sessionsBeforeLongBreak: 4,
+            autoStartBreaks: false,
+            autoStartFocus: false,
           ),
         ),
         expect: () => [
