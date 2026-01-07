@@ -1,15 +1,28 @@
-# Xcode
-#
-# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+# ===================
+# macOS
+# ===================
+.DS_Store
+*.swp
+*.swo
+*~
 
-## User settings
+# ===================
+# IDE / Editors
+# ===================
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+*.sublime-project
+*.sublime-workspace
+
+# ===================
+# Xcode / iOS
+# ===================
 xcuserdata/
-
-## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
 *.xcscmblueprint
 *.xccheckout
-
-## compatibility with Xcode 3 and earlier (ignoring not required starting Xcode 4)
 build/
 DerivedData/
 *.moved-aside
@@ -21,79 +34,121 @@ DerivedData/
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
-
-## Obj-C/Swift specific
 *.hmap
-
-## App packaging
 *.ipa
 *.dSYM.zip
 *.dSYM
-
-## Playgrounds
 timeline.xctimeline
 playground.xcworkspace
-
-# Swift Package Manager
-#
-# Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
-# Packages/
-# Package.pins
-# Package.resolved
-# *.xcodeproj
-#
-# Xcode automatically generates this directory with a .xcworkspacedata file and xcuserdata
-# hence it is not needed unless you have added a package configuration file to your project
-# .swiftpm
-
 .build/
+iOSInjectionProject/
 
 # CocoaPods
-#
-# We recommend against adding the Pods directory to your .gitignore. However
-# you should judge for yourself, the pros and cons are mentioned at:
-# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
-#
-# Pods/
-#
-# Add this line if you want to avoid checking in source code from the Xcode workspace
-# *.xcworkspace
+iOS/Pods/
+flutter/pomodoro_timer/ios/Pods/
+flutter/pomodoro_timer/ios/.symlinks/
+flutter/pomodoro_timer/ios/Podfile.lock
+flutter/pomodoro_timer/ios/Flutter/Flutter.framework
+flutter/pomodoro_timer/ios/Flutter/Flutter.podspec
+flutter/pomodoro_timer/ios/Flutter/Generated.xcconfig
+flutter/pomodoro_timer/ios/Flutter/.last_build_id
+flutter/pomodoro_timer/ios/ServiceDefinitions.json
+flutter/pomodoro_timer/ios/Runner/GeneratedPluginRegistrant.*
 
 # Carthage
-#
-# Add this line if you want to avoid checking in source code from Carthage dependencies.
-# Carthage/Checkouts
-
 Carthage/Build/
 
-# Accio dependency management
-Dependencies/
-.accio/
-
 # fastlane
-#
-# It is recommended to not store the screenshots in the git repo.
-# Instead, use fastlane to re-generate the screenshots whenever they are needed.
-# For more information about the recommended setup visit:
-# https://docs.fastlane.tools/best-practices/source-control/#source-control
-
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 
-# Code Injection
-#
-# After new code Injection tools there's a generated folder /iOSInjectionProject
-# https://github.com/johnno1962/injectionforxcode
-
-iOSInjectionProject/
-
-# macOS
-.DS_Store
-
-# Development tools
-splash_screen_generator.html
-
-
+# ===================
+# Android
+# ===================
 android/keystore/*
+android/.gradle/
+android/local.properties
+android/app/build/
+android/app/release/
+android/captures/
+flutter/pomodoro_timer/android/.gradle/
+flutter/pomodoro_timer/android/local.properties
+flutter/pomodoro_timer/android/app/debug/
+flutter/pomodoro_timer/android/app/profile/
+flutter/pomodoro_timer/android/app/release/
+flutter/pomodoro_timer/android/captures/
+flutter/pomodoro_timer/android/gradlew
+flutter/pomodoro_timer/android/gradlew.bat
+*.jks
+*.keystore
+
+# ===================
+# Flutter / Dart
+# ===================
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+pubspec.lock
+build/
+/coverage/
+*.g.dart
+*.freezed.dart
+*.config.dart
+*.part.dart
+.metadata
+*.iml
+
+# Flutter platform directories (can be regenerated)
+flutter/pomodoro_timer/linux/
+flutter/pomodoro_timer/macos/
+flutter/pomodoro_timer/web/
+flutter/pomodoro_timer/windows/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Test/Cache directories
+test_hive/
+flutter/pomodoro_timer/test_hive/
+
+# Hive database files
+*.hive
+*.lock
+
+# ===================
+# Environment & Config
+# ===================
+.env
+.env.*
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart
+
+# ===================
+# Build Artifacts
+# ===================
+*.class
+*.log
+*.pyc
+
+# ===================
+# Miscellaneous
+# ===================
+splash_screen_generator.html
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+*.atom/
+Dependencies/
+.accio/
+**/doc/api/

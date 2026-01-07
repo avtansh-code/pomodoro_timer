@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'app_typography.dart';
 
 /// Defines the application themes.
 ///
@@ -11,8 +12,8 @@ class AppThemes {
   // Prevent instantiation
   AppThemes._();
 
-  /// Primary color seed for generating color schemes
-  static const Color _primarySeed = Colors.deepOrange;
+  /// Default primary color seed for generating color schemes
+  static const Color _defaultPrimarySeed = Colors.deepOrange;
 
   /// Check if running on Apple platform
   static bool get _isApplePlatform {
@@ -22,12 +23,30 @@ class AppThemes {
 
   /// Light theme configuration
   static ThemeData get lightTheme {
-    return _isApplePlatform ? _iosLightTheme : _materialLightTheme;
+    return _isApplePlatform
+        ? _iosLightTheme
+        : _materialLightTheme;
   }
 
   /// Dark theme configuration
   static ThemeData get darkTheme {
-    return _isApplePlatform ? _iosDarkTheme : _materialDarkTheme;
+    return _isApplePlatform
+        ? _iosDarkTheme
+        : _materialDarkTheme;
+  }
+
+  /// Get light theme with custom primary color
+  static ThemeData getLightTheme(Color primaryColor) {
+    return _isApplePlatform
+        ? _buildIosLightTheme(primaryColor)
+        : _buildMaterialLightTheme(primaryColor);
+  }
+
+  /// Get dark theme with custom primary color
+  static ThemeData getDarkTheme(Color primaryColor) {
+    return _isApplePlatform
+        ? _buildIosDarkTheme(primaryColor)
+        : _buildMaterialDarkTheme(primaryColor);
   }
 
   // ============================================================================
@@ -36,14 +55,20 @@ class AppThemes {
 
   /// Material Design 3 Light Theme
   static ThemeData get _materialLightTheme {
+    return _buildMaterialLightTheme(_defaultPrimarySeed);
+  }
+
+  /// Build Material Design 3 Light Theme with custom color
+  static ThemeData _buildMaterialLightTheme(Color seedColor) {
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: _primarySeed,
+      seedColor: seedColor,
       brightness: Brightness.light,
     );
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      textTheme: AppTypography.createTextTheme(colorScheme.onSurface),
 
       // App Bar Theme - Material 3
       appBarTheme: AppBarTheme(
@@ -177,14 +202,20 @@ class AppThemes {
 
   /// Material Design 3 Dark Theme
   static ThemeData get _materialDarkTheme {
+    return _buildMaterialDarkTheme(_defaultPrimarySeed);
+  }
+
+  /// Build Material Design 3 Dark Theme with custom color
+  static ThemeData _buildMaterialDarkTheme(Color seedColor) {
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: _primarySeed,
+      seedColor: seedColor,
       brightness: Brightness.dark,
     );
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      textTheme: AppTypography.createTextTheme(colorScheme.onSurface),
 
       // App Bar Theme - Material 3
       appBarTheme: AppBarTheme(
@@ -323,14 +354,20 @@ class AppThemes {
 
   /// iOS/macOS Liquid Glass Light Theme
   static ThemeData get _iosLightTheme {
+    return _buildIosLightTheme(_defaultPrimarySeed);
+  }
+
+  /// Build iOS/macOS Liquid Glass Light Theme with custom color
+  static ThemeData _buildIosLightTheme(Color seedColor) {
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: _primarySeed,
+      seedColor: seedColor,
       brightness: Brightness.light,
     );
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      textTheme: AppTypography.createTextTheme(colorScheme.onSurface),
 
       // App Bar Theme - Glass morphism
       appBarTheme: AppBarTheme(
@@ -509,14 +546,20 @@ class AppThemes {
 
   /// iOS/macOS Liquid Glass Dark Theme
   static ThemeData get _iosDarkTheme {
+    return _buildIosDarkTheme(_defaultPrimarySeed);
+  }
+
+  /// Build iOS/macOS Liquid Glass Dark Theme with custom color
+  static ThemeData _buildIosDarkTheme(Color seedColor) {
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: _primarySeed,
+      seedColor: seedColor,
       brightness: Brightness.dark,
     );
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      textTheme: AppTypography.createTextTheme(colorScheme.onSurface),
 
       // App Bar Theme - Glass morphism
       appBarTheme: AppBarTheme(

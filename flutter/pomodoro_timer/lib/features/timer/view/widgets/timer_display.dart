@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../app/theme/pomodoro_theme_cubit.dart';
 import '../../../../core/models/timer_session.dart';
 import '../../bloc/timer_state.dart' as state;
 import 'circular_timer_progress.dart';
@@ -36,15 +38,22 @@ class TimerDisplay extends StatelessWidget {
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
-  /// Gets the color based on session type
+  /// Gets the color based on session type from the current theme
+  /// Uses primary color with subtle variations to maintain theme consistency
   Color _getSessionColor(BuildContext context) {
+    final appTheme = context.read<PomodoroThemeCubit>().state.currentTheme;
+    final primaryColor = appTheme.primaryColor;
+    
     switch (sessionType) {
       case SessionType.work:
-        return Theme.of(context).colorScheme.primary;
+        // Full primary color for focus
+        return primaryColor;
       case SessionType.shortBreak:
-        return const Color(0xFF34C759); // Green, matching legacy apps
+        // Lighter tint of primary for short break
+        return Color.lerp(primaryColor, Colors.white, 0.2) ?? primaryColor;
       case SessionType.longBreak:
-        return const Color(0xFF007AFF); // Blue, matching legacy apps
+        // Slightly darker shade of primary for long break  
+        return Color.lerp(primaryColor, Colors.black, 0.15) ?? primaryColor;
     }
   }
 

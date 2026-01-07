@@ -14,10 +14,10 @@ class StateIndicatorChip extends StatelessWidget {
     required this.color,
   });
 
-  /// Gets the state text based on timer state
+  /// Gets the state text based on timer state (matching iOS)
   String get _stateText {
     if (timerState is state.TimerRunning) {
-      return 'Running';
+      return 'Active';
     } else if (timerState is state.TimerPaused) {
       return 'Paused';
     } else if (timerState is state.TimerCompleted) {
@@ -55,8 +55,8 @@ class StateIndicatorChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(
             context,
-          ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.8),
-          borderRadius: BorderRadius.circular(12),
+          ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.9),
+          borderRadius: BorderRadius.circular(20), // Capsule shape
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

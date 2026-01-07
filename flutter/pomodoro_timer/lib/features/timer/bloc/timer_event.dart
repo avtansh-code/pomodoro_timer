@@ -73,12 +73,16 @@ class TimerSettingsUpdated extends TimerEvent {
   final int shortBreakDuration;
   final int longBreakDuration;
   final int sessionsBeforeLongBreak;
+  final bool autoStartBreaks;
+  final bool autoStartFocus;
 
   const TimerSettingsUpdated({
     required this.workDuration,
     required this.shortBreakDuration,
     required this.longBreakDuration,
     required this.sessionsBeforeLongBreak,
+    required this.autoStartBreaks,
+    required this.autoStartFocus,
   });
 
   @override
@@ -87,5 +91,7 @@ class TimerSettingsUpdated extends TimerEvent {
     shortBreakDuration,
     longBreakDuration,
     sessionsBeforeLongBreak,
+    autoStartBreaks,
+    autoStartFocus,
   ];
 }

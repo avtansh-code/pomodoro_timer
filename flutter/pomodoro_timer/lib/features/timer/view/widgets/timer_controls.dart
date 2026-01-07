@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vibration/vibration.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/services.dart';
+import '../../../../app/theme/pomodoro_theme_cubit.dart';
 import '../../../../core/models/timer_session.dart';
 import '../../bloc/timer_event.dart' as event;
 import '../../bloc/timer_state.dart' as state;
@@ -25,14 +27,21 @@ class TimerControls extends StatelessWidget {
     required this.onEventAdded,
   });
 
+  /// Gets color based on session type using theme's primary color with variations
   Color _getSessionColor(BuildContext context) {
+    final appTheme = context.read<PomodoroThemeCubit>().state.currentTheme;
+    final primaryColor = appTheme.primaryColor;
+    
     switch (timerState.sessionType) {
       case SessionType.work:
-        return Theme.of(context).colorScheme.primary;
+        // Full primary color for focus
+        return primaryColor;
       case SessionType.shortBreak:
-        return const Color(0xFF34C759);
+        // Lighter tint of primary for short break
+        return Color.lerp(primaryColor, Colors.white, 0.2) ?? primaryColor;
       case SessionType.longBreak:
-        return const Color(0xFF007AFF);
+        // Slightly darker shade of primary for long break  
+        return Color.lerp(primaryColor, Colors.black, 0.15) ?? primaryColor;
     }
   }
 
@@ -76,7 +85,7 @@ class TimerControls extends StatelessWidget {
 
     return _ScaleButton(
       onPressed: () {
-        Vibration.vibrate(duration: 50);
+        HapticFeedback.mediumImpact();
         if (timerState is state.TimerInitial ||
             timerState is state.TimerCompleted) {
           onEventAdded(event.TimerStarted(timerState.duration));
@@ -122,7 +131,7 @@ class TimerControls extends StatelessWidget {
   Widget _buildResetButton(BuildContext context, Color sessionColor) {
     return _ScaleButton(
       onPressed: () {
-        Vibration.vibrate(duration: 30);
+        HapticFeedback.lightImpact();
         onEventAdded(const event.TimerReset());
       },
       child: Container(

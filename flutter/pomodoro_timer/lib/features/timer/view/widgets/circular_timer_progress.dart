@@ -45,6 +45,24 @@ class CircularTimerProgress extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
+          // Shadow/Glow effect layer (iOS-style) - transparent container for glow only
+          Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.transparent, // Transparent background
+              boxShadow: [
+                // Subtle colored glow effect
+                BoxShadow(
+                  color: color.withValues(alpha: 0.1),
+                  blurRadius: 15,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+          ),
+
           // Circular progress indicator
           TweenAnimationBuilder<double>(
             duration: const Duration(milliseconds: 1000),
@@ -56,7 +74,7 @@ class CircularTimerProgress extends StatelessWidget {
                 painter: _CircularProgressPainter(
                   progress: value,
                   color: color,
-                  backgroundColor: color.withValues(alpha: 0.2),
+                  backgroundColor: color.withValues(alpha: 0.15), // Lighter track
                   strokeWidth: strokeWidth,
                 ),
               );
