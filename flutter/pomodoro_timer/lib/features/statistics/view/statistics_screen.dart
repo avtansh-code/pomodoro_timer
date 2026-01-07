@@ -292,13 +292,29 @@ class _StatisticsViewState extends State<_StatisticsView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.cardColor,
+        gradient: LinearGradient(
+          colors: [
+            theme.cardColor,
+            primaryColor.withValues(alpha: 0.03),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: primaryColor.withValues(alpha: 0.1),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
+          ),
+          BoxShadow(
+            color: primaryColor.withValues(alpha: 0.05),
+            blurRadius: 12,
+            spreadRadius: 2,
           ),
         ],
       ),
@@ -418,13 +434,29 @@ class _StatisticsViewState extends State<_StatisticsView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.cardColor,
+        gradient: LinearGradient(
+          colors: [
+            theme.cardColor,
+            primaryColor.withValues(alpha: 0.03),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: primaryColor.withValues(alpha: 0.1),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
+          ),
+          BoxShadow(
+            color: primaryColor.withValues(alpha: 0.05),
+            blurRadius: 12,
+            spreadRadius: 2,
           ),
         ],
       ),
@@ -542,16 +574,34 @@ class _StatisticsViewState extends State<_StatisticsView> {
       );
     }
 
+    final primaryColor = appTheme.primaryColor;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.cardColor,
+        gradient: LinearGradient(
+          colors: [
+            theme.cardColor,
+            primaryColor.withValues(alpha: 0.03),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: primaryColor.withValues(alpha: 0.1),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
+          ),
+          BoxShadow(
+            color: primaryColor.withValues(alpha: 0.05),
+            blurRadius: 12,
+            spreadRadius: 2,
           ),
         ],
       ),

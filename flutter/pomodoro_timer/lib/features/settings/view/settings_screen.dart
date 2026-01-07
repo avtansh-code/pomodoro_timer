@@ -4,6 +4,7 @@ import '../../../app/theme/app_theme.dart';
 import '../../../app/theme/pomodoro_theme_cubit.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../core/models/app_theme_model.dart';
+import '../../../core/models/timer_session.dart';
 import '../../../core/models/timer_settings.dart';
 import '../../statistics/data/statistics_repository.dart';
 import '../bloc/settings_cubit.dart';
@@ -106,6 +107,13 @@ class _SettingsView extends StatelessWidget {
                 _buildNotificationSection(context, state),
 
                 const SizedBox(height: 8),
+
+                // Developer Tools (Debug mode only)
+                if (const bool.fromEnvironment('dart.vm.product') == false)
+                  _buildDeveloperSection(context),
+
+                if (const bool.fromEnvironment('dart.vm.product') == false)
+                  const SizedBox(height: 8),
 
                 // Data Management
                 _buildDataSection(context),
@@ -414,6 +422,50 @@ class _SettingsView extends StatelessWidget {
     );
   }
 
+  Widget _buildDeveloperSection(BuildContext context) {
+    return _buildSection(
+      context: context,
+      icon: Icons.construction,
+      title: 'Developer Tools',
+      footer:
+          'Tools for debugging and testing. Only visible in debug builds.',
+      children: [
+        ListTile(
+          leading: const Icon(Icons.bug_report, color: Colors.purple),
+          title: const Text(
+            'App Information',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          subtitle: const Text('View technical details and logs'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => _showAppInfoDialog(context),
+        ),
+        const Divider(height: 1),
+        ListTile(
+          leading: const Icon(Icons.palette, color: Colors.pink),
+          title: const Text(
+            'Test All Themes',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          subtitle: const Text('Quick preview of all color schemes'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => _showThemeTestDialog(context),
+        ),
+        const Divider(height: 1),
+        ListTile(
+          leading: const Icon(Icons.data_object, color: Colors.teal),
+          title: const Text(
+            'Generate Sample Data',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          subtitle: const Text('Add dummy sessions for testing'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => _showGenerateDataDialog(context),
+        ),
+      ],
+    );
+  }
+
   Widget _buildDataSection(BuildContext context) {
     return _buildSection(
       context: context,
@@ -623,6 +675,209 @@ class _SettingsView extends StatelessWidget {
             },
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Reset Everything'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAppInfoDialog(BuildContext context) {
+    final theme = Theme.of(context);
+    
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.info_outline, color: theme.colorScheme.primary),
+            const SizedBox(width: 12),
+            const Text('App Information'),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildInfoRow('Version', '2.0.0+7'),
+              _buildInfoRow('Build Mode', 'Debug'),
+              _buildInfoRow('Flutter SDK', '3.10.4+'),
+              _buildInfoRow('Platform', Theme.of(context).platform.name),
+              const Divider(),
+              _buildInfoRow('Material', 'Design 3'),
+              _buildInfoRow('State Management', 'BLoC'),
+              _buildInfoRow('Storage', 'Hive + SharedPreferences'),
+              const Divider(),
+              const Text(
+                'Theme System',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              ),
+              const SizedBox(height: 8),
+              BlocBuilder<PomodoroThemeCubit, PomodoroThemeState>(
+                builder: (context, state) {
+                  return _buildInfoRow(
+                    'Current Theme',
+                    state.currentTheme.name,
+                  );
+                },
+              ),
+              BlocBuilder<ThemeCubit, ThemeState>(
+                builder: (context, state) {
+                  return _buildInfoRow(
+                    'Brightness',
+                    state.themeMode.name,
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Flexible(
+            child: Text(
+              value,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 13,
+              ),
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showThemeTestDialog(BuildContext context) {
+    final allThemes = PomodoroThemes.allThemes;
+    
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Theme Preview'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.separated(
+            shrinkWrap: true,
+            itemCount: allThemes.length,
+            separatorBuilder: (context, index) => const Divider(),
+            itemBuilder: (context, index) {
+              final theme = allThemes[index];
+              return ListTile(
+                leading: _buildThemePreview(theme),
+                title: Text(theme.name),
+                subtitle: Text('#${(theme.primaryColor.r * 255).round().toRadixString(16).padLeft(2, '0')}${(theme.primaryColor.g * 255).round().toRadixString(16).padLeft(2, '0')}${(theme.primaryColor.b * 255).round().toRadixString(16).padLeft(2, '0')}'.toUpperCase()),
+                onTap: () {
+                  context.read<PomodoroThemeCubit>().setTheme(theme);
+                  Navigator.of(dialogContext).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Switched to ${theme.name}'),
+                      duration: const Duration(seconds: 1),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showGenerateDataDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Generate Sample Data'),
+        content: const Text(
+          'This will add dummy session data for the past 30 days. Useful for testing statistics and charts.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              // Generate sample data
+              final repository = getIt<StatisticsRepository>();
+              
+              // Add sessions for the past 30 days
+              final now = DateTime.now();
+              for (int i = 0; i < 30; i++) {
+                final date = now.subtract(Duration(days: i));
+                
+                // Add 2-4 sessions per day
+                final sessionsCount = 2 + (i % 3);
+                for (int j = 0; j < sessionsCount; j++) {
+                  final startTime = date.subtract(Duration(hours: j * 2));
+                  final breakStartTime = date.subtract(Duration(hours: j * 2, minutes: 25));
+                  
+                  // Add focus session
+                  await repository.addSession(
+                    TimerSession(
+                      id: '${DateTime.now().millisecondsSinceEpoch}_${i}_$j',
+                      startTime: startTime,
+                      endTime: startTime.add(const Duration(minutes: 25)),
+                      sessionType: SessionType.work,
+                      durationInMinutes: 25,
+                    ),
+                  );
+                  
+                  // Add a short break
+                  await repository.addSession(
+                    TimerSession(
+                      id: '${DateTime.now().millisecondsSinceEpoch}_${i}_${j}_break',
+                      startTime: breakStartTime,
+                      endTime: breakStartTime.add(const Duration(minutes: 5)),
+                      sessionType: SessionType.shortBreak,
+                      durationInMinutes: 5,
+                    ),
+                  );
+                }
+              }
+              
+              if (dialogContext.mounted) {
+                Navigator.of(dialogContext).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Sample data generated successfully!'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
+            child: const Text('Generate'),
           ),
         ],
       ),

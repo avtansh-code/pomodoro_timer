@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'app_typography.dart';
 
 /// Defines the application themes.
 ///
@@ -67,6 +68,7 @@ class AppThemes {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      textTheme: AppTypography.createTextTheme(colorScheme.onSurface),
 
       // App Bar Theme - Material 3
       appBarTheme: AppBarTheme(
@@ -213,6 +215,7 @@ class AppThemes {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      textTheme: AppTypography.createTextTheme(colorScheme.onSurface),
 
       // App Bar Theme - Material 3
       appBarTheme: AppBarTheme(
@@ -364,6 +367,7 @@ class AppThemes {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      textTheme: AppTypography.createTextTheme(colorScheme.onSurface),
 
       // App Bar Theme - Glass morphism
       appBarTheme: AppBarTheme(
@@ -555,6 +559,7 @@ class AppThemes {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      textTheme: AppTypography.createTextTheme(colorScheme.onSurface),
 
       // App Bar Theme - Glass morphism
       appBarTheme: AppBarTheme(

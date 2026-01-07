@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../app/theme/pomodoro_theme_cubit.dart';
 import '../../../../core/models/timer_session.dart';
 import '../../bloc/timer_state.dart' as state;
 import 'circular_timer_progress.dart';
@@ -36,16 +38,10 @@ class TimerDisplay extends StatelessWidget {
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
-  /// Gets the color based on session type
+  /// Gets the color based on session type from the current theme
   Color _getSessionColor(BuildContext context) {
-    switch (sessionType) {
-      case SessionType.work:
-        return Theme.of(context).colorScheme.primary;
-      case SessionType.shortBreak:
-        return const Color(0xFF34C759); // Green, matching legacy apps
-      case SessionType.longBreak:
-        return const Color(0xFF007AFF); // Blue, matching legacy apps
-    }
+    final appTheme = context.read<PomodoroThemeCubit>().state.currentTheme;
+    return appTheme.getColorForSession(sessionType);
   }
 
   /// Calculates progress (0.0 to 1.0)
