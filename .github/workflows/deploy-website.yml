@@ -5,10 +5,17 @@ on:
     branches: ["main"]
     paths:
       - 'website/**'
+  pull_request:
+    types: [closed]
+    branches: ["main"]
+    paths:
+      - 'website/**'
   workflow_dispatch:
 
 jobs:
   deploy:
+    # Run on push to main, manual trigger, or when PR is merged (not just closed)
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source repository
