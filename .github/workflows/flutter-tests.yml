@@ -1,0 +1,73 @@
+name: Flutter Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - 'flutter/**'
+      - '.github/workflows/flutter-tests.yml'
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'flutter/**'
+      - '.github/workflows/flutter-tests.yml'
+
+jobs:
+  test:
+    name: Run Flutter Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: flutter/pomodoro_timer
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze project source
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run tests
+        run: flutter test --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: flutter/pomodoro_timer/coverage/lcov.info
+          flags: flutter
+          name: flutter-coverage
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Check test coverage
+        run: |
+          if [ -f coverage/lcov.info ]; then
+            echo "Coverage report generated successfully"
+            # Extract coverage percentage (basic calculation)
+            LINES=$(grep -c "^DA:" coverage/lcov.info || echo "0")
+            HITS=$(grep "^DA:" coverage/lcov.info | grep -v ",0$" | wc -l || echo "0")
+            if [ "$LINES" -gt 0 ]; then
+              COVERAGE=$((HITS * 100 / LINES))
+              echo "Approximate line coverage: ${COVERAGE}%"
+            fi
+          else
+            echo "No coverage report found"
+          fi
