@@ -892,7 +892,7 @@ class _SettingsView extends StatelessWidget {
       builder: (dialogContext) => AlertDialog(
         title: const Text('Generate Sample Data'),
         content: const Text(
-          'This will add dummy session data for the past 30 days. Useful for testing statistics and charts.',
+          'This will add dummy session data for the past 45 days. Useful for testing statistics and charts.',
         ),
         actions: [
           TextButton(
@@ -904,23 +904,27 @@ class _SettingsView extends StatelessWidget {
               // Generate sample data
               final repository = getIt<StatisticsRepository>();
 
-              // Add sessions for the past 30 days
+              // Add sessions for the past 45 days
               final now = DateTime.now();
-              for (int i = 0; i < 30; i++) {
-                final date = now.subtract(Duration(days: i));
+              for (int i = 0; i < 45; i++) {
+                final date = DateTime(
+                  now.year,
+                  now.month,
+                  now.day,
+                ).subtract(Duration(days: i));
 
-                // Add 2-4 sessions per day
-                final sessionsCount = 2 + (i % 3);
+                // Add 2-5 sessions per day with some variation
+                final sessionsCount = 2 + (i % 4);
                 for (int j = 0; j < sessionsCount; j++) {
-                  final startTime = date.subtract(Duration(hours: j * 2));
-                  final breakStartTime = date.subtract(
-                    Duration(hours: j * 2, minutes: 25),
+                  final startTime = date.add(Duration(hours: 9 + j * 2));
+                  final breakStartTime = startTime.add(
+                    const Duration(minutes: 25),
                   );
 
                   // Add focus session
                   await repository.addSession(
                     TimerSession(
-                      id: '${DateTime.now().millisecondsSinceEpoch}_${i}_$j',
+                      id: 'dummy_${date.millisecondsSinceEpoch}_${i}_$j',
                       startTime: startTime,
                       endTime: startTime.add(const Duration(minutes: 25)),
                       sessionType: SessionType.work,
@@ -931,13 +935,29 @@ class _SettingsView extends StatelessWidget {
                   // Add a short break
                   await repository.addSession(
                     TimerSession(
-                      id: '${DateTime.now().millisecondsSinceEpoch}_${i}_${j}_break',
+                      id: 'dummy_${date.millisecondsSinceEpoch}_${i}_${j}_break',
                       startTime: breakStartTime,
                       endTime: breakStartTime.add(const Duration(minutes: 5)),
                       sessionType: SessionType.shortBreak,
                       durationInMinutes: 5,
                     ),
                   );
+
+                  // Add a long break every 4th session
+                  if ((j + 1) % 4 == 0) {
+                    final longBreakTime = breakStartTime.add(
+                      const Duration(minutes: 5),
+                    );
+                    await repository.addSession(
+                      TimerSession(
+                        id: 'dummy_${date.millisecondsSinceEpoch}_${i}_${j}_longbreak',
+                        startTime: longBreakTime,
+                        endTime: longBreakTime.add(const Duration(minutes: 15)),
+                        sessionType: SessionType.longBreak,
+                        durationInMinutes: 15,
+                      ),
+                    );
+                  }
                 }
               }
 
@@ -945,7 +965,9 @@ class _SettingsView extends StatelessWidget {
                 Navigator.of(dialogContext).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Sample data generated successfully!'),
+                    content: Text(
+                      'Sample data generated successfully for 45 days!',
+                    ),
                     duration: Duration(seconds: 2),
                   ),
                 );

@@ -1,0 +1,30 @@
+# Flutter-related
+**/Flutter/ephemeral/
+**/Flutter/GeneratedPluginRegistrant.swift
+**/Flutter/flutter_export_environment.sh
+
+# CocoaPods
+**/Pods/
+Podfile.lock
+
+# Xcode build artifacts
+**/DerivedData/
+*.mode1v3
+*.mode2v3
+*.moved-aside
+*.pbxuser
+*.perspectivev3
+profile
+xcuserdata/
+**/.generated/
+
+# Xcode project files that should be ignored
+**/dgph
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
+# Exceptions to above rules
+!default.mode1v3
+!default.mode2v3
+!default.pbxuser
+!default.perspectivev3

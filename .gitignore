@@ -104,10 +104,9 @@ build/
 *.iml
 
 # Flutter platform directories (can be regenerated)
+# Note: macOS and Windows are tracked for custom configurations
 flutter/pomodoro_timer/linux/
-flutter/pomodoro_timer/macos/
 flutter/pomodoro_timer/web/
-flutter/pomodoro_timer/windows/
 
 # Symbolication related
 app.*.symbols

@@ -417,18 +417,28 @@ class _StatisticsViewState extends State<_StatisticsView> {
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
+                      reservedSize: 30,
                       getTitlesWidget: (value, meta) {
-                        if (value.toInt() >= 0 &&
-                            value.toInt() < dailyData.length) {
+                        final index = value.toInt();
+                        if (index >= 0 && index < dailyData.length) {
+                          // For month view (30 days), show every 5th label to avoid overlap
+                          // For week view (7 days), show all labels
+                          final showLabel =
+                              _selectedTimeRange == StatisticsFilter.week ||
+                              index % 5 == 0 ||
+                              index == dailyData.length - 1;
+                          if (!showLabel) return const SizedBox.shrink();
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
-                              dailyData[value.toInt()].day,
-                              style: theme.textTheme.bodySmall,
+                              dailyData[index].day,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                fontSize: 10,
+                              ),
                             ),
                           );
                         }
-                        return const Text('');
+                        return const SizedBox.shrink();
                       },
                     ),
                   ),
@@ -560,18 +570,28 @@ class _StatisticsViewState extends State<_StatisticsView> {
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
+                      reservedSize: 30,
                       getTitlesWidget: (value, meta) {
-                        if (value.toInt() >= 0 &&
-                            value.toInt() < trendData.length) {
+                        final index = value.toInt();
+                        if (index >= 0 && index < trendData.length) {
+                          // For month view (30 days), show every 5th label to avoid overlap
+                          // For week view (7 days), show all labels
+                          final showLabel =
+                              _selectedTimeRange == StatisticsFilter.week ||
+                              index % 5 == 0 ||
+                              index == trendData.length - 1;
+                          if (!showLabel) return const SizedBox.shrink();
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
-                              trendData[value.toInt()].day,
-                              style: theme.textTheme.bodySmall,
+                              trendData[index].day,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                fontSize: 10,
+                              ),
                             ),
                           );
                         }
-                        return const Text('');
+                        return const SizedBox.shrink();
                       },
                     ),
                   ),

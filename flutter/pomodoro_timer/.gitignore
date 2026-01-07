@@ -59,9 +59,8 @@ app.*.map.json
 .dart_tool/build/
 
 # Platform directories (can be regenerated with `flutter create .`)
+# Note: macOS and Windows are tracked for custom configurations
 /web/
-/windows/
-/macos/
 /linux/
 
 # iOS

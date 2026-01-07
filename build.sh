@@ -4,13 +4,13 @@
 # Pomodoro Timer - Flutter Build Script
 #===============================================================================
 # A comprehensive build script for the Pomodoro Timer Flutter application.
-# Supports Release/Debug builds, Android/iOS/Both platforms, and device installation.
+# Supports Release/Debug builds for Android, iOS, iPadOS, macOS, and Windows.
 #
 # Usage: ./build.sh [options]
 #   Options:
 #     -h, --help          Show this help message
 #     -m, --mode          Build mode: debug|release (default: interactive)
-#     -p, --platform      Platform: android|ios|both (default: interactive)
+#     -p, --platform      Platform: android|ios|ipados|macos|windows (default: interactive)
 #     -i, --install       Install on connected device (default: false)
 #     -f, --format        Format code before building (default: true)
 #     -a, --analyze       Run analysis before building (default: true)
@@ -87,7 +87,7 @@ show_help() {
     echo -e "${BOLD}Options:${NC}"
     echo "  -h, --help          Show this help message"
     echo "  -m, --mode          Build mode: debug|release"
-    echo "  -p, --platform      Platform: android|ios|both"
+    echo "  -p, --platform      Platform: android|ios|ipados|macos|windows"
     echo "  -i, --install       Install on connected device"
     echo "  -f, --format        Format code before building (default: true)"
     echo "  -a, --analyze       Run analysis before building (default: true)"
@@ -99,7 +99,9 @@ show_help() {
     echo "  ./build.sh                                    # Interactive mode"
     echo "  ./build.sh -m release -p android              # Release build for Android"
     echo "  ./build.sh -m debug -p ios -i                 # Debug build for iOS with install"
-    echo "  ./build.sh -m release -p both --skip-format   # Release for both, skip formatting"
+    echo "  ./build.sh -m release -p macos                # Release build for macOS"
+    echo "  ./build.sh -m debug -p ipados -i              # Debug build for iPadOS with install"
+    echo "  ./build.sh -m release -p windows              # Release build for Windows"
     echo ""
 }
 
@@ -143,25 +145,33 @@ check_prerequisites() {
     fi
     
     # Platform-specific checks
-    if [[ "$PLATFORM" == "ios" || "$PLATFORM" == "both" ]]; then
+    if [[ "$PLATFORM" == "ios" || "$PLATFORM" == "ipados" || "$PLATFORM" == "macos" ]]; then
         if [[ "$(uname)" == "Darwin" ]]; then
             if command -v xcodebuild &> /dev/null; then
-                print_success "Xcode found for iOS builds"
+                print_success "Xcode found for $PLATFORM builds"
             else
-                print_error "Xcode not found - required for iOS builds"
+                print_error "Xcode not found - required for $PLATFORM builds"
                 has_error=true
             fi
         else
-            print_error "iOS builds require macOS"
+            print_error "$PLATFORM builds require macOS"
             has_error=true
         fi
     fi
     
-    if [[ "$PLATFORM" == "android" || "$PLATFORM" == "both" ]]; then
+    if [[ "$PLATFORM" == "android" ]]; then
         if [ -n "$ANDROID_HOME" ] || [ -n "$ANDROID_SDK_ROOT" ]; then
             print_success "Android SDK found"
         else
             print_warning "ANDROID_HOME or ANDROID_SDK_ROOT not set - Android build may fail"
+        fi
+    fi
+    
+    if [[ "$PLATFORM" == "windows" ]]; then
+        if [[ "$(uname)" == "MINGW"* || "$(uname)" == "MSYS"* || "$(uname)" == "CYGWIN"* ]]; then
+            print_success "Windows build environment detected"
+        else
+            print_warning "Windows builds are best run on Windows - cross-compilation not supported"
         fi
     fi
     
@@ -209,24 +219,35 @@ select_platform() {
     echo -e "\n${BOLD}Select Target Platform:${NC}"
     echo ""
     echo -e "  ${CYAN}1)${NC} Android - Build for Android devices"
-    echo -e "  ${CYAN}2)${NC} iOS     - Build for iOS devices (macOS only)"
-    echo -e "  ${CYAN}3)${NC} Both    - Build for Android and iOS"
+    echo -e "  ${CYAN}2)${NC} iOS     - Build for iPhone (macOS only)"
+    echo -e "  ${CYAN}3)${NC} iPadOS  - Build for iPad (macOS only)"
+    echo -e "  ${CYAN}4)${NC} macOS   - Build for Mac desktop (macOS only)"
+    echo -e "  ${CYAN}5)${NC} Windows - Build for Windows desktop"
     echo ""
     
     while true; do
-        read -p "$(echo -e ${YELLOW}Enter choice [1-3]: ${NC})" choice
+        read -p "$(echo -e ${YELLOW}Enter choice [1-5]: ${NC})" choice
         case $choice in
             1) PLATFORM="android"; break;;
             2) PLATFORM="ios"; break;;
-            3) PLATFORM="both"; break;;
-            *) print_error "Invalid choice. Please enter 1, 2, or 3.";;
+            3) PLATFORM="ipados"; break;;
+            4) PLATFORM="macos"; break;;
+            5) PLATFORM="windows"; break;;
+            *) print_error "Invalid choice. Please enter 1, 2, 3, 4, or 5.";;
         esac
     done
     
-    print_success "Selected: $PLATFORM platform(s)"
+    print_success "Selected: $PLATFORM platform"
 }
 
 select_install() {
+    # Install option not available for desktop platforms
+    if [[ "$PLATFORM" == "macos" || "$PLATFORM" == "windows" ]]; then
+        print_info "Install option not applicable for $PLATFORM - app will be built and can be run directly"
+        INSTALL_ON_DEVICE=false
+        return
+    fi
+    
     echo -e "\n${BOLD}Install on Connected Device?${NC}"
     echo ""
     echo -e "  ${CYAN}1)${NC} Yes - Install the built app on a connected device"
@@ -334,7 +355,7 @@ build_android() {
 }
 
 build_ios() {
-    print_step "Building for iOS ($BUILD_MODE)"
+    print_step "Building for iOS/iPhone ($BUILD_MODE)"
     
     if [[ "$(uname)" != "Darwin" ]]; then
         print_error "iOS builds are only supported on macOS"
@@ -362,6 +383,110 @@ build_ios() {
     
     print_success "iOS build completed!"
     print_info "Note: For App Store distribution, open Xcode and archive the project."
+}
+
+build_ipados() {
+    print_step "Building for iPadOS ($BUILD_MODE)"
+    
+    if [[ "$(uname)" != "Darwin" ]]; then
+        print_error "iPadOS builds are only supported on macOS"
+        return 1
+    fi
+    
+    cd "$FLUTTER_PROJECT_DIR"
+    
+    # Install CocoaPods dependencies
+    print_info "Installing CocoaPods dependencies..."
+    cd ios
+    pod install --repo-update || print_warning "Pod install had warnings"
+    cd ..
+    
+    # iPadOS uses the same iOS build but targets iPad
+    local build_command="flutter build ios"
+    
+    if [ "$BUILD_MODE" = "release" ]; then
+        build_command="$build_command --release --no-codesign"
+    else
+        build_command="$build_command --debug --no-codesign"
+    fi
+    
+    print_info "Running: $build_command"
+    print_info "Note: iPadOS uses the iOS build - app supports both iPhone and iPad"
+    eval $build_command
+    
+    print_success "iPadOS build completed!"
+    print_info "Note: For App Store distribution, open Xcode and archive the project."
+}
+
+build_macos() {
+    print_step "Building for macOS ($BUILD_MODE)"
+    
+    if [[ "$(uname)" != "Darwin" ]]; then
+        print_error "macOS builds are only supported on macOS"
+        return 1
+    fi
+    
+    cd "$FLUTTER_PROJECT_DIR"
+    
+    # Install CocoaPods dependencies for macOS
+    print_info "Installing CocoaPods dependencies..."
+    cd macos
+    pod install --repo-update || print_warning "Pod install had warnings"
+    cd ..
+    
+    local build_command="flutter build macos"
+    
+    if [ "$BUILD_MODE" = "release" ]; then
+        build_command="$build_command --release"
+    else
+        build_command="$build_command --debug"
+    fi
+    
+    print_info "Running: $build_command"
+    eval $build_command
+    
+    print_success "macOS build completed!"
+    
+    # Show output location
+    local app_path="$FLUTTER_PROJECT_DIR/build/macos/Build/Products"
+    if [ "$BUILD_MODE" = "release" ]; then
+        app_path="$app_path/Release"
+    else
+        app_path="$app_path/Debug"
+    fi
+    
+    print_info "Output: $app_path/"
+    print_info "You can run the app directly from the build folder."
+}
+
+build_windows() {
+    print_step "Building for Windows ($BUILD_MODE)"
+    
+    cd "$FLUTTER_PROJECT_DIR"
+    
+    local build_command="flutter build windows"
+    
+    if [ "$BUILD_MODE" = "release" ]; then
+        build_command="$build_command --release"
+    else
+        build_command="$build_command --debug"
+    fi
+    
+    print_info "Running: $build_command"
+    eval $build_command
+    
+    print_success "Windows build completed!"
+    
+    # Show output location
+    local exe_path="$FLUTTER_PROJECT_DIR/build/windows/x64/runner"
+    if [ "$BUILD_MODE" = "release" ]; then
+        exe_path="$exe_path/Release"
+    else
+        exe_path="$exe_path/Debug"
+    fi
+    
+    print_info "Output: $exe_path/"
+    print_info "You can run the .exe file directly from the build folder."
 }
 
 install_android() {
@@ -399,14 +524,14 @@ install_ios() {
     cd "$FLUTTER_PROJECT_DIR"
     
     # Check for connected devices
-    local devices=$(flutter devices | grep -i iphone)
+    local devices=$(flutter devices | grep -i -E "iphone|ipad")
     
     if [ -z "$devices" ]; then
-        print_warning "No iOS device connected. Skipping installation."
+        print_warning "No iOS/iPadOS device connected. Skipping installation."
         return
     fi
     
-    print_info "Found iOS device(s):"
+    print_info "Found iOS/iPadOS device(s):"
     echo "$devices"
     
     local install_command="flutter install"
@@ -439,17 +564,32 @@ print_completion() {
     echo -e "${GREEN}║                       BUILD COMPLETED! 🎉                         ║${NC}"
     echo -e "${GREEN}╚═══════════════════════════════════════════════════════════════════╝${NC}\n"
     
-    if [[ "$PLATFORM" == "android" || "$PLATFORM" == "both" ]]; then
-        if [ "$BUILD_MODE" = "release" ]; then
-            print_info "Android APK: $FLUTTER_PROJECT_DIR/build/app/outputs/flutter-apk/app-release.apk"
-        else
-            print_info "Android APK: $FLUTTER_PROJECT_DIR/build/app/outputs/flutter-apk/app-debug.apk"
-        fi
-    fi
-    
-    if [[ "$PLATFORM" == "ios" || "$PLATFORM" == "both" ]]; then
-        print_info "iOS Build: $FLUTTER_PROJECT_DIR/build/ios/iphoneos/"
-    fi
+    case "$PLATFORM" in
+        android)
+            if [ "$BUILD_MODE" = "release" ]; then
+                print_info "Android APK: $FLUTTER_PROJECT_DIR/build/app/outputs/flutter-apk/app-release.apk"
+            else
+                print_info "Android APK: $FLUTTER_PROJECT_DIR/build/app/outputs/flutter-apk/app-debug.apk"
+            fi
+            ;;
+        ios|ipados)
+            print_info "iOS/iPadOS Build: $FLUTTER_PROJECT_DIR/build/ios/iphoneos/"
+            ;;
+        macos)
+            if [ "$BUILD_MODE" = "release" ]; then
+                print_info "macOS App: $FLUTTER_PROJECT_DIR/build/macos/Build/Products/Release/"
+            else
+                print_info "macOS App: $FLUTTER_PROJECT_DIR/build/macos/Build/Products/Debug/"
+            fi
+            ;;
+        windows)
+            if [ "$BUILD_MODE" = "release" ]; then
+                print_info "Windows Exe: $FLUTTER_PROJECT_DIR/build/windows/x64/runner/Release/"
+            else
+                print_info "Windows Exe: $FLUTTER_PROJECT_DIR/build/windows/x64/runner/Debug/"
+            fi
+            ;;
+    esac
     
     echo ""
 }
@@ -475,8 +615,8 @@ parse_arguments() {
                 ;;
             -p|--platform)
                 PLATFORM="$2"
-                if [[ "$PLATFORM" != "android" && "$PLATFORM" != "ios" && "$PLATFORM" != "both" ]]; then
-                    print_error "Invalid platform: $PLATFORM (must be 'android', 'ios', or 'both')"
+                if [[ "$PLATFORM" != "android" && "$PLATFORM" != "ios" && "$PLATFORM" != "ipados" && "$PLATFORM" != "macos" && "$PLATFORM" != "windows" ]]; then
+                    print_error "Invalid platform: $PLATFORM (must be 'android', 'ios', 'ipados', 'macos', or 'windows')"
                     exit 1
                 fi
                 shift 2
@@ -536,7 +676,7 @@ main() {
             exit 1
         fi
         if [ -z "$PLATFORM" ]; then
-            print_error "Platform is required in non-interactive mode (-p android|ios|both)"
+            print_error "Platform is required in non-interactive mode (-p android|ios|ipados|macos|windows)"
             exit 1
         fi
     fi
@@ -562,20 +702,33 @@ main() {
     format_code
     analyze_code
     
-    # Build for selected platform(s)
-    if [[ "$PLATFORM" == "android" || "$PLATFORM" == "both" ]]; then
-        build_android
-        if [ "$INSTALL_ON_DEVICE" = true ]; then
-            install_android
-        fi
-    fi
-    
-    if [[ "$PLATFORM" == "ios" || "$PLATFORM" == "both" ]]; then
-        build_ios
-        if [ "$INSTALL_ON_DEVICE" = true ]; then
-            install_ios
-        fi
-    fi
+    # Build for selected platform
+    case "$PLATFORM" in
+        android)
+            build_android
+            if [ "$INSTALL_ON_DEVICE" = true ]; then
+                install_android
+            fi
+            ;;
+        ios)
+            build_ios
+            if [ "$INSTALL_ON_DEVICE" = true ]; then
+                install_ios
+            fi
+            ;;
+        ipados)
+            build_ipados
+            if [ "$INSTALL_ON_DEVICE" = true ]; then
+                install_ios
+            fi
+            ;;
+        macos)
+            build_macos
+            ;;
+        windows)
+            build_windows
+            ;;
+    esac
     
     # Print completion message
     print_completion
