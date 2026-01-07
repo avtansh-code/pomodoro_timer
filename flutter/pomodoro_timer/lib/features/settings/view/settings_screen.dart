@@ -274,6 +274,7 @@ class _SettingsView extends StatelessWidget {
           value: state.settings.workDuration,
           min: 1,
           max: 120,
+          suffix: 'min',
           onChanged: (value) {
             context.read<SettingsCubit>().updateWorkDuration(value.round());
           },
@@ -287,6 +288,7 @@ class _SettingsView extends StatelessWidget {
           value: state.settings.shortBreakDuration,
           min: 1,
           max: 30,
+          suffix: 'min',
           onChanged: (value) {
             context.read<SettingsCubit>().updateShortBreakDuration(
               value.round(),
@@ -302,6 +304,7 @@ class _SettingsView extends StatelessWidget {
           value: state.settings.longBreakDuration,
           min: 1,
           max: 60,
+          suffix: 'min',
           onChanged: (value) {
             context.read<SettingsCubit>().updateLongBreakDuration(
               value.round(),
@@ -309,7 +312,19 @@ class _SettingsView extends StatelessWidget {
           },
         ),
         const Divider(height: 1),
-        _buildSessionCountTile(context, state, theme),
+        _buildDurationTile(
+          context: context,
+          icon: Icons.repeat,
+          iconColor: theme.colorScheme.tertiary,
+          title: 'Long break after',
+          value: state.settings.sessionsBeforeLongBreak,
+          min: 2,
+          max: 10,
+          suffix: '',
+          onChanged: (value) {
+            context.read<SettingsCubit>().updateSessionsBeforeLongBreak(value.round());
+          },
+        ),
       ],
     );
   }
@@ -547,75 +562,79 @@ class _SettingsView extends StatelessWidget {
     required int value,
     required int min,
     required int max,
+    required String suffix,
     required ValueChanged<double> onChanged,
   }) {
     final theme = Theme.of(context);
     
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: [
           // Icon
-          Icon(icon, color: iconColor, size: 24),
-          const SizedBox(width: 16),
+          Icon(icon, color: iconColor, size: 20),
+          const SizedBox(width: 10),
           // Title
           Expanded(
             child: Text(
               title,
-              style: theme.textTheme.bodyLarge,
+              style: theme.textTheme.bodyMedium,
             ),
           ),
-          // Stepper control
+          // Compact stepper control
           Container(
+            height: 32,
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Minus button
-                IconButton(
-                  icon: Icon(
-                    Icons.remove,
-                    color: value > min 
-                        ? theme.colorScheme.primary 
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                    size: 20,
+                GestureDetector(
+                  onTap: value > min ? () => onChanged((value - 1).toDouble()) : null,
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.remove,
+                      color: value > min 
+                          ? theme.colorScheme.primary 
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                      size: 18,
+                    ),
                   ),
-                  onPressed: value > min
-                      ? () => onChanged((value - 1).toDouble())
-                      : null,
-                  padding: const EdgeInsets.all(8),
-                  constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
                 ),
                 // Value display
                 Container(
-                  constraints: const BoxConstraints(minWidth: 60),
+                  constraints: const BoxConstraints(minWidth: 40),
                   alignment: Alignment.center,
                   child: Text(
-                    '$value min',
+                    suffix.isEmpty ? '$value' : '$value $suffix',
                     style: TextStyle(
                       color: theme.colorScheme.onSurface,
                       fontWeight: FontWeight.w600,
-                      fontSize: 15,
+                      fontSize: 13,
                     ),
                   ),
                 ),
                 // Plus button
-                IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: value < max 
-                        ? theme.colorScheme.primary 
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                    size: 20,
+                GestureDetector(
+                  onTap: value < max ? () => onChanged((value + 1).toDouble()) : null,
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.add,
+                      color: value < max 
+                          ? theme.colorScheme.primary 
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                      size: 18,
+                    ),
                   ),
-                  onPressed: value < max
-                      ? () => onChanged((value + 1).toDouble())
-                      : null,
-                  padding: const EdgeInsets.all(8),
-                  constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
                 ),
               ],
             ),
@@ -629,74 +648,77 @@ class _SettingsView extends StatelessWidget {
     final value = state.settings.sessionsBeforeLongBreak;
     
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: [
           // Icon
-          Icon(Icons.repeat, color: theme.colorScheme.tertiary, size: 24),
-          const SizedBox(width: 16),
+          Icon(Icons.repeat, color: theme.colorScheme.tertiary, size: 20),
+          const SizedBox(width: 10),
           // Title
           Expanded(
             child: Text(
-              'Sessions before long break',
-              style: theme.textTheme.bodyLarge,
+              'Long break after',
+              style: theme.textTheme.bodyMedium,
             ),
           ),
-          // Stepper control
+          // Compact stepper control
           Container(
+            height: 32,
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Minus button
-                IconButton(
-                  icon: Icon(
-                    Icons.remove,
-                    color: value > 2 
-                        ? theme.colorScheme.primary 
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                    size: 20,
-                  ),
-                  onPressed: value > 2
-                      ? () {
-                          context.read<SettingsCubit>().updateSessionsBeforeLongBreak(value - 1);
-                        }
+                GestureDetector(
+                  onTap: value > 2
+                      ? () => context.read<SettingsCubit>().updateSessionsBeforeLongBreak(value - 1)
                       : null,
-                  padding: const EdgeInsets.all(8),
-                  constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.remove,
+                      color: value > 2 
+                          ? theme.colorScheme.primary 
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                      size: 18,
+                    ),
+                  ),
                 ),
                 // Value display
                 Container(
-                  constraints: const BoxConstraints(minWidth: 40),
+                  constraints: const BoxConstraints(minWidth: 54),
                   alignment: Alignment.center,
                   child: Text(
-                    '$value',
+                    '$value sess',
                     style: TextStyle(
                       color: theme.colorScheme.onSurface,
                       fontWeight: FontWeight.w600,
-                      fontSize: 15,
+                      fontSize: 13,
                     ),
                   ),
                 ),
                 // Plus button
-                IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: value < 10 
-                        ? theme.colorScheme.primary 
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                    size: 20,
-                  ),
-                  onPressed: value < 10
-                      ? () {
-                          context.read<SettingsCubit>().updateSessionsBeforeLongBreak(value + 1);
-                        }
+                GestureDetector(
+                  onTap: value < 10
+                      ? () => context.read<SettingsCubit>().updateSessionsBeforeLongBreak(value + 1)
                       : null,
-                  padding: const EdgeInsets.all(8),
-                  constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.add,
+                      color: value < 10 
+                          ? theme.colorScheme.primary 
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                      size: 18,
+                    ),
+                  ),
                 ),
               ],
             ),

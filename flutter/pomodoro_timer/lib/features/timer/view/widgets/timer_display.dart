@@ -39,9 +39,22 @@ class TimerDisplay extends StatelessWidget {
   }
 
   /// Gets the color based on session type from the current theme
+  /// Uses primary color with subtle variations to maintain theme consistency
   Color _getSessionColor(BuildContext context) {
     final appTheme = context.read<PomodoroThemeCubit>().state.currentTheme;
-    return appTheme.getColorForSession(sessionType);
+    final primaryColor = appTheme.primaryColor;
+    
+    switch (sessionType) {
+      case SessionType.work:
+        // Full primary color for focus
+        return primaryColor;
+      case SessionType.shortBreak:
+        // Lighter tint of primary for short break
+        return Color.lerp(primaryColor, Colors.white, 0.2) ?? primaryColor;
+      case SessionType.longBreak:
+        // Slightly darker shade of primary for long break  
+        return Color.lerp(primaryColor, Colors.black, 0.15) ?? primaryColor;
+    }
   }
 
   /// Calculates progress (0.0 to 1.0)

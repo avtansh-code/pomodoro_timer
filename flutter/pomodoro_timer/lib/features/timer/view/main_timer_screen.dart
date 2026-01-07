@@ -70,16 +70,16 @@ class _MainTimerView extends StatelessWidget {
                 longBreakDuration: settingsState.settings.longBreakDuration,
                 sessionsBeforeLongBreak:
                     settingsState.settings.sessionsBeforeLongBreak,
+                autoStartBreaks: settingsState.settings.autoStartBreaks,
+                autoStartFocus: settingsState.settings.autoStartFocus,
               ),
             );
           },
         ),
+        // Timer completion is handled via notifications, no in-app toast needed
         BlocListener<TimerBloc, state.TimerState>(
           listener: (context, timerState) {
-            // Show toast when timer completes
-            if (timerState is state.TimerCompleted) {
-              _showCompletionToast(context, timerState);
-            }
+            // No action needed - notifications are handled by TimerBloc
           },
         ),
       ],
@@ -88,11 +88,12 @@ class _MainTimerView extends StatelessWidget {
           return BlocBuilder<TimerBloc, state.TimerState>(
             builder: (context, timerState) {
               final appTheme = pomodoroThemeState.currentTheme;
-              final sessionColor = appTheme.getColorForSession(
+              // Always use the theme's primary color for main UI
+              final primaryColor = appTheme.primaryColor;
+              // Use accent colors for session type differentiation
+              final sessionAccentColor = _getSessionAccentColor(
                 timerState.sessionType,
-              );
-              final sessionGradient = appTheme.getGradientForSession(
-                timerState.sessionType,
+                appTheme,
               );
 
               return Scaffold(
@@ -109,7 +110,7 @@ class _MainTimerView extends StatelessWidget {
                   curve: Curves.easeInOut,
                   color: Color.lerp(
                     Theme.of(context).scaffoldBackgroundColor,
-                    sessionColor,
+                    primaryColor, // Always use primary color for background
                     _getBackgroundOpacity(timerState.sessionType),
                   ),
                   child: SafeArea(
@@ -118,7 +119,7 @@ class _MainTimerView extends StatelessWidget {
                       child: Column(
                         children: [
                           // Session header with session info
-                          _buildSessionHeader(context, timerState, sessionColor),
+                          _buildSessionHeader(context, timerState, primaryColor, sessionAccentColor),
 
                           const SizedBox(height: 40),
 
@@ -150,7 +151,7 @@ class _MainTimerView extends StatelessWidget {
                           const SizedBox(height: 24),
 
                           // Skip button
-                          _buildSkipButton(context, timerState, sessionColor),
+                          _buildSkipButton(context, timerState, primaryColor),
 
                           const SizedBox(height: 24),
                         ],
@@ -204,11 +205,42 @@ class _MainTimerView extends StatelessWidget {
     }
   }
 
+  /// Gets accent color for session type while keeping main theme intact
+  /// All sessions use variations of the primary color to maintain theme consistency
+  Color _getSessionAccentColor(SessionType sessionType, dynamic appTheme) {
+    final Color primaryColor = appTheme.primaryColor;
+    
+    switch (sessionType) {
+      case SessionType.work:
+        // Full primary color for focus
+        return primaryColor;
+      case SessionType.shortBreak:
+        // Lighter tint of primary for short break
+        return Color.lerp(primaryColor, Colors.white, 0.2) ?? primaryColor;
+      case SessionType.longBreak:
+        // Slightly darker shade of primary for long break  
+        return Color.lerp(primaryColor, Colors.black, 0.15) ?? primaryColor;
+    }
+  }
+
+  /// Gets icon for session type
+  IconData _getSessionIcon(SessionType sessionType) {
+    switch (sessionType) {
+      case SessionType.work:
+        return Icons.psychology;
+      case SessionType.shortBreak:
+        return Icons.coffee;
+      case SessionType.longBreak:
+        return Icons.self_improvement;
+    }
+  }
+
   /// Builds the session header matching iOS design
   Widget _buildSessionHeader(
     BuildContext context,
     state.TimerState timerState,
-    Color color,
+    Color primaryColor,
+    Color accentColor,
   ) {
     String title;
     String subtitle;
@@ -228,15 +260,37 @@ class _MainTimerView extends StatelessWidget {
         break;
     }
 
+    // Use accent color for session-specific elements, primary for base
+    final displayColor = accentColor;
+    
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.15),
+        color: primaryColor.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: displayColor.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
       ),
       child: Row(
         children: [
+          // Session type icon
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: displayColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              _getSessionIcon(timerState.sessionType),
+              color: displayColor,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 16),
           // Title and subtitle
           Expanded(
             child: Column(
@@ -245,7 +299,7 @@ class _MainTimerView extends StatelessWidget {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: color,
+                    color: displayColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -264,7 +318,7 @@ class _MainTimerView extends StatelessWidget {
             Container(
               width: 48,
               height: 48,
-              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+              decoration: BoxDecoration(color: primaryColor, shape: BoxShape.circle),
               alignment: Alignment.center,
               child: Text(
                 '${timerState.completedSessions + 1}',

@@ -230,13 +230,38 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
     // Auto-transition to initial state for next session after a brief delay
     await Future.delayed(const Duration(seconds: 2));
 
-    emit(
-      state.TimerInitial(
-        duration: nextDuration,
-        sessionType: nextSessionType,
-        completedSessions: newCompletedSessions,
-      ),
-    );
+    // Check if we should auto-start the next session
+    // Don't auto-start focus after a long break - user must manually start
+    final shouldAutoStart = (nextSessionType == SessionType.work && 
+                             settings.autoStartFocus && 
+                             completedType != SessionType.longBreak) ||
+        (nextSessionType != SessionType.work && settings.autoStartBreaks);
+
+    if (shouldAutoStart) {
+      // Auto-start the next session
+      _sessionStartTime = DateTime.now();
+      emit(
+        state.TimerRunning(
+          duration: nextDuration,
+          sessionType: nextSessionType,
+          startTime: _sessionStartTime!,
+          completedSessions: newCompletedSessions,
+        ),
+      );
+      _tickerSubscription?.cancel();
+      _tickerSubscription = _ticker(
+        nextDuration,
+      ).listen((duration) => add(event.TimerTicked(duration)));
+    } else {
+      // Just transition to initial state (user needs to manually start)
+      emit(
+        state.TimerInitial(
+          duration: nextDuration,
+          sessionType: nextSessionType,
+          completedSessions: newCompletedSessions,
+        ),
+      );
+    }
   }
 
   /// Handles skip event to manually move to next session.
@@ -279,6 +304,8 @@ class TimerBloc extends Bloc<event.TimerEvent, state.TimerState> {
       shortBreakDuration: settingsEvent.shortBreakDuration,
       longBreakDuration: settingsEvent.longBreakDuration,
       sessionsBeforeLongBreak: settingsEvent.sessionsBeforeLongBreak,
+      autoStartBreaks: settingsEvent.autoStartBreaks,
+      autoStartFocus: settingsEvent.autoStartFocus,
     );
 
     // Calculate new total duration for the current session type

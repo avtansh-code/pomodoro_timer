@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vibration/vibration.dart';
+import 'package:flutter/services.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../app/theme/pomodoro_theme_cubit.dart';
 import '../../../core/models/app_theme_model.dart';
@@ -175,7 +175,7 @@ class _ThemeSelectionView extends StatelessWidget {
             )
           : null,
       onTap: () {
-        Vibration.vibrate(duration: 30);
+        HapticFeedback.lightImpact();
         context.read<PomodoroThemeCubit>().setTheme(appTheme);
       },
     );
@@ -346,7 +346,7 @@ class _ThemeSelectionView extends StatelessWidget {
             )
           : null,
       onTap: () {
-        Vibration.vibrate(duration: 30);
+        HapticFeedback.lightImpact();
         context.read<ThemeCubit>().setThemeMode(themeMode);
       },
     );

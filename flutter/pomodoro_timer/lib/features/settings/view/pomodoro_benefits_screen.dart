@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vibration/vibration.dart';
+import 'package:flutter/services.dart';
 
 /// Educational screen explaining the Pomodoro Technique.
 ///
@@ -373,7 +373,7 @@ class PomodoroBenefitsScreen extends StatelessWidget {
         const SizedBox(height: 16),
         FilledButton.icon(
           onPressed: () {
-            Vibration.vibrate(duration: 50);
+            HapticFeedback.mediumImpact();
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
           icon: const Icon(Icons.play_arrow),
