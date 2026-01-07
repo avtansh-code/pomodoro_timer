@@ -1,6 +1,6 @@
-package com.avtanshgupta.mr.pomodoro.domain.repository
+package avtanshgupta.PomodoroTimer.domain.repository
 
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerSettings
+import avtanshgupta.PomodoroTimer.domain.model.TimerSettings
 import kotlinx.coroutines.flow.Flow
 
 /**

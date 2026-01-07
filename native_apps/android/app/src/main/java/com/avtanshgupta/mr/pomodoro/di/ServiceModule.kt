@@ -1,11 +1,11 @@
-package com.avtanshgupta.mr.pomodoro.di
+package avtanshgupta.PomodoroTimer.di
 
 import android.content.Context
-import com.avtanshgupta.mr.pomodoro.domain.repository.SessionRepository
-import com.avtanshgupta.mr.pomodoro.manager.DoNotDisturbManager
-import com.avtanshgupta.mr.pomodoro.manager.ScreenshotHelper
-import com.avtanshgupta.mr.pomodoro.service.NotificationHelper
-import com.avtanshgupta.mr.pomodoro.util.TimerManager
+import avtanshgupta.PomodoroTimer.domain.repository.SessionRepository
+import avtanshgupta.PomodoroTimer.manager.DoNotDisturbManager
+import avtanshgupta.PomodoroTimer.manager.ScreenshotHelper
+import avtanshgupta.PomodoroTimer.service.NotificationHelper
+import avtanshgupta.PomodoroTimer.util.TimerManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

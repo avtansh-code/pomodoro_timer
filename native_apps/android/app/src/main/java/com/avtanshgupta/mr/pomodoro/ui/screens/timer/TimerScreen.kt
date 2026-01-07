@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.ui.screens.timer
+package avtanshgupta.PomodoroTimer.ui.screens.timer
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -51,13 +51,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.avtanshgupta.mr.pomodoro.domain.model.SessionType
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerState
-import com.avtanshgupta.mr.pomodoro.presentation.viewmodel.TimerViewModel
-import com.avtanshgupta.mr.pomodoro.ui.components.CircularTimerProgress
-import com.avtanshgupta.mr.pomodoro.ui.theme.LongBreakColor
-import com.avtanshgupta.mr.pomodoro.ui.theme.PomodoroTheme
-import com.avtanshgupta.mr.pomodoro.ui.theme.ShortBreakColor
+import avtanshgupta.PomodoroTimer.domain.model.SessionType
+import avtanshgupta.PomodoroTimer.domain.model.TimerState
+import avtanshgupta.PomodoroTimer.presentation.viewmodel.TimerViewModel
+import avtanshgupta.PomodoroTimer.ui.components.CircularTimerProgress
+import avtanshgupta.PomodoroTimer.ui.theme.LongBreakColor
+import avtanshgupta.PomodoroTimer.ui.theme.PomodoroTheme
+import avtanshgupta.PomodoroTimer.ui.theme.ShortBreakColor
 import java.util.Locale
 
 /**

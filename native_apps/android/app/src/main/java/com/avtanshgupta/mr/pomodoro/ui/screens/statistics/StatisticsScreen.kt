@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.ui.screens.statistics
+package avtanshgupta.PomodoroTimer.ui.screens.statistics
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -24,8 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.avtanshgupta.mr.pomodoro.presentation.viewmodel.StatisticsViewModel
-import com.avtanshgupta.mr.pomodoro.ui.theme.PomodoroTheme
+import avtanshgupta.PomodoroTimer.presentation.viewmodel.StatisticsViewModel
+import avtanshgupta.PomodoroTimer.ui.theme.PomodoroTheme
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin

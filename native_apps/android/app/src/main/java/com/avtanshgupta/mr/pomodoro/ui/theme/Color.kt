@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.ui.theme
+package avtanshgupta.PomodoroTimer.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

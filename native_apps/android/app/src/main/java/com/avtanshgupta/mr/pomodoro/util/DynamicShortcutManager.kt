@@ -1,13 +1,13 @@
-package com.avtanshgupta.mr.pomodoro.util
+package avtanshgupta.PomodoroTimer.util
 
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import com.avtanshgupta.mr.pomodoro.MainActivity
-import com.avtanshgupta.mr.pomodoro.R
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerState
+import avtanshgupta.PomodoroTimer.MainActivity
+import avtanshgupta.PomodoroTimer.R
+import avtanshgupta.PomodoroTimer.domain.model.TimerState
 
 /**
  * DynamicShortcutManager manages dynamic app shortcuts.

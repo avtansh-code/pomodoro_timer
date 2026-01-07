@@ -1,8 +1,8 @@
-package com.avtanshgupta.mr.pomodoro.data.repository
+package avtanshgupta.PomodoroTimer.data.repository
 
-import com.avtanshgupta.mr.pomodoro.data.local.datastore.SettingsDataStore
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerSettings
-import com.avtanshgupta.mr.pomodoro.domain.repository.SettingsRepository
+import avtanshgupta.PomodoroTimer.data.local.datastore.SettingsDataStore
+import avtanshgupta.PomodoroTimer.domain.model.TimerSettings
+import avtanshgupta.PomodoroTimer.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject

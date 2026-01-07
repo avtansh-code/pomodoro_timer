@@ -152,7 +152,7 @@ Store links in `index.html`:
 </a>
 
 <!-- Google Play Store -->
-<a href="https://play.google.com/store/apps/details?id=com.avtanshgupta.mr.pomodoro">
+<a href="https://play.google.com/store/apps/details?id=avtanshgupta.PomodoroTimer">
   Get it on Google Play
 </a>
 ```

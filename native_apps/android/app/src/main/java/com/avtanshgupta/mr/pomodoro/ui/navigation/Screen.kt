@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.ui.navigation
+package avtanshgupta.PomodoroTimer.ui.navigation
 
 /**
  * Sealed class defining app navigation screens.

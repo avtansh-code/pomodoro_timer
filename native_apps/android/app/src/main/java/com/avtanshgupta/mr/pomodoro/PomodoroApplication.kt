@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro
+package avtanshgupta.PomodoroTimer
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

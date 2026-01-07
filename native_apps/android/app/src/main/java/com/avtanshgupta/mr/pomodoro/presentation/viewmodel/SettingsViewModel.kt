@@ -1,13 +1,13 @@
-package com.avtanshgupta.mr.pomodoro.presentation.viewmodel
+package avtanshgupta.PomodoroTimer.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.avtanshgupta.mr.pomodoro.domain.model.AppTheme
-import com.avtanshgupta.mr.pomodoro.domain.model.AppThemeType
-import com.avtanshgupta.mr.pomodoro.domain.model.SessionType
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerSettings
-import com.avtanshgupta.mr.pomodoro.domain.repository.SessionRepository
-import com.avtanshgupta.mr.pomodoro.domain.repository.SettingsRepository
+import avtanshgupta.PomodoroTimer.domain.model.AppTheme
+import avtanshgupta.PomodoroTimer.domain.model.AppThemeType
+import avtanshgupta.PomodoroTimer.domain.model.SessionType
+import avtanshgupta.PomodoroTimer.domain.model.TimerSettings
+import avtanshgupta.PomodoroTimer.domain.repository.SessionRepository
+import avtanshgupta.PomodoroTimer.domain.repository.SettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -1,9 +1,9 @@
-package com.avtanshgupta.mr.pomodoro.data.local.database.entity
+package avtanshgupta.PomodoroTimer.data.local.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.avtanshgupta.mr.pomodoro.domain.model.SessionType
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerSession
+import avtanshgupta.PomodoroTimer.domain.model.SessionType
+import avtanshgupta.PomodoroTimer.domain.model.TimerSession
 
 /**
  * Room database entity for storing timer sessions.

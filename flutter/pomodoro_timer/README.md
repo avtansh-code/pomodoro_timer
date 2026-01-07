@@ -352,8 +352,8 @@ Modify themes in `lib/app/theme/`. The app includes 5 built-in themes:
 
 ### Bundle Identifier
 
-- **iOS**: `com.avtanshgupta.mr.pomodoro`
-- **Android**: `com.avtanshgupta.mr.pomodoro`
+- **iOS**: `avtanshgupta.PomodoroTimer`
+- **Android**: `avtanshgupta.PomodoroTimer`
 
 Update in:
 - iOS: `ios/Runner.xcodeproj/project.pbxproj`

@@ -1,8 +1,8 @@
-package com.avtanshgupta.mr.pomodoro.presentation.viewmodel
+package avtanshgupta.PomodoroTimer.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.avtanshgupta.mr.pomodoro.manager.ScreenshotHelper
+import avtanshgupta.PomodoroTimer.manager.ScreenshotHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

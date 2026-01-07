@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.ui.components
+package avtanshgupta.PomodoroTimer.ui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -17,11 +17,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.avtanshgupta.mr.pomodoro.domain.model.SessionType
-import com.avtanshgupta.mr.pomodoro.ui.theme.FocusColor
-import com.avtanshgupta.mr.pomodoro.ui.theme.LongBreakColor
-import com.avtanshgupta.mr.pomodoro.ui.theme.PomodoroTheme
-import com.avtanshgupta.mr.pomodoro.ui.theme.ShortBreakColor
+import avtanshgupta.PomodoroTimer.domain.model.SessionType
+import avtanshgupta.PomodoroTimer.ui.theme.FocusColor
+import avtanshgupta.PomodoroTimer.ui.theme.LongBreakColor
+import avtanshgupta.PomodoroTimer.ui.theme.PomodoroTheme
+import avtanshgupta.PomodoroTimer.ui.theme.ShortBreakColor
 
 /**
  * Session header showing session type and number.

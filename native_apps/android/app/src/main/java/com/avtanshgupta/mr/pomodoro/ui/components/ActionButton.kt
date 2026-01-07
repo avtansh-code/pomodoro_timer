@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.ui.components
+package avtanshgupta.PomodoroTimer.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -38,7 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.avtanshgupta.mr.pomodoro.ui.theme.PomodoroTheme
+import avtanshgupta.PomodoroTimer.ui.theme.PomodoroTheme
 
 /**
  * Reusable action button component matching iOS ActionButton design.

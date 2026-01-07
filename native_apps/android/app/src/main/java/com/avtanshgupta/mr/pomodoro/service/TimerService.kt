@@ -1,13 +1,13 @@
-package com.avtanshgupta.mr.pomodoro.service
+package avtanshgupta.PomodoroTimer.service
 
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import com.avtanshgupta.mr.pomodoro.domain.model.SessionType
-import com.avtanshgupta.mr.pomodoro.domain.model.TimerState
-import com.avtanshgupta.mr.pomodoro.domain.repository.SettingsRepository
-import com.avtanshgupta.mr.pomodoro.domain.usecase.SaveSessionUseCase
-import com.avtanshgupta.mr.pomodoro.util.TimerManager
+import avtanshgupta.PomodoroTimer.domain.model.SessionType
+import avtanshgupta.PomodoroTimer.domain.model.TimerState
+import avtanshgupta.PomodoroTimer.domain.repository.SettingsRepository
+import avtanshgupta.PomodoroTimer.domain.usecase.SaveSessionUseCase
+import avtanshgupta.PomodoroTimer.util.TimerManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

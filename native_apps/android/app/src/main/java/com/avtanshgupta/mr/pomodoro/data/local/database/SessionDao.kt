@@ -1,10 +1,10 @@
-package com.avtanshgupta.mr.pomodoro.data.local.database
+package avtanshgupta.PomodoroTimer.data.local.database
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.avtanshgupta.mr.pomodoro.data.local.database.entity.SessionEntity
+import avtanshgupta.PomodoroTimer.data.local.database.entity.SessionEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

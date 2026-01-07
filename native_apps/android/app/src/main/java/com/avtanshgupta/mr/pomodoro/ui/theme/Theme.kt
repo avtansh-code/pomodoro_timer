@@ -1,4 +1,4 @@
-package com.avtanshgupta.mr.pomodoro.ui.theme
+package avtanshgupta.PomodoroTimer.ui.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -11,7 +11,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.avtanshgupta.mr.pomodoro.domain.model.AppTheme
+import avtanshgupta.PomodoroTimer.domain.model.AppTheme
 
 /**
  * Pomodoro Timer Material3 Theme
