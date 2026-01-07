@@ -35,8 +35,8 @@ website/
 │   ├── css/
 │   │   └── styles.css      # Main stylesheet
 │   ├── favicon.png         # Site icon
-│   ├── ios_focus.png       # iOS screenshot
-│   └── android_focus.png   # Android screenshot
+│   ├── focus_ss.png        # Focus timer screenshot
+│   └── stats_ss.png        # Statistics screenshot
 │
 ├── app.yaml                # Google Cloud config
 ├── .gcloudignore          # Deployment ignore file

@@ -24,7 +24,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Last updated: January 6, 2026',
+            'Last updated: January 8, 2026',
             style: Theme.of(context).textTheme.bodySmall,
             textAlign: TextAlign.center,
           ),
@@ -44,8 +44,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
             title: 'What We Store Locally',
             content:
                 '• Timer settings (work duration, break duration, etc.)\n'
-                '• Session history and statistics\n'
-                '• App preferences (theme, notifications)\n\n'
+                '• Session history and statistics (stored in Hive database)\n'
+                '• App preferences (theme, notifications, via SharedPreferences)\n\n'
                 'All this data remains on your device and is never shared.',
           ),
 
