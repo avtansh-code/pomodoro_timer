@@ -9,7 +9,7 @@ A beautiful, privacy-first Pomodoro timer for iOS, Android, macOS, and Windows. 
 [![Flutter](https://img.shields.io/badge/Flutter-3.8+-02569B.svg)](https://flutter.dev/)
 [![Dart](https://img.shields.io/badge/Dart-3.8+-0175C2.svg)](https://dart.dev/)
 [![Tests](https://img.shields.io/badge/Tests-200+-brightgreen.svg)](flutter/pomodoro_timer/test/)
-[![License](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
 
@@ -281,7 +281,7 @@ The original native iOS and Android implementations have been retired and moved 
 
 ## 📄 License
 
-This project is proprietary software. See [LICENSE](LICENSE) for details.
+This project is open-source software licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
