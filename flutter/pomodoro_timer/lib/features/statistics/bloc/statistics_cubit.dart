@@ -3,7 +3,7 @@ import '../data/statistics_repository.dart';
 import 'statistics_state.dart';
 
 /// Cubit for managing statistics state.
-/// 
+///
 /// Handles loading and filtering of timer session statistics.
 class StatisticsCubit extends Cubit<StatisticsState> {
   final StatisticsRepository _repository;
@@ -24,15 +24,14 @@ class StatisticsCubit extends Cubit<StatisticsState> {
         StatisticsFilter.all => _repository.getAllSessions(),
       };
 
-      emit(state.copyWith(
-        sessions: sessions,
-        isLoading: false,
-      ));
+      emit(state.copyWith(sessions: sessions, isLoading: false));
     } catch (e) {
-      emit(state.copyWith(
-        isLoading: false,
-        errorMessage: 'Failed to load statistics: $e',
-      ));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: 'Failed to load statistics: $e',
+        ),
+      );
     }
   }
 
@@ -51,18 +50,17 @@ class StatisticsCubit extends Cubit<StatisticsState> {
   Future<void> clearAllStatistics() async {
     try {
       emit(state.copyWith(isLoading: true, clearError: true));
-      
+
       await _repository.clearAllSessions();
-      
-      emit(state.copyWith(
-        sessions: [],
-        isLoading: false,
-      ));
+
+      emit(state.copyWith(sessions: [], isLoading: false));
     } catch (e) {
-      emit(state.copyWith(
-        isLoading: false,
-        errorMessage: 'Failed to clear statistics: $e',
-      ));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: 'Failed to clear statistics: $e',
+        ),
+      );
     }
   }
 

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 /// Base class for all timer events.
-/// 
+///
 /// Timer events represent user actions or system events that
 /// trigger state changes in the TimerBloc.
 sealed class TimerEvent extends Equatable {
@@ -12,7 +12,7 @@ sealed class TimerEvent extends Equatable {
 }
 
 /// Event to start the timer.
-/// 
+///
 /// Initiates a new timer session with the specified duration.
 class TimerStarted extends TimerEvent {
   /// Duration of the timer in seconds
@@ -40,7 +40,7 @@ class TimerReset extends TimerEvent {
 }
 
 /// Internal event triggered by the timer tick.
-/// 
+///
 /// This event is emitted every second while the timer is running
 /// to update the remaining duration.
 class TimerTicked extends TimerEvent {
@@ -59,8 +59,33 @@ class TimerSkipped extends TimerEvent {
 }
 
 /// Event triggered when a timer session completes.
-/// 
+///
 /// This handles the transition between work and break sessions.
 class TimerCompleted extends TimerEvent {
   const TimerCompleted();
+}
+
+/// Event to update timer settings.
+///
+/// This allows updating settings (like durations) without losing timer state.
+class TimerSettingsUpdated extends TimerEvent {
+  final int workDuration;
+  final int shortBreakDuration;
+  final int longBreakDuration;
+  final int sessionsBeforeLongBreak;
+
+  const TimerSettingsUpdated({
+    required this.workDuration,
+    required this.shortBreakDuration,
+    required this.longBreakDuration,
+    required this.sessionsBeforeLongBreak,
+  });
+
+  @override
+  List<Object?> get props => [
+    workDuration,
+    shortBreakDuration,
+    longBreakDuration,
+    sessionsBeforeLongBreak,
+  ];
 }

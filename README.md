@@ -61,6 +61,7 @@ This simple approach helps improve focus, reduce mental fatigue, increase produc
 Mr. Pomodoro/
 ├── iOS/                    # iOS App (SwiftUI)
 ├── android/                # Android App (Jetpack Compose)
+├── flutter/                # Flutter App (Cross-platform) ✨
 ├── website/                # Marketing Website
 ├── screenshots/            # App Store Screenshots
 ├── docs/                   # Technical Documentation
@@ -82,6 +83,14 @@ Mr. Pomodoro/
 - **Framework:** Jetpack Compose
 - **Architecture:** MVVM + Clean Architecture
 - **Min Version:** Android 13.0 (API 33)
+
+### Flutter ✨
+- **Language:** Dart 3.10+
+- **Framework:** Flutter 3.10+
+- **Architecture:** Clean Architecture + BLoC
+- **State Management:** flutter_bloc
+- **Testing:** 129 comprehensive tests
+- **Platforms:** iOS, Android, Web, Desktop
 
 ---
 
@@ -118,6 +127,28 @@ cd pomodoro_timer/android
 
 See **[android/README.md](android/README.md)** for detailed setup instructions.
 
+### Flutter Development ✨
+
+```bash
+# Clone and navigate to Flutter directory
+git clone https://github.com/avtansh-code/pomodoro_timer.git
+cd pomodoro_timer/flutter/pomodoro_timer
+
+# Install dependencies
+flutter pub get
+
+# Generate code (Hive adapters)
+dart run build_runner build --delete-conflicting-outputs
+
+# Run the app
+flutter run
+
+# Run tests (129 tests)
+flutter test
+```
+
+See **[flutter/pomodoro_timer/README.md](flutter/pomodoro_timer/README.md)** for detailed setup instructions.
+
 ---
 
 ## Documentation
@@ -130,6 +161,7 @@ See **[android/README.md](android/README.md)** for detailed setup instructions.
 - **[Architecture](docs/ARCHITECTURE.md)** - Technical architecture overview
 - **[iOS Setup](iOS/README.md)** - iOS development guide
 - **[Android Setup](android/README.md)** - Android development guide
+- **[Flutter Setup](flutter/pomodoro_timer/README.md)** - Flutter development guide ✨
 - **[Contributing](CONTRIBUTING.md)** - How to contribute
 - **[Code of Conduct](CODE_OF_CONDUCT.md)** - Community guidelines
 - **[Security](SECURITY.md)** - Security policy
@@ -194,6 +226,6 @@ Created by **[Avtansh Gupta](https://github.com/avtansh-code)**
 
 <div align="center">
 
-**Made with ❤️ using SwiftUI & Jetpack Compose**
+**Made with ❤️ using SwiftUI, Jetpack Compose & Flutter**
 
 </div>

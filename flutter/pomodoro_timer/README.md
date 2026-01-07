@@ -144,6 +144,46 @@ flutter build ipa --release
 
 ## 🧪 Testing
 
+This project has **comprehensive test coverage** with 129 tests covering all major components.
+
+### Test Coverage
+
+- **✅ 129 tests passing** (0 failures)
+- **Core Models**: 21 tests
+- **Core Services**: 21 tests (PersistenceService, AudioService)
+- **Data Layer**: 17 tests (StatisticsRepository)
+- **BLoC/Cubit**: 57 tests (TimerBloc, SettingsCubit, StatisticsCubit, ThemeCubit)
+- **Widget Tests**: 13 tests
+
+### Test Structure
+
+```
+test/
+├── core/
+│   ├── models/
+│   │   ├── timer_session_test.dart      # 13 tests
+│   │   └── timer_settings_test.dart     # 8 tests
+│   └── services/
+│       ├── persistence_service_test.dart # 10 tests
+│       └── audio_service_test.dart       # 11 tests
+├── features/
+│   ├── settings/bloc/
+│   │   └── settings_cubit_test.dart      # 10 tests
+│   ├── statistics/
+│   │   ├── bloc/
+│   │   │   └── statistics_cubit_test.dart # 16 tests
+│   │   └── data/
+│   │       └── statistics_repository_test.dart # 17 tests
+│   └── timer/bloc/
+│       └── timer_bloc_test.dart          # 31 tests
+├── app/
+│   └── theme/
+│       └── app_theme_test.dart           # 13 tests
+└── widget_test.dart                      # 1 test
+```
+
+### Running Tests
+
 ```bash
 # Run all tests
 flutter test
@@ -151,9 +191,78 @@ flutter test
 # Run specific test file
 flutter test test/core/models/timer_settings_test.dart
 
-# Run with coverage
+# Run tests with coverage
 flutter test --coverage
+
+# Run tests in a specific directory
+flutter test test/features/timer/
+
+# Run a single test by name
+flutter test --plain-name "TimerBloc initial state"
+
+# Run tests with verbose output
+flutter test --reporter expanded
+
+# Generate coverage report (requires lcov)
+genhtml coverage/lcov.info -o coverage/html
+open coverage/html/index.html
 ```
+
+### Test Categories
+
+#### Unit Tests
+- **Models**: Data class behavior, serialization, equality
+- **Services**: Business logic, persistence, audio management
+- **Repository**: Data access, filtering, CRUD operations
+- **BLoC/Cubit**: State management, event handling, state transitions
+
+#### Integration Tests
+- **Widget Tests**: UI components and user interactions
+- **End-to-end flows**: Complete user journeys
+
+### Writing New Tests
+
+Follow these patterns when adding tests:
+
+```dart
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  group('YourComponent', () {
+    late YourComponent component;
+
+    setUp(() {
+      // Initialize before each test
+      component = YourComponent();
+    });
+
+    tearDown(() {
+      // Clean up after each test
+      component.dispose();
+    });
+
+    test('should do something', () {
+      // Arrange
+      final input = 'test';
+      
+      // Act
+      final result = component.doSomething(input);
+      
+      // Assert
+      expect(result, equals('expected'));
+    });
+  });
+}
+```
+
+### Continuous Integration
+
+Tests are automatically run on:
+- Pull requests
+- Main branch commits
+- Release branches
+
+Ensure all tests pass before submitting a PR.
 
 ## 🎨 Customization
 

@@ -3,19 +3,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/timer_settings.dart';
 
 /// Service for persisting and retrieving timer settings.
-/// 
+///
 /// Uses SharedPreferences to store user preferences locally.
 /// All methods are synchronous for simplicity since SharedPreferences
 /// caches values in memory after initialization.
 class PersistenceService {
   final SharedPreferences _prefs;
-  
+
   static const String _settingsKey = 'timer_settings';
 
   PersistenceService(this._prefs);
 
   /// Saves timer settings to local storage.
-  /// 
+  ///
   /// Returns true if the save was successful, false otherwise.
   Future<bool> saveSettings(TimerSettings settings) async {
     try {
@@ -28,7 +28,7 @@ class PersistenceService {
   }
 
   /// Retrieves timer settings from local storage.
-  /// 
+  ///
   /// Returns the saved settings if available, otherwise returns
   /// default settings.
   TimerSettings getSettings() {

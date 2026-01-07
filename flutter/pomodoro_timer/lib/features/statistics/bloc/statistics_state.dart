@@ -2,26 +2,21 @@ import 'package:equatable/equatable.dart';
 import '../../../core/models/timer_session.dart';
 
 /// Filter for displaying statistics
-enum StatisticsFilter {
-  today,
-  week,
-  month,
-  all,
-}
+enum StatisticsFilter { today, week, month, all }
 
 /// State for the statistics feature.
-/// 
+///
 /// Contains filtered sessions and aggregate statistics.
 class StatisticsState extends Equatable {
   /// List of filtered sessions
   final List<TimerSession> sessions;
-  
+
   /// Current filter being applied
   final StatisticsFilter filter;
-  
+
   /// Whether statistics are being loaded
   final bool isLoading;
-  
+
   /// Error message if something went wrong
   final String? errorMessage;
 
@@ -65,20 +60,20 @@ class StatisticsState extends Equatable {
   /// Gets work sessions grouped by date
   Map<DateTime, List<TimerSession>> get sessionsByDate {
     final Map<DateTime, List<TimerSession>> grouped = {};
-    
+
     for (final session in sessions) {
       final date = DateTime(
         session.startTime.year,
         session.startTime.month,
         session.startTime.day,
       );
-      
+
       if (!grouped.containsKey(date)) {
         grouped[date] = [];
       }
       grouped[date]!.add(session);
     }
-    
+
     return grouped;
   }
 
