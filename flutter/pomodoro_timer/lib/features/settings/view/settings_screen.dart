@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../app/theme/app_theme.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../core/models/timer_settings.dart';
 import '../../statistics/data/statistics_repository.dart';
@@ -7,6 +8,7 @@ import '../bloc/settings_cubit.dart';
 import '../bloc/settings_state.dart';
 import 'pomodoro_benefits_screen.dart';
 import 'privacy_policy_screen.dart';
+import 'theme_selection_screen.dart';
 
 /// Settings screen matching iOS legacy app structure.
 ///
@@ -35,6 +37,12 @@ class _SettingsView extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: BlocConsumer<SettingsCubit, SettingsState>(
         listener: (context, state) {
           if (state.errorMessage != null) {
@@ -70,10 +78,15 @@ class _SettingsView extends StatelessWidget {
               ),
             ),
             child: ListView(
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               children: [
                 // Learn Section - Featured at top
                 _buildLearnSection(context),
+
+                const SizedBox(height: 8),
+
+                // Theme Section
+                _buildThemeSection(context),
 
                 const SizedBox(height: 8),
 
@@ -128,6 +141,55 @@ class _SettingsView extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => const PomodoroBenefitsScreen(),
               ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildThemeSection(BuildContext context) {
+    return _buildSection(
+      context: context,
+      icon: Icons.palette,
+      title: 'Appearance',
+      children: [
+        BlocBuilder<ThemeCubit, ThemeState>(
+          builder: (context, themeState) {
+            String themeModeName;
+            IconData themeModeIcon;
+            Color themeModeColor;
+
+            switch (themeState.themeMode) {
+              case ThemeMode.light:
+                themeModeName = 'Light';
+                themeModeIcon = Icons.light_mode;
+                themeModeColor = Colors.amber;
+                break;
+              case ThemeMode.dark:
+                themeModeName = 'Dark';
+                themeModeIcon = Icons.dark_mode;
+                themeModeColor = Colors.indigo;
+                break;
+              case ThemeMode.system:
+                themeModeName = 'System';
+                themeModeIcon = Icons.brightness_auto;
+                themeModeColor = Colors.blue;
+                break;
+            }
+
+            return ListTile(
+              leading: Icon(themeModeIcon, color: themeModeColor),
+              title: const Text('App Theme'),
+              subtitle: Text(themeModeName),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const ThemeSelectionScreen(),
+                  ),
+                );
+              },
             );
           },
         ),
@@ -351,7 +413,7 @@ class _SettingsView extends StatelessWidget {
         const ListTile(
           leading: Icon(Icons.info_outline, color: Colors.grey),
           title: Text('Version'),
-          trailing: Text('1.0.0', style: TextStyle(color: Colors.grey)),
+          trailing: Text('2.0.0', style: TextStyle(color: Colors.grey)),
         ),
       ],
     );
@@ -417,21 +479,31 @@ class _SettingsView extends StatelessWidget {
     return ListTile(
       leading: Icon(icon, color: iconColor),
       title: Text(title),
-      subtitle: Slider(
-        value: value.toDouble(),
-        min: min.toDouble(),
-        max: max.toDouble(),
-        divisions: max - min,
-        label: '$value min',
-        onChanged: onChanged,
-      ),
-      trailing: Text(
-        '$value min',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-          fontWeight: FontWeight.w600,
-          fontSize: 16,
-        ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '$value min',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            icon: const Icon(Icons.remove_circle_outline),
+            onPressed: value > min
+                ? () => onChanged((value - 1).toDouble())
+                : null,
+          ),
+          IconButton(
+            icon: const Icon(Icons.add_circle_outline),
+            onPressed: value < max
+                ? () => onChanged((value + 1).toDouble())
+                : null,
+          ),
+        ],
       ),
     );
   }
