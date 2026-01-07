@@ -107,15 +107,10 @@ class _MainTimerView extends StatelessWidget {
                 body: AnimatedContainer(
                   duration: const Duration(milliseconds: 600),
                   curve: Curves.easeInOut,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        sessionColor.withValues(alpha: _getBackgroundOpacity(timerState.sessionType)),
-                        Theme.of(context).scaffoldBackgroundColor,
-                      ],
-                    ),
+                  color: Color.lerp(
+                    Theme.of(context).scaffoldBackgroundColor,
+                    sessionColor,
+                    _getBackgroundOpacity(timerState.sessionType),
                   ),
                   child: SafeArea(
                     child: Padding(
@@ -318,27 +313,51 @@ class _MainTimerView extends StatelessWidget {
       nextSessionName = 'Focus';
     }
 
-    return TextButton.icon(
-      onPressed: () {
-        context.read<TimerBloc>().add(const event.TimerSkipped());
-      },
-      icon: Icon(
-        Icons.skip_next_rounded, // Better icon for skip
-        size: 20,
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
       ),
-      label: Text(
-        'Skip to $nextSessionName',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
+      child: TextButton.icon(
+        onPressed: () {
+          context.read<TimerBloc>().add(const event.TimerSkipped());
+        },
+        icon: Icon(
+          Icons.skip_next_rounded, // Better icon for skip
+          size: 20,
+          color: theme.colorScheme.onSurfaceVariant,
         ),
-      ),
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        backgroundColor: Colors.grey.withValues(alpha: 0.2),
-        shape: const StadiumBorder(), // Capsule shape
+        label: Text(
+          'Skip to $nextSessionName',
+          style: TextStyle(
+            color: theme.colorScheme.onSurfaceVariant,
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          backgroundColor: theme.cardColor,
+          shape: StadiumBorder(
+            side: BorderSide(
+              color: isDark 
+                  ? theme.dividerColor.withValues(alpha: 0.3)
+                  : Colors.black.withValues(alpha: 0.1),
+              width: 1,
+            ),
+          ),
+        ),
       ),
     );
   }

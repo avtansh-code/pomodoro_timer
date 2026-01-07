@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/di/service_locator.dart';
+import '../theme/pomodoro_theme_cubit.dart';
 import '../../features/settings/bloc/settings_cubit.dart';
 import '../../features/statistics/bloc/statistics_cubit.dart';
 import '../../features/statistics/data/statistics_repository.dart';
@@ -71,64 +73,149 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       const SettingsScreen(),
     ];
 
-    // Use platform-specific navigation
-    if (Platform.isIOS) {
-      return CupertinoTabScaffold(
-        tabBar: CupertinoTabBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.95),
-          activeColor: Theme.of(context).colorScheme.primary,
-          inactiveColor: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.timer),
-              label: 'Timer',
+    return Scaffold(
+      extendBody: true, // Allow body to extend behind the navigation bar
+      body: IndexedStack(index: _selectedIndex, children: pages),
+      bottomNavigationBar: _buildModernNavigationBar(context),
+    );
+  }
+
+  Widget _buildModernNavigationBar(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = context.watch<PomodoroThemeCubit>().state.currentTheme.primaryColor;
+    final isDark = theme.brightness == Brightness.dark;
+    
+    return Container(
+      margin: EdgeInsets.fromLTRB(
+        16,
+        0,
+        16,
+        Platform.isIOS ? 24 : 16,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+          child: Container(
+            height: 72,
+            decoration: BoxDecoration(
+              color: isDark 
+                  ? Colors.black.withValues(alpha: 0.7)
+                  : Colors.white.withValues(alpha: 0.85),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.1)
+                    : Colors.black.withValues(alpha: 0.08),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.12),
+                  blurRadius: 24,
+                  offset: const Offset(0, 8),
+                ),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.chart_bar),
-              label: 'Stats',
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(
+                  context,
+                  index: 0,
+                  // iOS: timer, Flutter equivalent: timer/timer_outlined
+                  icon: CupertinoIcons.timer,
+                  selectedIcon: CupertinoIcons.timer_fill,
+                  label: 'Timer',
+                  primaryColor: primaryColor,
+                ),
+                _buildNavItem(
+                  context,
+                  index: 1,
+                  // iOS: chart.line.uptrend.xyaxis, Flutter equivalent: graph_increase/trending_up
+                  icon: CupertinoIcons.graph_square,
+                  selectedIcon: CupertinoIcons.graph_square_fill,
+                  label: 'Stats',
+                  primaryColor: primaryColor,
+                ),
+                _buildNavItem(
+                  context,
+                  index: 2,
+                  // iOS: slider.horizontal.3, Flutter equivalent: slider icons
+                  icon: CupertinoIcons.slider_horizontal_3,
+                  selectedIcon: CupertinoIcons.slider_horizontal_3,
+                  label: 'Settings',
+                  primaryColor: primaryColor,
+                ),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.settings),
-              label: 'Settings',
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(
+    BuildContext context, {
+    required int index,
+    required IconData icon,
+    required IconData selectedIcon,
+    required String label,
+    required Color primaryColor,
+  }) {
+    final isSelected = _selectedIndex == index;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
+    return GestureDetector(
+      onTap: () => _onItemTapped(index),
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: isSelected
+            ? BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    primaryColor.withValues(alpha: 0.2),
+                    primaryColor.withValues(alpha: 0.1),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+              )
+            : null,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                isSelected ? selectedIcon : icon,
+                key: ValueKey(isSelected),
+                color: isSelected 
+                    ? primaryColor 
+                    : (isDark ? Colors.white70 : Colors.black54),
+                size: 26,
+              ),
+            ),
+            const SizedBox(height: 4),
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 200),
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                color: isSelected 
+                    ? primaryColor 
+                    : (isDark ? Colors.white70 : Colors.black54),
+              ),
+              child: Text(label),
             ),
           ],
         ),
-        tabBuilder: (context, index) => pages[index],
-      );
-    } else {
-      // Android/Web - Use Material 3 Navigation Bar with subtle styling
-      return Scaffold(
-        body: IndexedStack(index: _selectedIndex, children: pages),
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: _onItemTapped,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.98),
-          indicatorColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-          surfaceTintColor: Colors.transparent,
-          elevation: 0,
-          height: 65,
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.timer_outlined, size: 24),
-              selectedIcon: Icon(Icons.timer, size: 24),
-              label: 'Timer',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.bar_chart_outlined, size: 24),
-              selectedIcon: Icon(Icons.bar_chart, size: 24),
-              label: 'Stats',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.settings_outlined, size: 24),
-              selectedIcon: Icon(Icons.settings, size: 24),
-              label: 'Settings',
-            ),
-          ],
-        ),
-      );
-    }
+      ),
+    );
   }
 }

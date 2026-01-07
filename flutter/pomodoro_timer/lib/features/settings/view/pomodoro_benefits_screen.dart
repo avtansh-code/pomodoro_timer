@@ -26,15 +26,10 @@ class PomodoroBenefitsScreen extends StatelessWidget {
         surfaceTintColor: Colors.transparent,
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              theme.colorScheme.primary.withValues(alpha: 0.12),
-              theme.scaffoldBackgroundColor,
-            ],
-          ),
+        color: Color.lerp(
+          theme.scaffoldBackgroundColor,
+          theme.colorScheme.primary,
+          0.12,
         ),
         child: SafeArea(
           child: ListView(
@@ -127,6 +122,15 @@ class PomodoroBenefitsScreen extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Card(
+          color: theme.cardColor,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: theme.dividerColor.withValues(alpha: 0.3),
+              width: 0.5,
+            ),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -301,6 +305,15 @@ class PomodoroBenefitsScreen extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Card(
+          color: theme.cardColor,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: theme.dividerColor.withValues(alpha: 0.3),
+              width: 0.5,
+            ),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(

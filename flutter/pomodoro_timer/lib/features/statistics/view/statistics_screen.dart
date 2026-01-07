@@ -65,15 +65,10 @@ class _StatisticsViewState extends State<_StatisticsView> {
               final streak = _calculateStreak(state);
 
               return Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      primaryColor.withValues(alpha: 0.12),
-                      theme.scaffoldBackgroundColor,
-                    ],
-                  ),
+                color: Color.lerp(
+                  theme.scaffoldBackgroundColor,
+                  primaryColor,
+                  0.12,
                 ),
                 child: SafeArea(
                   child: ListView(
@@ -201,17 +196,86 @@ class _StatisticsViewState extends State<_StatisticsView> {
   }
 
   Widget _buildTimeRangePicker(BuildContext context) {
-    return SegmentedButton<StatisticsFilter>(
-      segments: const [
-        ButtonSegment(value: StatisticsFilter.week, label: Text('Week')),
-        ButtonSegment(value: StatisticsFilter.month, label: Text('Month')),
-      ],
-      selected: {_selectedTimeRange},
-      onSelectionChanged: (Set<StatisticsFilter> newSelection) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
+    
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.dividerColor.withValues(alpha: 0.3),
+          width: 0.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildSegmentButton(
+              context,
+              'Week',
+              StatisticsFilter.week,
+              primaryColor,
+            ),
+          ),
+          Expanded(
+            child: _buildSegmentButton(
+              context,
+              'Month',
+              StatisticsFilter.month,
+              primaryColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildSegmentButton(
+    BuildContext context,
+    String label,
+    StatisticsFilter filter,
+    Color primaryColor,
+  ) {
+    final isSelected = _selectedTimeRange == filter;
+    final theme = Theme.of(context);
+    
+    return GestureDetector(
+      onTap: () {
         setState(() {
-          _selectedTimeRange = newSelection.first;
+          _selectedTimeRange = filter;
         });
       },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          gradient: isSelected 
+              ? LinearGradient(
+                  colors: [
+                    primaryColor,
+                    primaryColor.withValues(alpha: 0.8),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: isSelected 
+                ? Colors.white 
+                : theme.colorScheme.onSurface,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+            fontSize: 15,
+          ),
+        ),
+      ),
     );
   }
 
@@ -1035,4 +1099,3 @@ class _StatisticsViewState extends State<_StatisticsView> {
     return mins > 0 ? '${hours}h ${mins}m' : '${hours}h';
   }
 }
-

@@ -76,15 +76,10 @@ class _SettingsView extends StatelessWidget {
               final primaryColor = pomodoroState.currentTheme.primaryColor;
               
               return Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      primaryColor.withValues(alpha: 0.12),
-                      theme.scaffoldBackgroundColor,
-                    ],
-                  ),
+                color: Color.lerp(
+                  theme.scaffoldBackgroundColor,
+                  primaryColor,
+                  0.12,
                 ),
                 child: SafeArea(
                   child: ListView(
@@ -176,56 +171,52 @@ class _SettingsView extends StatelessWidget {
       children: [
         BlocBuilder<PomodoroThemeCubit, PomodoroThemeState>(
           builder: (context, pomodoroThemeState) {
-            return ListTile(
-              leading: _buildThemePreview(pomodoroThemeState.currentTheme),
-              title: const Text('Color Scheme'),
-              subtitle: Text(pomodoroThemeState.currentTheme.name),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const ThemeSelectionScreen(),
+            return BlocBuilder<ThemeCubit, ThemeState>(
+              builder: (context, themeState) {
+                String themeModeName;
+                switch (themeState.themeMode) {
+                  case ThemeMode.light:
+                    themeModeName = 'Light';
+                    break;
+                  case ThemeMode.dark:
+                    themeModeName = 'Dark';
+                    break;
+                  case ThemeMode.system:
+                    themeModeName = 'System';
+                    break;
+                }
+                
+                return ListTile(
+                  leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: pomodoroThemeState.currentTheme.primaryColor.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      Icons.palette,
+                      color: pomodoroThemeState.currentTheme.primaryColor,
+                      size: 22,
+                    ),
                   ),
-                );
-              },
-            );
-          },
-        ),
-        const Divider(height: 1),
-        BlocBuilder<ThemeCubit, ThemeState>(
-          builder: (context, themeState) {
-            String themeModeName;
-            IconData themeModeIcon;
-            Color themeModeColor;
-
-            switch (themeState.themeMode) {
-              case ThemeMode.light:
-                themeModeName = 'Light';
-                themeModeIcon = Icons.light_mode;
-                themeModeColor = Colors.amber;
-                break;
-              case ThemeMode.dark:
-                themeModeName = 'Dark';
-                themeModeIcon = Icons.dark_mode;
-                themeModeColor = Colors.indigo;
-                break;
-              case ThemeMode.system:
-                themeModeName = 'System';
-                themeModeIcon = Icons.brightness_auto;
-                themeModeColor = Colors.blue;
-                break;
-            }
-
-            return ListTile(
-              leading: Icon(themeModeIcon, color: themeModeColor),
-              title: const Text('Brightness'),
-              subtitle: Text(themeModeName),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const ThemeSelectionScreen(),
+                  title: const Text('Theme & Colors'),
+                  subtitle: Text('${pomodoroThemeState.currentTheme.name} • $themeModeName'),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildThemePreview(pomodoroThemeState.currentTheme),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.chevron_right),
+                    ],
                   ),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ThemeSelectionScreen(),
+                      ),
+                    );
+                  },
                 );
               },
             );
@@ -318,48 +309,7 @@ class _SettingsView extends StatelessWidget {
           },
         ),
         const Divider(height: 1),
-        ListTile(
-          leading: Icon(Icons.repeat, color: theme.colorScheme.tertiary),
-          title: const Text('Sessions until long break'),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '${state.settings.sessionsBeforeLongBreak}',
-                style: TextStyle(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(width: 8),
-              IconButton(
-                icon: const Icon(Icons.remove_circle_outline),
-                onPressed: state.settings.sessionsBeforeLongBreak > 2
-                    ? () {
-                        context
-                            .read<SettingsCubit>()
-                            .updateSessionsBeforeLongBreak(
-                              state.settings.sessionsBeforeLongBreak - 1,
-                            );
-                      }
-                    : null,
-              ),
-              IconButton(
-                icon: const Icon(Icons.add_circle_outline),
-                onPressed: state.settings.sessionsBeforeLongBreak < 10
-                    ? () {
-                        context
-                            .read<SettingsCubit>()
-                            .updateSessionsBeforeLongBreak(
-                              state.settings.sessionsBeforeLongBreak + 1,
-                            );
-                      }
-                    : null,
-              ),
-            ],
-          ),
-        ),
+        _buildSessionCountTile(context, state, theme),
       ],
     );
   }
@@ -564,6 +514,15 @@ class _SettingsView extends StatelessWidget {
         ),
         Card(
           margin: const EdgeInsets.symmetric(horizontal: 16),
+          color: theme.cardColor,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: theme.dividerColor.withValues(alpha: 0.3),
+              width: 0.5,
+            ),
+          ),
           child: Column(children: children),
         ),
         if (footer != null)
@@ -590,32 +549,157 @@ class _SettingsView extends StatelessWidget {
     required int max,
     required ValueChanged<double> onChanged,
   }) {
-    return ListTile(
-      leading: Icon(icon, color: iconColor),
-      title: Text(title),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
+    final theme = Theme.of(context);
+    
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
         children: [
-          Text(
-            '$value min',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
+          // Icon
+          Icon(icon, color: iconColor, size: 24),
+          const SizedBox(width: 16),
+          // Title
+          Expanded(
+            child: Text(
+              title,
+              style: theme.textTheme.bodyLarge,
             ),
           ),
-          const SizedBox(width: 8),
-          IconButton(
-            icon: const Icon(Icons.remove_circle_outline),
-            onPressed: value > min
-                ? () => onChanged((value - 1).toDouble())
-                : null,
+          // Stepper control
+          Container(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Minus button
+                IconButton(
+                  icon: Icon(
+                    Icons.remove,
+                    color: value > min 
+                        ? theme.colorScheme.primary 
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                    size: 20,
+                  ),
+                  onPressed: value > min
+                      ? () => onChanged((value - 1).toDouble())
+                      : null,
+                  padding: const EdgeInsets.all(8),
+                  constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                ),
+                // Value display
+                Container(
+                  constraints: const BoxConstraints(minWidth: 60),
+                  alignment: Alignment.center,
+                  child: Text(
+                    '$value min',
+                    style: TextStyle(
+                      color: theme.colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                // Plus button
+                IconButton(
+                  icon: Icon(
+                    Icons.add,
+                    color: value < max 
+                        ? theme.colorScheme.primary 
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                    size: 20,
+                  ),
+                  onPressed: value < max
+                      ? () => onChanged((value + 1).toDouble())
+                      : null,
+                  padding: const EdgeInsets.all(8),
+                  constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                ),
+              ],
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.add_circle_outline),
-            onPressed: value < max
-                ? () => onChanged((value + 1).toDouble())
-                : null,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSessionCountTile(BuildContext context, SettingsState state, ThemeData theme) {
+    final value = state.settings.sessionsBeforeLongBreak;
+    
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          // Icon
+          Icon(Icons.repeat, color: theme.colorScheme.tertiary, size: 24),
+          const SizedBox(width: 16),
+          // Title
+          Expanded(
+            child: Text(
+              'Sessions before long break',
+              style: theme.textTheme.bodyLarge,
+            ),
+          ),
+          // Stepper control
+          Container(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Minus button
+                IconButton(
+                  icon: Icon(
+                    Icons.remove,
+                    color: value > 2 
+                        ? theme.colorScheme.primary 
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                    size: 20,
+                  ),
+                  onPressed: value > 2
+                      ? () {
+                          context.read<SettingsCubit>().updateSessionsBeforeLongBreak(value - 1);
+                        }
+                      : null,
+                  padding: const EdgeInsets.all(8),
+                  constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                ),
+                // Value display
+                Container(
+                  constraints: const BoxConstraints(minWidth: 40),
+                  alignment: Alignment.center,
+                  child: Text(
+                    '$value',
+                    style: TextStyle(
+                      color: theme.colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                // Plus button
+                IconButton(
+                  icon: Icon(
+                    Icons.add,
+                    color: value < 10 
+                        ? theme.colorScheme.primary 
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                    size: 20,
+                  ),
+                  onPressed: value < 10
+                      ? () {
+                          context.read<SettingsCubit>().updateSessionsBeforeLongBreak(value + 1);
+                        }
+                      : null,
+                  padding: const EdgeInsets.all(8),
+                  constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                ),
+              ],
+            ),
           ),
         ],
       ),

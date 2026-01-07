@@ -42,15 +42,10 @@ class _ThemeSelectionView extends StatelessWidget {
             surfaceTintColor: Colors.transparent,
           ),
           body: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  currentTheme.primaryColor.withValues(alpha: 0.12),
-                  theme.scaffoldBackgroundColor,
-                ],
-              ),
+            color: Color.lerp(
+              theme.scaffoldBackgroundColor,
+              currentTheme.primaryColor,
+              0.12,
             ),
             child: SafeArea(
               child: ListView(
@@ -106,6 +101,15 @@ class _ThemeSelectionView extends StatelessWidget {
         ),
         Card(
           margin: const EdgeInsets.symmetric(horizontal: 16),
+          color: theme.cardColor,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: theme.dividerColor.withValues(alpha: 0.3),
+              width: 0.5,
+            ),
+          ),
           child: BlocBuilder<PomodoroThemeCubit, PomodoroThemeState>(
             builder: (context, state) {
               return Column(
@@ -247,6 +251,15 @@ class _ThemeSelectionView extends StatelessWidget {
         ),
         Card(
           margin: const EdgeInsets.symmetric(horizontal: 16),
+          color: theme.cardColor,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: theme.dividerColor.withValues(alpha: 0.3),
+              width: 0.5,
+            ),
+          ),
           child: BlocBuilder<ThemeCubit, ThemeState>(
             builder: (context, state) {
               return Column(
