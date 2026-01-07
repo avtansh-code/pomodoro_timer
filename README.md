@@ -121,7 +121,7 @@ Mr. Pomodoro/
 git clone https://github.com/avtansh-code/pomodoro_timer.git
 cd pomodoro_timer
 
-# Interactive build (prompts for platform and mode)
+# Default build (iOS debug - no prompts)
 ./build.sh
 
 # Or specify options directly
@@ -130,6 +130,7 @@ cd pomodoro_timer
 ./build.sh -m release -p macos      # macOS release
 ./build.sh -m release -p windows    # Windows release
 ./build.sh -m debug -p android -i   # Debug with install
+./build.sh --interactive            # Interactive mode with prompts
 ```
 
 ### Manual Setup

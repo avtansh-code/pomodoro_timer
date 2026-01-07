@@ -9,14 +9,14 @@
 # Usage: ./build.sh [options]
 #   Options:
 #     -h, --help          Show this help message
-#     -m, --mode          Build mode: debug|release (default: interactive)
-#     -p, --platform      Platform: android|ios|ipados|macos|windows (default: interactive)
+#     -m, --mode          Build mode: debug|release (default: debug)
+#     -p, --platform      Platform: android|ios|ipados|macos|windows (default: ios)
 #     -i, --install       Install on connected device (default: false)
 #     -f, --format        Format code before building (default: true)
 #     -a, --analyze       Run analysis before building (default: true)
 #     --skip-format       Skip code formatting
 #     --skip-analyze      Skip code analysis
-#     --non-interactive   Run with provided options only (no prompts)
+#     --interactive       Run in interactive mode (prompts for options)
 #===============================================================================
 
 set -e
@@ -36,12 +36,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FLUTTER_PROJECT_DIR="$SCRIPT_DIR/flutter/pomodoro_timer"
 
 # Default values
-BUILD_MODE=""
-PLATFORM=""
+BUILD_MODE="debug"
+PLATFORM="ios"
 INSTALL_ON_DEVICE=false
 FORMAT_CODE=true
 ANALYZE_CODE=true
-NON_INTERACTIVE=false
+INTERACTIVE=false
 
 #===============================================================================
 # Helper Functions
@@ -86,22 +86,23 @@ show_help() {
     echo ""
     echo -e "${BOLD}Options:${NC}"
     echo "  -h, --help          Show this help message"
-    echo "  -m, --mode          Build mode: debug|release"
-    echo "  -p, --platform      Platform: android|ios|ipados|macos|windows"
+    echo "  -m, --mode          Build mode: debug|release (default: debug)"
+    echo "  -p, --platform      Platform: android|ios|ipados|macos|windows (default: ios)"
     echo "  -i, --install       Install on connected device"
     echo "  -f, --format        Format code before building (default: true)"
     echo "  -a, --analyze       Run analysis before building (default: true)"
     echo "  --skip-format       Skip code formatting"
     echo "  --skip-analyze      Skip code analysis"
-    echo "  --non-interactive   Run with provided options only (no prompts)"
+    echo "  --interactive       Run in interactive mode (prompts for options)"
     echo ""
     echo -e "${BOLD}Examples:${NC}"
-    echo "  ./build.sh                                    # Interactive mode"
+    echo "  ./build.sh                                    # Default: iOS debug build"
     echo "  ./build.sh -m release -p android              # Release build for Android"
     echo "  ./build.sh -m debug -p ios -i                 # Debug build for iOS with install"
     echo "  ./build.sh -m release -p macos                # Release build for macOS"
     echo "  ./build.sh -m debug -p ipados -i              # Debug build for iPadOS with install"
     echo "  ./build.sh -m release -p windows              # Release build for Windows"
+    echo "  ./build.sh --interactive                      # Interactive mode with prompts"
     echo ""
 }
 
@@ -189,10 +190,6 @@ check_prerequisites() {
 #===============================================================================
 
 select_build_mode() {
-    if [ -n "$BUILD_MODE" ]; then
-        return
-    fi
-    
     echo -e "\n${BOLD}Select Build Mode:${NC}"
     echo ""
     echo -e "  ${CYAN}1)${NC} Debug   - Development build with debugging enabled"
@@ -212,10 +209,6 @@ select_build_mode() {
 }
 
 select_platform() {
-    if [ -n "$PLATFORM" ]; then
-        return
-    fi
-    
     echo -e "\n${BOLD}Select Target Platform:${NC}"
     echo ""
     echo -e "  ${CYAN}1)${NC} Android - Build for Android devices"
@@ -641,8 +634,8 @@ parse_arguments() {
                 ANALYZE_CODE=false
                 shift
                 ;;
-            --non-interactive)
-                NON_INTERACTIVE=true
+            --interactive)
+                INTERACTIVE=true
                 shift
                 ;;
             *)
@@ -661,31 +654,16 @@ main() {
     # Print banner
     print_banner
     
-    # Interactive mode if options not provided
-    if [ "$NON_INTERACTIVE" = false ]; then
+    # Interactive mode if explicitly requested
+    if [ "$INTERACTIVE" = true ]; then
         select_build_mode
         select_platform
+        select_install
         
-        if [ "$INSTALL_ON_DEVICE" = false ]; then
-            select_install
-        fi
-    else
-        # Validate required options in non-interactive mode
-        if [ -z "$BUILD_MODE" ]; then
-            print_error "Build mode is required in non-interactive mode (-m debug|release)"
-            exit 1
-        fi
-        if [ -z "$PLATFORM" ]; then
-            print_error "Platform is required in non-interactive mode (-p android|ios|ipados|macos|windows)"
-            exit 1
-        fi
-    fi
-    
-    # Print build summary
-    print_build_summary
-    
-    # Confirm before proceeding (in interactive mode)
-    if [ "$NON_INTERACTIVE" = false ]; then
+        # Print build summary
+        print_build_summary
+        
+        # Confirm before proceeding
         echo ""
         read -p "$(echo -e ${YELLOW}Proceed with build? [Y/n]: ${NC})" confirm
         case $confirm in
@@ -694,6 +672,9 @@ main() {
                 exit 0
                 ;;
         esac
+    else
+        # Print build summary (using defaults or provided options)
+        print_build_summary
     fi
     
     # Run build steps

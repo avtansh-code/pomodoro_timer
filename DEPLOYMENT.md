@@ -56,17 +56,14 @@ Before deploying, ensure you have:
 
 The project includes a comprehensive build script (`build.sh`) that automates the entire build process for all platforms.
 
-### Interactive Mode
+### Default Mode
 
 ```bash
-# Run the build script
+# Run the build script (defaults: iOS debug build)
 ./build.sh
-
-# Follow the interactive prompts to select:
-# 1. Build mode (Debug/Release)
-# 2. Platform (Android/iOS/iPadOS/macOS/Windows)
-# 3. Install on device (optional)
 ```
+
+By default, the script builds for **iOS** in **debug** mode without any prompts.
 
 ### Command Line Mode
 
@@ -103,7 +100,7 @@ The project includes a comprehensive build script (`build.sh`) that automates th
 | `-i, --install` | Install on connected device |
 | `--skip-format` | Skip code formatting |
 | `--skip-analyze` | Skip code analysis |
-| `--non-interactive` | Run without prompts |
+| `--interactive` | Run in interactive mode (prompts for options) |
 
 ### What the Build Script Does
 
