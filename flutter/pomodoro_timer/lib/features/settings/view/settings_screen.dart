@@ -40,11 +40,13 @@ class _SettingsView extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Settings'),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
       ),
       body: BlocConsumer<SettingsCubit, SettingsState>(
         listener: (context, state) {
@@ -69,20 +71,25 @@ class _SettingsView extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  theme.colorScheme.primary.withValues(alpha: 0.05),
-                  theme.colorScheme.secondary.withValues(alpha: 0.05),
-                ],
-              ),
-            ),
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              children: [
+          return BlocBuilder<PomodoroThemeCubit, PomodoroThemeState>(
+            builder: (context, pomodoroState) {
+              final primaryColor = pomodoroState.currentTheme.primaryColor;
+              
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      primaryColor.withValues(alpha: 0.12),
+                      theme.scaffoldBackgroundColor,
+                    ],
+                  ),
+                ),
+                child: SafeArea(
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                    children: [
                 // Learn Section - Featured at top
                 _buildLearnSection(context),
 
@@ -123,9 +130,12 @@ class _SettingsView extends StatelessWidget {
                 // About Section
                 _buildAboutSection(context),
 
-                const SizedBox(height: 24),
-              ],
-            ),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
+                ),
+              );
+            },
           );
         },
       ),

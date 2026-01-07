@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vibration/vibration.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../app/theme/pomodoro_theme_cubit.dart';
 import '../../../core/models/app_theme_model.dart';
@@ -9,6 +10,8 @@ import '../../../core/models/app_theme_model.dart';
 /// Allows users to:
 /// - Switch between light/dark/system theme modes
 /// - Select different color schemes (Classic Red, Ocean Blue, etc.)
+/// 
+/// Enhanced with animated background gradient matching iOS design.
 class ThemeSelectionScreen extends StatelessWidget {
   const ThemeSelectionScreen({super.key});
 
@@ -25,42 +28,52 @@ class _ThemeSelectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Appearance'),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              theme.colorScheme.primary.withValues(alpha: 0.05),
-              theme.colorScheme.secondary.withValues(alpha: 0.05),
-            ],
+    return BlocBuilder<PomodoroThemeCubit, PomodoroThemeState>(
+      builder: (context, pomodoroState) {
+        final currentTheme = pomodoroState.currentTheme;
+        
+        return Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            title: const Text('Appearance'),
+            centerTitle: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            surfaceTintColor: Colors.transparent,
           ),
-        ),
-        child: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: [
-            // Color Scheme Section
-            _buildColorSchemeSection(context),
+          body: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  currentTheme.primaryColor.withValues(alpha: 0.12),
+                  theme.scaffoldBackgroundColor,
+                ],
+              ),
+            ),
+            child: SafeArea(
+              child: ListView(
+                padding: const EdgeInsets.all(16.0),
+                children: [
+                  // Color Scheme Section
+                  _buildColorSchemeSection(context),
 
-            const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-            // Theme Mode Section
-            _buildThemeModeSection(context),
+                  // Theme Mode Section
+                  _buildThemeModeSection(context),
 
-            const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-            // Info Card
-            _buildInfoCard(context),
-          ],
-        ),
-      ),
+                  // Info Card
+                  _buildInfoCard(context),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -135,7 +148,7 @@ class _ThemeSelectionView extends StatelessWidget {
     final isSelected = appTheme.id == currentTheme.id;
 
     return ListTile(
-      leading: _buildThemePreview(appTheme),
+      leading: _buildThemePreview(appTheme, isSelected),
       title: Text(
         appTheme.name,
         style: TextStyle(
@@ -143,28 +156,47 @@ class _ThemeSelectionView extends StatelessWidget {
         ),
       ),
       trailing: isSelected
-          ? Icon(
-              Icons.check_circle,
-              color: appTheme.primaryColor,
+          ? Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: appTheme.primaryColor,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.check,
+                color: Colors.white,
+                size: 18,
+              ),
             )
           : null,
       onTap: () {
+        Vibration.vibrate(duration: 30);
         context.read<PomodoroThemeCubit>().setTheme(appTheme);
       },
     );
   }
 
   /// Builds a theme preview with 3 colored circles matching iOS design
-  Widget _buildThemePreview(AppThemeModel appTheme) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildPreviewCircle(appTheme.primaryColor, 12),
-        const SizedBox(width: 4),
-        _buildPreviewCircle(appTheme.secondaryColor, 12),
-        const SizedBox(width: 4),
-        _buildPreviewCircle(appTheme.accentColor, 12),
-      ],
+  Widget _buildThemePreview(AppThemeModel appTheme, bool isSelected) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: isSelected 
+          ? Border.all(color: appTheme.primaryColor.withValues(alpha: 0.5), width: 2)
+          : null,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildPreviewCircle(appTheme.primaryColor, 14),
+          const SizedBox(width: 4),
+          _buildPreviewCircle(appTheme.secondaryColor, 14),
+          const SizedBox(width: 4),
+          _buildPreviewCircle(appTheme.accentColor, 14),
+        ],
+      ),
     );
   }
 
@@ -177,9 +209,9 @@ class _ThemeSelectionView extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: color.withValues(alpha: 0.3),
-            blurRadius: 2,
-            offset: const Offset(0, 1),
+            color: color.withValues(alpha: 0.4),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -269,7 +301,15 @@ class _ThemeSelectionView extends StatelessWidget {
     final isSelected = themeMode == currentMode;
 
     return ListTile(
-      leading: Icon(icon, color: iconColor),
+      leading: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: iconColor.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(icon, color: iconColor, size: 20),
+      ),
       title: Text(
         title,
         style: TextStyle(
@@ -278,12 +318,22 @@ class _ThemeSelectionView extends StatelessWidget {
       ),
       subtitle: Text(subtitle),
       trailing: isSelected
-          ? Icon(
-              Icons.check_circle,
-              color: Theme.of(context).colorScheme.primary,
+          ? Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.check,
+                color: Colors.white,
+                size: 18,
+              ),
             )
           : null,
       onTap: () {
+        Vibration.vibrate(duration: 30);
         context.read<ThemeCubit>().setThemeMode(themeMode);
       },
     );

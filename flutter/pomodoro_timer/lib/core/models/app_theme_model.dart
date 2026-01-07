@@ -244,6 +244,6 @@ class PomodoroThemes {
     );
   }
 
-  /// Default theme
-  static AppThemeModel get defaultTheme => classicRed;
+  /// Default theme (Forest Green to match iOS)
+  static AppThemeModel get defaultTheme => forestGreen;
 }

@@ -40,11 +40,13 @@ class _StatisticsViewState extends State<_StatisticsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Statistics'),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
       ),
       body: BlocBuilder<PomodoroThemeCubit, PomodoroThemeState>(
         builder: (context, pomodoroThemeState) {
@@ -65,18 +67,18 @@ class _StatisticsViewState extends State<_StatisticsView> {
               return Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                     colors: [
                       primaryColor.withValues(alpha: 0.12),
                       theme.scaffoldBackgroundColor,
                     ],
-                    stops: const [0.0, 0.3],
                   ),
                 ),
-                child: ListView(
-                  padding: const EdgeInsets.all(16.0),
-                  children: [
+                child: SafeArea(
+                  child: ListView(
+                    padding: const EdgeInsets.all(16.0),
+                    children: [
                     // Time Range Picker
                     _buildTimeRangePicker(context),
 
@@ -129,8 +131,9 @@ class _StatisticsViewState extends State<_StatisticsView> {
                     // Motivational Quote
                     _buildMotivationalQuote(context),
 
-                    const SizedBox(height: 16),
-                  ],
+                      const SizedBox(height: 16),
+                    ],
+                  ),
                 ),
               );
             },
@@ -1032,3 +1035,4 @@ class _StatisticsViewState extends State<_StatisticsView> {
     return mins > 0 ? '${hours}h ${mins}m' : '${hours}h';
   }
 }
+

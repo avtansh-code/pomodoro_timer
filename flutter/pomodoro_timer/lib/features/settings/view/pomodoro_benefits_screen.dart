@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
 
 /// Educational screen explaining the Pomodoro Technique.
 ///
@@ -16,23 +17,31 @@ class PomodoroBenefitsScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('The Pomodoro Way')),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text('The Pomodoro Way'),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              theme.colorScheme.primary.withValues(alpha: 0.08),
-              theme.colorScheme.secondary.withValues(alpha: 0.08),
+              theme.colorScheme.primary.withValues(alpha: 0.12),
+              theme.scaffoldBackgroundColor,
             ],
           ),
         ),
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            // Header
-            _buildHeader(theme),
+        child: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              // Header
+              _buildHeader(theme),
             const SizedBox(height: 32),
 
             // History Section
@@ -51,10 +60,11 @@ class PomodoroBenefitsScreen extends StatelessWidget {
             _buildConsiderationsSection(theme),
             const SizedBox(height: 32),
 
-            // CTA
-            _buildCTA(context, theme),
-            const SizedBox(height: 24),
-          ],
+              // CTA
+              _buildCTA(context, theme),
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
     );
@@ -68,7 +78,21 @@ class PomodoroBenefitsScreen extends StatelessWidget {
           height: 100,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: theme.colorScheme.primary.withValues(alpha: 0.15),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                theme.colorScheme.primary.withValues(alpha: 0.2),
+                theme.colorScheme.secondary.withValues(alpha: 0.15),
+              ],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
           child: Icon(Icons.timer, size: 44, color: theme.colorScheme.primary),
         ),
@@ -336,6 +360,7 @@ class PomodoroBenefitsScreen extends StatelessWidget {
         const SizedBox(height: 16),
         FilledButton.icon(
           onPressed: () {
+            Vibration.vibrate(duration: 50);
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
           icon: const Icon(Icons.play_arrow),
@@ -343,6 +368,9 @@ class PomodoroBenefitsScreen extends StatelessWidget {
           style: FilledButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             minimumSize: const Size(double.infinity, 56),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
           ),
         ),
       ],

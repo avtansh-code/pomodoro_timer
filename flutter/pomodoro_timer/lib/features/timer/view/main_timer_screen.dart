@@ -96,20 +96,25 @@ class _MainTimerView extends StatelessWidget {
               );
 
               return Scaffold(
+                extendBodyBehindAppBar: true, // Extend gradient behind AppBar
                 appBar: AppBar(
                   title: const Text('Focus Timer'),
                   centerTitle: true,
                   backgroundColor: Colors.transparent,
                   elevation: 0,
+                  surfaceTintColor: Colors.transparent, // Remove tint color
                 ),
                 body: AnimatedContainer(
                   duration: const Duration(milliseconds: 600),
                   curve: Curves.easeInOut,
                   decoration: BoxDecoration(
-                    gradient: _buildBackgroundGradient(
-                      context,
-                      sessionGradient,
-                      timerState.sessionType,
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        sessionColor.withValues(alpha: _getBackgroundOpacity(timerState.sessionType)),
+                        Theme.of(context).scaffoldBackgroundColor,
+                      ],
                     ),
                   ),
                   child: SafeArea(
@@ -117,7 +122,7 @@ class _MainTimerView extends StatelessWidget {
                       padding: const EdgeInsets.all(24.0),
                       child: Column(
                         children: [
-                          // Session header with emoji and info
+                          // Session header with session info
                           _buildSessionHeader(context, timerState, sessionColor),
 
                           const SizedBox(height: 40),
@@ -181,14 +186,14 @@ class _MainTimerView extends StatelessWidget {
         : [Theme.of(context).colorScheme.primary];
 
     return LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
       colors: [
-        gradientColors.first.withValues(alpha: opacity),
-        scaffoldBg,
-        scaffoldBg,
+        gradientColors.first.withValues(alpha: opacity * 1.2),
+        gradientColors.last.withValues(alpha: opacity * 0.8),
+        scaffoldBg.withValues(alpha: 0.95),
       ],
-      stops: const [0.0, 0.3, 1.0],
+      stops: const [0.0, 0.5, 1.0],
     );
   }
 
@@ -204,29 +209,25 @@ class _MainTimerView extends StatelessWidget {
     }
   }
 
-  /// Builds the session header with emoji and session info
+  /// Builds the session header matching iOS design
   Widget _buildSessionHeader(
     BuildContext context,
     state.TimerState timerState,
     Color color,
   ) {
-    String emoji;
     String title;
     String subtitle;
 
     switch (timerState.sessionType) {
       case SessionType.work:
-        emoji = '🎯';
-        title = 'Focus Session';
-        subtitle = 'Session #${timerState.completedSessions + 1}';
+        title = 'Focus';
+        subtitle = 'Session ${timerState.completedSessions + 1}';
         break;
       case SessionType.shortBreak:
-        emoji = '☕';
         title = 'Short Break';
-        subtitle = 'Relax and recharge';
+        subtitle = 'Rest and recharge';
         break;
       case SessionType.longBreak:
-        emoji = '🌴';
         title = 'Long Break';
         subtitle = 'Well-deserved rest';
         break;
@@ -241,9 +242,6 @@ class _MainTimerView extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Emoji
-          Text(emoji, style: const TextStyle(fontSize: 32)),
-          const SizedBox(width: 16),
           // Title and subtitle
           Expanded(
             child: Column(
@@ -300,7 +298,7 @@ class _MainTimerView extends StatelessWidget {
     }
   }
 
-  /// Builds the skip button
+  /// Builds the skip button with capsule shape (matching iOS)
   Widget _buildSkipButton(
     BuildContext context,
     state.TimerState timerState,
@@ -324,21 +322,23 @@ class _MainTimerView extends StatelessWidget {
       onPressed: () {
         context.read<TimerBloc>().add(const event.TimerSkipped());
       },
-      icon: Icon(Icons.fast_forward, size: 18, color: sessionColor),
+      icon: Icon(
+        Icons.skip_next_rounded, // Better icon for skip
+        size: 20,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
       label: Text(
         'Skip to $nextSessionName',
         style: TextStyle(
-          color: sessionColor,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
           fontSize: 15,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500,
         ),
       ),
       style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        backgroundColor: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        backgroundColor: Colors.grey.withValues(alpha: 0.2),
+        shape: const StadiumBorder(), // Capsule shape
       ),
     );
   }
@@ -349,39 +349,27 @@ class _MainTimerView extends StatelessWidget {
     state.TimerCompleted completedState,
   ) {
     String message;
-    String emoji;
 
     switch (completedState.completedSessionType) {
       case SessionType.work:
-        emoji = '🎉';
         message = 'Great work! Time for a break.';
         break;
       case SessionType.shortBreak:
-        emoji = '💪';
         message = 'Break over! Ready to focus?';
         break;
       case SessionType.longBreak:
-        emoji = '🌟';
         message = 'Long break complete! Let\'s get back to it.';
         break;
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
-          children: [
-            Text(emoji, style: const TextStyle(fontSize: 20)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                message,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
+        content: Text(
+          message,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 4),

@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/di/service_locator.dart';
@@ -69,29 +71,64 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       const SettingsScreen(),
     ];
 
-    return Scaffold(
-      body: IndexedStack(index: _selectedIndex, children: pages),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: _onItemTapped,
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.timer_outlined),
-            selectedIcon: Icon(Icons.timer),
-            label: 'Timer',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.bar_chart_outlined),
-            selectedIcon: Icon(Icons.bar_chart),
-            label: 'Stats',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-      ),
-    );
+    // Use platform-specific navigation
+    if (Platform.isIOS) {
+      return CupertinoTabScaffold(
+        tabBar: CupertinoTabBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.95),
+          activeColor: Theme.of(context).colorScheme.primary,
+          inactiveColor: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.timer),
+              label: 'Timer',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.chart_bar),
+              label: 'Stats',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.settings),
+              label: 'Settings',
+            ),
+          ],
+        ),
+        tabBuilder: (context, index) => pages[index],
+      );
+    } else {
+      // Android/Web - Use Material 3 Navigation Bar with subtle styling
+      return Scaffold(
+        body: IndexedStack(index: _selectedIndex, children: pages),
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: _selectedIndex,
+          onDestinationSelected: _onItemTapped,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.98),
+          indicatorColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
+          height: 65,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.timer_outlined, size: 24),
+              selectedIcon: Icon(Icons.timer, size: 24),
+              label: 'Timer',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.bar_chart_outlined, size: 24),
+              selectedIcon: Icon(Icons.bar_chart, size: 24),
+              label: 'Stats',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.settings_outlined, size: 24),
+              selectedIcon: Icon(Icons.settings, size: 24),
+              label: 'Settings',
+            ),
+          ],
+        ),
+      );
+    }
   }
 }

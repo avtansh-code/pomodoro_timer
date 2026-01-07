@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// Custom typography system matching iOS SF Rounded design patterns.
 ///
 /// Provides a consistent rounded font design across the application,
-/// similar to iOS's SF Pro Rounded font. Uses Google Fonts' Quicksand
+/// similar to iOS's SF Pro Rounded font. Uses bundled Quicksand font
 /// which provides a rounded, friendly appearance similar to SF Rounded.
 class AppTypography {
   /// Base text style using Quicksand (rounded font similar to SF Rounded)
-  static TextStyle get _baseStyle => GoogleFonts.quicksand();
+  /// Font is bundled locally to avoid network issues on iOS
+  static const TextStyle _baseStyle = TextStyle(
+    fontFamily: 'Quicksand',
+  );
   
   /// Large title style (34pt, bold, rounded)
   /// Used for major section headers
@@ -94,7 +96,7 @@ class AppTypography {
   /// Special style for the timer display with tabular figures
   static TextStyle get timerFont => _baseStyle.copyWith(
         fontSize: 64,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w100, // Thin weight to match iOS .thin
         letterSpacing: 2.0,
         fontFeatures: const [
           FontFeature.tabularFigures(), // Ensures consistent digit width
